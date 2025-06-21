@@ -194,6 +194,6 @@ cython_debug/
 .cursorindexingignore
 
 # Secrets
-/*.json # for Google API's json file
+creds/ # for Google API's json file
 .env # app's personnal config (mongoDB's creds)
 log/ # app's logs
