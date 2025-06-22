@@ -2,14 +2,29 @@ from pymongo import MongoClient
 
 
 class Mongo:
-  def __init__(self, config):
+  def __init__(self, config, logger):
     """ MongoDB initialisation
       Args:
         config: config object loaded from config.py which contains mongoDB credentials
+        logger: custom logger from logger.py
     """
-    self.client = MongoClient(config.MONGO_URI)
-    self.db = self.client[config.MONGO_DB_NAME]
-    print(f'connected at {config.MONGO_URI}')
+    self.logger = logger
+    self.config = config
+
+  
+  def connect(self):
+    """ MongoDB connexion
+      Returns: True if connected, False instead
+    """
+    self.logger.info('Attempting to connect to MongoDB...')
+    try:
+      self.client = MongoClient(self.config.MONGO_URI)
+      self.db = self.client[self.config.MONGO_DB_NAME]
+      self.logger.info(f'MongoDB connexion success')
+      return True
+    except Exception as e:
+      self.logger.error(f'Error while connecting to MongoDB: {e}')
+      return False
 
 
   def read(self, collection):
@@ -19,9 +34,11 @@ class Mongo:
     """
     try:
       cursor = self.db.get_collection(collection).find()
-      return {'status': True, 'return': list(cursor)}
+      self.logger.info(f'read {collection} ok')
+      return list(cursor)
     except Exception as e:
-      return {'status': False, 'return': f'Mongo read error : {e}'}
+      self.logger.error(f'Mongo read error : {e}')
+      return False
     
 
   def write(self, collection, data):
@@ -31,13 +48,15 @@ class Mongo:
         data (list[dict]): data to write
     """
     if not data:
-      return {'status': False, 'return': f'no data to write in {collection}'}
+      self.logger.error(f'no data to write in {collection}')
+      return False
     self.db.get_collection(collection).delete_many({})
     result = self.insert(collection, data)
     if result.get('status'):
       result.get('return').replace('inserted', 'written')
     else:
       result.get('return').replace('insert', 'write')
+    self.logger.info(f'write {collection} ok')
     return result
     
     
@@ -52,9 +71,11 @@ class Mongo:
         result = self.db.get_collection(collection).delete_many({})
       else:
         result = self.db.get_collection(collection).delete_many(filter_dict)
-      return {'status': True, 'return': f'{result.deleted_count} document{'s' if result.deleted_count > 1 else ''} deleted'}
+      self.logger.info(f'{result.deleted_count} document{'s' if result.deleted_count > 1 else ''} deleted')
+      return True
     except Exception as e:
-      return {'status': False, 'return': f'Mongo delete error : {e}'}
+      self.logger.error(f'Mongo delete error : {e}')
+      return False
   
 
   def insert(self, collection, data):
@@ -65,36 +86,44 @@ class Mongo:
     """
     try:
       if not data:
-        return {'status': False, 'return': f'no data to insert in {collection}'}
+        self.logger.error(f'no data to insert in {collection}')
       if isinstance(data, list):
         result = self.db.get_collection(collection).insert_many(data)
         lines = len(result.inserted_ids)
       else:
         result = self.db.get_collection(collection).insert_one(data)
         lines = 1 if result.inserted_id else 0
-      return {'status': True, 'return': f'{lines} document{'s' if lines > 1 else ''} inserted in {collection}'}
+      self.logger.info(f'{lines} document{'s' if lines > 1 else ''} inserted in {collection}')
+      return True
     except Exception as e:
-      return {'status': False, 'return': f'Mongo insert error : {e}'}
+      self.logger.error(f'Mongo insert error : {e}')
+      return False
   
 
   def update(self, collection, filter_dict, update_dict):
-      """ Update data in collection
-        Args:
-          collection (str): name of the collection
-          filter_dict (dict): Filter to know which documents to update
-          data (list[dict]): data to update
-      """
-      try:
-        if not update_dict:
-          return {'status': False, 'return': f'no data to update in {collection}'}
-        result = self.db.get_collection(collection).update_many(filter_dict, {"$set": update_dict})
-        return {'status': True, 'return': f'{result.modified_count} document{'s' if result.modified_count > 1 else ''} updated in {collection}'}
-      except Exception as e:
-        return {'status': False, 'return': f'Mongo update error : {e}'}
+    """ Update data in collection
+      Args:
+        collection (str): name of the collection
+        filter_dict (dict): Filter to know which documents to update
+        data (list[dict]): data to update
+    """
+    try:
+      if not update_dict:
+        self.logger.error(f'no data to update in {collection}')
+        return False
+      result = self.db.get_collection(collection).update_many(filter_dict, {"$set": update_dict})
+      self.logger.info(f'{result.modified_count} document{'s' if result.modified_count > 1 else ''} updated in {collection}')
+      return True
+    except Exception as e:
+      self.logger.error(f'Mongo update error : {e}')
+      return False
   
   
   def close(self):
-      """ Close mongoDB connexion"""
-      if self.client:
-        self.client.close()
-        print('MongoDB connexion closed')
+    """ Close mongoDB connexion"""
+    if self.client:
+      self.client.close()
+      self.logger.info('MongoDB connexion closed')
+      return True
+    self.logger.error('No MongoDB connexion to close')
+    return False
