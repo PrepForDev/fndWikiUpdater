@@ -1,0 +1,67 @@
+### Pages templates ###
+#
+# elements between // are taken from base_object (can be nested attributes)
+# exemple: base object: hero + attribute: //attack.A0// -> returns the value of hero.attack.A0
+#
+# special attributes :
+# - 'translated' attribute will return the translation of the requested attribute
+#   if the resquested attribute is between '', it will return the translation of the expression instead of searching in attributes
+#   exemples: base object: hero + attribute: //translated.class// -> returns lang.translate(hero.class)
+#             //translated.'Hero Stats'// -> returns lang.translate('Hero Stats')
+# - 'print' attribute will return a custom attribute calculated in template_processor._prepare_print_data()
+#   /!\ if a new 'print' attribute is created and not calculated in the template processor, the template won't be processed and an error will show up in the log file
+#   exemple: base object: hero + attribute: display.stars.raw_list -> returns the value of the custom attribute hero.display.stars.raw_list
+#
+#
+# elements between ** are replaced by templates which can be found in elements_template.yml
+#   /!\ if a new template is created and not present in elements_template.yml, the template won't be processed and an error will show up in the log file
+#   exemple : **color.translated_template** -> returns {{Color|Name=//color//|Translated=//translated.color//|Size=30}} taken from elements_template.yml
+#
+
+
+Single Hero page:
+  base object: hero
+  type: single
+  title: //translated.name//
+  template: |
+    **character.template**
+    == //translated.'Basics'// ==
+    '''//translated.'Color'// :''' **color.translated_template**<br />
+    '''//translated.'Class'// :''' **class.translated_template**<br />
+    '''//translated.'Species'// :''' **species.translated_template**<br />
+    '''//translated.'Stars'// :''' //display.stars//<br />
+    '''//translated.'Attack'// :''' **attack_type.translated_template****attack_pattern.translated_template**<br />
+    '''//translated.'Base AI'// :''' **base_AI.translated_template**<br />
+    '''//translated.'AI Speed'// :''' //AI_speed//<br />
+    == //translated.'Cap'// ==
+    '''//translated.'Level'// :''' //display.max_level//<br />
+    '''//translated.'Attack'// :''' //display.attack.max.total// (//translated.'Base'// //display.attack.max.base// + //translated.'Gear'// //display.attack.max.gear// + //translated.'Merge'// //display.attack.max.merge//)<br />
+    '''//translated.'Health'// :''' //display.health.max.total// (//translated.'Base'// //display.health.max.base// + //translated.'Gear'// //display.health.max.gear// + //translated.'Merge'// //display.health.max.merge//)<br />
+    '''//translated.'Leader'// :''' //display.leadA.with_text// - //display.leadB.with_text//
+    == //translated.'Talents'// ==
+    '''//translated.'Base'//'''//display.talents.base.bullet_list//<br />
+    '''//translated.'Ascend'//'''//display.talents.ascend.bullet_list//<br />
+    '''//translated.'Merge'//'''//display.talents.merge.bullet_list//<br />
+    == //translated.'Gear'// ==
+    '''//translated.'Base'//'''//display.gear.A0.bullet_list//<br />
+    '''//translated.'1st Ascension'//'''//display.gear.A1.bullet_list//<br />
+    '''//translated.'2nd Ascension'//'''//display.gear.A2.bullet_list//<br />
+    '''//translated.'3rd Ascension'//'''//display.gear.A3.bullet_list//<br />
+
+Hero Stats:
+  base object: hero
+  type: full list
+  title: //translated.'Hero Stats'//
+  template: |
+    {{HeroStatsTableRow|Name=//name//|NameTranslated=//translated.name//|Class=//heroclass//|ClassTranslated=//translated.heroclass//|Color=//color//|
+    Species=//species//|SpeciesTranslated=//translated.species//|Stars=//stars//|AttackType=**attack_type.no_text_template**|AttackPattern=**attack_pattern.no_text_template**|
+    AttA0=//attack.A0//|DefA0=//health.A0//|AttA1=//attack.A1//|DefA1=//health.A1//|AttA2=//attack.A2//|DefA2=//health.A2//|AttA3=//attack.A3//|DefA3=//health.A3//|
+    LeadA=//display.leadA.no_text//|LeadB=//display.leadB.no_text//|AI=//AI//|Speed=//AI_speed//|Exclusive=//exclusivity//}}
+  header: |
+    {|  class="fandom-table sortable" style="100%"
+    |+
+    !Hero!!Class!!Color!!Species!!Stars!!Type!!Pattern_!!AttA0!!DefA0!!AttA1!!DefA1!!AttA2!!DefA2!!AttA3!!DefA3!!3A Leader Bonus A!!3A Leader Bonus B!!Base AI!!Exclusive
+  footer: |
+    |}
+    [[Category:Barracks]][[fr:Statistiques du Héros]][[es:Estadísticas de Héroe]]
+
