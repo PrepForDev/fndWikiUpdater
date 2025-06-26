@@ -32,3 +32,12 @@ class Logger:
     message = f'{self._str_now()} {msg}'
     print(message)
     self.logger.info(message)
+
+  def warning(self, msg):
+    message = f'{self._str_now()} {msg}'
+    print(message)
+    self.logger.warning(message)
+
+  def debug(self, msg):
+    message = f'{self._str_now()} {msg}'
+    self.logger.debug(message)
