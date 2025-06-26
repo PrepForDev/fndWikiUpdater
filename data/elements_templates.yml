@@ -1,0 +1,149 @@
+### Elements templates ###
+#
+# elements between // are taken from base_object (can be nested attributes)
+# exemple: base object: hero + attribute: //attack.A0// -> returns the value of hero.attack.A0
+#
+# special attributes :
+# - 'translated' attribute will return the translation of the requested attribute
+#   if the resquested attribute is between '', it will return the translation of the expression instead of searching in attributes
+#   exemples: base object: hero + attribute: //translated.class// -> returns lang.translate(hero.class)
+#             //translated.'Hero Stats'// -> returns lang.translate('Hero Stats')
+# - 'print' attribute will return a custom attribute calculated in template_processor._prepare_print_data()
+#   /!\ if a new 'print' attribute is created and not calculated in the template processor, the template won't be processed and an error will show up in the log file
+#   exemple: base object: hero + attribute: display.stars.raw_list -> returns the value of the custom attribute hero.display.stars.raw_list
+#
+
+
+attack_pattern:
+  base object: hero
+  template: |
+    {{AttackPattern|Name=//display.attack_pattern//}}
+  no_text_template: |
+    {{AttackPattern|Name=//display.attack_pattern//|notext=True}}
+  translated_template: |
+    {{AttackPattern|Name=//display.attack_pattern//|Translated=//translated.display.attack_pattern//}}
+  translated_no_text_template: |
+    {{AttackPattern|Name=//display.attack_pattern//|Translated=//translated.display.attack_pattern//|notext=True}}
+
+attack_type:
+  base object: hero
+  template: |
+    {{AttackType|Name=//display.attack_type//}}
+  no_text_template: |
+    {{AttackType|Name=//display.attack_type//|notext=True}}
+  translated_template: |
+    {{AttackType|Name=//display.attack_type//|Translated=//translated.display.attack_type//}}
+  translated_no_text_template: |
+    {{AttackType|Name=//display.attack_type//|Translated=//translated.display.attack_type//|notext=True}}
+
+base_AI:
+  base object: hero
+  template: |
+    {{BaseAI|Name=//AI//|Size=30}}
+  translated_template: |
+    {{BaseAI|Name=//AI//|Translated=//translated.AI//|Size=30}}
+
+character:
+  base object: hero
+  template: |
+    {{Character
+    | name         =//translated.name//
+    | image        =//display.image//
+    | class        =//translated.heroclass//
+    | color        =//translated.color//
+    | species      =//translated.species//
+    | stars        =//display.stars//
+    | basic_attack =//display.attack.A0.total_base_gear//<br />(//translated.'Base'// //attack.A0// + //translated.'Gear'// //display.attack.A0.gear//)
+    | basic_health =//display.health.A0.total_base_gear//<br />(//translated.'Base'// //health.A0// + //translated.'Gear'// //display.health.A0.gear//)
+    | basic_traits =//display.talents.base.raw_list//
+    | merge_traits =//display.talents.merge.raw_list//
+    | basic_gear   =//display.gear.A0.raw_list//
+    | asc_attack   =//display.attack.A1.total_base_gear//<br />(//translated.'Base'// //attack.A1// + //translated.'Gear'// //display.attack.A1.gear//)
+    | asc_health   =//display.health.A1.total_base_gear//<br />(//translated.'Base'// //health.A1// + //translated.'Gear'// //display.health.A1.gear//)
+    | asc_traits   =//display.talents.A1.raw_list//
+    | asc_gear     =//display.gear.A1.raw_list//
+    | asc2_attack  =//display.attack.A2.total_base_gear//<br />(//translated.'Base'// //attack.A2// + //translated.'Gear'// //display.attack.A2.gear//)
+    | asc2_health  =//display.health.A2.total_base_gear//<br />(//translated.'Base'// //health.A2// + //translated.'Gear'// //display.health.A2.gear//)
+    | asc2_traits  =//display.talents.A2.raw_list//
+    | asc2_gear    =//display.gear.A2.raw_list//
+    | asc3_attack  =//display.attack.A3.total_base_gear//<br />(//translated.'Base'// //attack.A3// + //translated.'Gear'// //display.attack.A3.gear//)
+    | asc3_health  =//display.health.A3.total_base_gear//<br />(//translated.'Base'// //health.A3// + //translated.'Gear'// //display.health.A3.gear//)
+    | asc3_traits  =//display.talents.A3.raw_list//
+    | asc3_gear    =//display.gear.A3.raw_list//
+    }}
+
+class:
+  base object: hero
+  template: |
+    {{Class|Name=//heroclass//|Size=30}}
+  no_text_template: |
+    {{Class|Name=//heroclass//|Size=30|notext=True}}
+  translated_template: |
+    {{Class|Name=//heroclass//|Translated=//translated.heroclass//|Size=30}}
+  translated_no_text_template: |
+    {{Class|Name=//heroclass//|Translated=//translated.heroclass//|Size=30|notext=True}}
+
+color:
+  base object: hero
+  template: |
+    {{Color|Name=//color//|Size=30}}
+  no_text_template: |
+    {{Color|Name=//color//|Size=30|notext=True}}
+  translated_template: |
+    {{Color|Name=//color//|Translated=//translated.color//|Size=30}}
+  translated_no_text_template: |
+    {{Color|Name=//color//|Translated=//translated.color//|Size=30|notext=True}}
+
+portrait:
+  base object: hero
+  template: |
+    {{Portrait|Name=//name//|link=True|Size=50}}
+  picless_template: |
+    {{Portrait|Name=//name//|link=True|Size=50|noimage=True}}
+  translated_template: |
+    {{Portrait|Name=//name//|Translated=//translated.name//|link=True|Size=50}}
+  translated_picless_template: |
+    {{Portrait|Name=//name//|Translated=//translated.name//|link=True|Size=50|noimage=True}}
+
+species:
+  base object: hero
+  template: |
+    {{Species|Name=//species//|Size=30}}
+  no_text_template: |
+    {{Species|Name=//species//|Size=30|notext=True}}
+  translated_template: |
+    {{Species|Name=//species//|Translated=//translated.species//|Size=30}}
+  translated_no_text_template: |
+    {{Species|Name=//species//|Translated=//translated.species//|Size=30|notext=True}}
+
+stars:
+  base object: hero
+  template: |
+    {{Stars|Stars=//Stars//|Size=30}}
+
+trait:
+  base object: hero
+  template: |
+    {{Trait|Name=//name//|Size=30}}
+  linked_template: |
+    {{Trait|Name=//name//|Size=30|link=True}}
+  picless_template: |
+    {{Trait|Name=//name//|Size=30|noimage=True}}
+  picless_linked_template: |
+    {{Trait|Name=//name//|Size=30|noimage=True|link=True}}
+  no_text_template: |
+    {{Trait|Name=//name//|Size=30|notext=True}}
+  forcepic_template: |
+    {{Trait|Name=//name//|Size=30|ForcePic=//image.forcepic//}}
+  translated_template: |
+    {{Trait|Name=//name//|Size=30|Translated=//translated.name//}}
+  translated_linked_template: |
+    {{Trait|Name=//name//|Size=30|Translated=//translated.name//|link=True}}
+  translated_picless_template: |
+    {{Trait|Name=//name//|Size=30|Translated=//translated.name//|noimage=True}}
+  translated_picless_linked_template: |
+    {{Trait|Name=//name//|Size=30|Translated=//translated.name//|noimage=True|link=True}}
+  translated_no_text_template: |
+    {{Trait|Name=//name//|Size=30|Translated=//translated.name//|notext=True}}
+  translated_forcepic_template: |
+    {{Trait|Name=//name//|Size=30|Translated=//translated.name//|ForcePic=//image.forcepic//}}
