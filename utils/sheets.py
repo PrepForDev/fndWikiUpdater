@@ -68,6 +68,5 @@ class Sheets:
     if connect:
       playsome_data = self._read_sheet_data(self.config.PLAYSOME_KEY)
       if playsome_data:
-        header_row = playsome_data.pop(0)
         return playsome_data
     return False
