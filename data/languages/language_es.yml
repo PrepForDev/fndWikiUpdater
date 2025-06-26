@@ -1,0 +1,884 @@
+Name: Spanish
+Code: es
+Translations:
+  AI:
+    Charge: Cargar
+    Evade: Evadir
+    Supporter: Apoyo
+  Classes:
+    Archer: Arquero
+    Assassin: Asesino
+    Barbarian: Bárbaro
+    Bard: Bardo
+    Druid: Druida
+    Elementalist: Elementalista
+    Guardian: Guardián
+    Healer: Sanador
+    Hunter: Cazador
+    Javelineer: Lanzador de jabalina
+    Knight: Caballero
+    Mage: Mago
+    Monk: Monje
+    Paladin: Paladín
+    Pirate: Pirata
+    Princess: Princesa
+    Ranger: Guardabosques
+    Rogue: Pícaro
+    Warlock: Hechicero
+    Warrior: Guerrero
+    Witch: Bruja
+  Colors:
+    Blue: Azul
+    Dark: Oscuro
+    Green: Verde
+    Light: Claro
+    Red: Rojo
+  Events:
+    All Hallows Eve: All Hallows Eve
+    Obsidian Carnival: Obsidian Carnival
+    Dragon Egg Hunt: Dragon Egg Hunt
+    Festival of Friendship: Festival of Friendship
+    Alpha Genesis: Alpha Genesis
+    Gold Summon: Gold Summon
+    Harvest Festival: Harvest Festival
+    Lunar New Year: Lunar New Year
+    Carnival of Light: Carnival of Light
+    Raid Summon: Raid Summon
+    Soul Summon: Soul Summon
+    Spring Break: Spring Break
+    Summer Solstice: Summer Solstice
+    Trial by Fire: Trial by Fire
+    Wintertide: Wintertide
+  Gear:
+    Amulet: Amuleto
+    Brilliant Amulet of Earth: Amuleto brillante de tierra
+    Brilliant Amulet of Fire: Amuleto brillante de fuego
+    Brilliant Amulet of Moon: Amuleto brillante de luna
+    Brilliant Amulet of Sea: Amuleto brillante de mar
+    Brilliant Amulet of Sun: Amuleto brillante de sol
+    Coruscating Amulet of Earth: Amuleto resplandeciente de tierra
+    Coruscating Amulet of Fire: Amuleto resplandeciente de fuego
+    Coruscating Amulet of Moon: Amuleto resplandeciente de luna
+    Coruscating Amulet of Sea: Amuleto resplandeciente de mar
+    Coruscating Amulet of Sun: Amuleto resplandeciente de sol
+    Divine Arrows: Flechas divinas
+    Divine Axe: Hacha divina
+    Divine Blade: Espada divina
+    Divine Bludgeon: Maza divina
+    Divine Bolts: Perno divino
+    Divine Bow: Arco divino
+    Divine Cap: Gorro divino
+    Divine Circlet: Círculo divino
+    Divine Crossbow: Ballesta divina
+    Divine Crystal: Cristal divino
+    Divine Dagger: Daga divina
+    Divine Gauntlets: Guanteletes divinos
+    Divine Grimoire: Grimorio divino
+    Divine Hat: Sombrero divino
+    Divine Helmet: Casco divino
+    Divine Herb: Hierba divina
+    Divine Hide Armor: Armadura de piel divina
+    Divine Ingredient: Ingrediente divino
+    Divine Instrument: Instrumento divino
+    Divine Javelin: Jabalina divina
+    Divine Knuckles: Nudillos divinos
+    Divine Leather Armor: Armadura de cuero divina
+    Divine Orb: Orbe divino
+    Divine Phylactery: Filacteria divina
+    Divine Pistol: Pistola divina
+    Divine Plate Mail: Cota de malla divina
+    Divine Quiver: Carcaj divino
+    Divine Ring of Earth: Anillo divino de tierra
+    Divine Ring of Fire: Anillo divino de fuego
+    Divine Ring of Moon: Anillo divino de luna
+    Divine Ring of Sea: Anillo divino de mar
+    Divine Ring of Sun: Anillo divino de sol
+    Divine Robe: Túnica divina
+    Divine Scepter: Cetro divino
+    Divine Shield: Escudo divino
+    Divine Staff: Bastón divino
+    Divine Sword: Espada divina
+    Divine Tabard: Tabardo divino
+    Divine Tome: Tomo divino
+    Divine Tower Shield: Escudo torre divino
+    Divine Vial: Frasco divino
+    Divine Wand: Varita divina
+    Epic Arrows: Flechas épicas
+    Epic Axe: Hacha épica
+    Epic Blade: Espada épica
+    Epic Bludgeon: Maza épica
+    Epic Bolts: Perno épico
+    Epic Bow: Arco épico
+    Epic Cap: Gorro épico
+    Epic Circlet: Círculo épico
+    Epic Crossbow: Ballesta épica
+    Epic Crystal: Cristal épico
+    Epic Dagger: Daga épica
+    Epic Gauntlets: Guanteletes épicos
+    Epic Grimoire: Grimorio épico
+    Epic Hat: Sombrero épico
+    Epic Helmet: Casco épico
+    Epic Herb: Hierba épica
+    Epic Hide Armor: Armadura de piel épica
+    Epic Ingredient: Ingrediente épico
+    Epic Instrument: Instrumento épico
+    Epic Javelin: Jabalina épica
+    Epic Knuckles: Nudillos épicos
+    Epic Leather Armor: Armadura de cuero épica
+    Epic Orb: Orbe épico
+    Epic Phylactery: Filacteria épica
+    Epic Pistol: Pistola épica
+    Epic Plate Mail: Cota de malla épica
+    Epic Quiver: Carcaj épico
+    Epic Ring of Earth: Anillo épico de tierra
+    Epic Ring of Fire: Anillo épico de fuego
+    Epic Ring of Moon: Anillo épico de luna
+    Epic Ring of Sea: Anillo épico de mar
+    Epic Ring of Sun: Anillo épico de sol
+    Epic Robe: Túnica épica
+    Epic Scepter: Cetro épico
+    Epic Shield: Escudo épico
+    Epic Staff: Bastón épico
+    Epic Sword: Espada épica
+    Epic Tabard: Tabardo épico
+    Epic Tome: Tomo épico
+    Epic Tower Shield: Escudo torre épico
+    Epic Vial: Frasco épico
+    Epic Wand: Varita épica
+    Exalted Arrows: Flechas exaltadas
+    Exalted Axe: Hacha exaltada
+    Exalted Blade: Espada exaltada
+    Exalted Bludgeon: Maza exaltada
+    Exalted Bolts: Perno exaltado
+    Exalted Bow: Arco exaltado
+    Exalted Cap: Gorro exaltado
+    Exalted Circlet: Círculo exaltado
+    Exalted Crossbow: Ballesta exaltada
+    Exalted Crystal: Cristal exaltado
+    Exalted Dagger: Daga exaltada
+    Exalted Gauntlets: Guanteletes exaltados
+    Exalted Grimoire: Grimorio exaltado
+    Exalted Hat: Sombrero exaltado
+    Exalted Helmet: Casco exaltado
+    Exalted Herb: Hierba exaltada
+    Exalted Hide Armor: Armadura de piel exaltada
+    Exalted Ingredient: Ingrediente exaltado
+    Exalted Instrument: Instrumento exaltado
+    Exalted Javelin: Jabalina exaltada
+    Exalted Knuckles: Nudillos exaltados
+    Exalted Leather Armor: Armadura de cuero exaltada
+    Exalted Orb: Orbe exaltado
+    Exalted Phylactery: Filacteria exaltada
+    Exalted Pistol: Pistola exaltada
+    Exalted Plate Mail: Cota de malla exaltada
+    Exalted Quiver: Carcaj exaltado
+    Exalted Ring of Earth: Anillo exaltado de tierra
+    Exalted Ring of Fire: Anillo exaltado de fuego
+    Exalted Ring of Moon: Anillo exaltado de luna
+    Exalted Ring of Sea: Anillo exaltado de mar
+    Exalted Ring of Sun: Anillo exaltado de sol
+    Exalted Robe: Túnica exaltada
+    Exalted Scepter: Cetro exaltado
+    Exalted Shield: Escudo exaltado
+    Exalted Staff: Bastón exaltado
+    Exalted Sword: Espada exaltada
+    Exalted Tabard: Tabardo exaltado
+    Exalted Tome: Tomo exaltado
+    Exalted Tower Shield: Escudo torre exaltado
+    Exalted Vial: Frasco exaltado
+    Exalted Wand: Varita exaltada
+    Incandescent Amulet of Earth: Amuleto incandescente de tierra
+    Incandescent Amulet of Fire: Amuleto incandescente de fuego
+    Incandescent Amulet of Moon: Amuleto incandescente de luna
+    Incandescent Amulet of Sea: Amuleto incandescente de mar
+    Incandescent Amulet of Sun: Amuleto incandescente de sol
+    Legendary Arrows: Flechas legendarias
+    Legendary Axe: Hacha legendaria
+    Legendary Blade: Espada legendaria
+    Legendary Bludgeon: Maza legendaria
+    Legendary Bolts: Perno legendario
+    Legendary Bow: Arco legendario
+    Legendary Cap: Gorro legendario
+    Legendary Circlet: Círculo legendario
+    Legendary Crossbow: Ballesta legendaria
+    Legendary Crystal: Cristal legendario
+    Legendary Dagger: Daga legendaria
+    Legendary Gauntlets: Guanteletes legendarios
+    Legendary Grimoire: Grimorio legendario
+    Legendary Hat: Sombrero legendario
+    Legendary Helmet: Casco legendario
+    Legendary Herb: Hierba legendaria
+    Legendary Hide Armor: Armadura de piel legendaria
+    Legendary Ingredient: Ingrediente legendario
+    Legendary Instrument: Instrumento legendario
+    Legendary Javelin: Jabalina legendaria
+    Legendary Knuckles: Nudillos legendarios
+    Legendary Leather Armor: Armadura de cuero legendaria
+    Legendary Orb: Orbe legendario
+    Legendary Phylactery: Filacteria legendaria
+    Legendary Pistol: Pistola legendaria
+    Legendary Plate Mail: Cota de malla legendaria
+    Legendary Quiver: Carcaj legendario
+    Legendary Ring of Earth: Anillo legendario de tierra
+    Legendary Ring of Fire: Anillo legendario de fuego
+    Legendary Ring of Moon: Anillo legendario de luna
+    Legendary Ring of Sea: Anillo legendario de mar
+    Legendary Ring of Sun: Anillo legendario de sol
+    Legendary Robe: Túnica legendaria
+    Legendary Scepter: Cetro legendario
+    Legendary Shield: Escudo legendario
+    Legendary Staff: Bastón legendario
+    Legendary Sword: Espada legendaria
+    Legendary Tabard: Tabardo legendario
+    Legendary Tome: Tomo legendario
+    Legendary Tower Shield: Escudo torre legendario
+    Legendary Vial: Frasco legendario
+    Legendary Wand: Varita legendaria
+    Magic Arrows: Flechas Mágicas
+    Magic Axe: Hacha Mágica
+    Magic Blade: Hoja Mágica
+    Magic Bludgeon: Garrote Mágico
+    Magic Bolts: Saetas Mágicas
+    Magic Bow: Arco Mágico
+    Magic Cap: Gorra Mágica
+    Magic Circlet: Aro Mágico
+    Magic Crossbow: Ballesta Mágica
+    Magic Crystal: Cristal Mágico
+    Magic Dagger: Daga Mágica
+    Magic Gauntlets: Guanteletes Mágicos
+    Magic Grimoire: Grimorio Mágico
+    Magic Hat: Sombrero Mágico
+    Magic Helmet: Casco Mágico
+    Magic Herb: Hierba Mágica
+    Magic Hide Armor: Armadura de Cuero Mágica
+    Magic Ingredient: Ingrediente Mágico
+    Magic Instrument: Instrumento Mágico
+    Magic Javelin: Jabalina Mágica
+    Magic Knuckles: Nudillos Mágicos
+    Magic Leather Armor: Armadura de Cuero Mágica
+    Magic Orb: Orbe Mágico
+    Magic Phylactery: Filacteria Mágica
+    Magic Pistol: Pistola Mágica
+    Magic Plate Mail: Armadura de Placas Mágica
+    Magic Quiver: Carcaj Mágico
+    Magic Ring of Earth: Anillo Mágico de Tierra
+    Magic Ring of Fire: Anillo Mágico de Fuego
+    Magic Ring of Moon: Anillo Mágico de la Luna
+    Magic Ring of Sea: Anillo Mágico del Mar
+    Magic Ring of Sun: Anillo Mágico del Sol
+    Magic Robe: Túnica Mágica
+    Magic Scepter: Cetro Mágico
+    Magic Shield: Escudo Mágico
+    Magic Staff: Bastón Mágico
+    Magic Sword: Espada Mágica
+    Magic Tabard: Tabardo Mágico
+    Magic Tome: Tomo Mágico
+    Magic Tower Shield: Escudo Torre Mágico
+    Magic Vial: Vial Mágico
+    Magic Wand: Varita Mágica
+    Mythic Arrows: Flechas Míticas
+    Mythic Axe: Hacha Mítica
+    Mythic Blade: Hoja Mítica
+    Mythic Bludgeon: Garrote Mítico
+    Mythic Bolts: Saetas Míticas
+    Mythic Bow: Arco Mítico
+    Mythic Cap: Gorra Mítica
+    Mythic Circlet: Aro Mítico
+    Mythic Crossbow: Ballesta Mítica
+    Mythic Crystal: Cristal Mítico
+    Mythic Dagger: Daga Mítica
+    Mythic Gauntlets: Guanteletes Míticos
+    Mythic Grimoire: Grimorio Mítico
+    Mythic Hat: Sombrero Mítico
+    Mythic Helmet: Casco Mítico
+    Mythic Herb: Hierba Mítica
+    Mythic Hide Armor: Armadura de Cuero Mítica
+    Mythic Ingredient: Ingrediente Mítico
+    Mythic Instrument: Instrumento Mítico
+    Mythic Javelin: Jabalina Mítica
+    Mythic Knuckles: Nudillos Míticos
+    Mythic Leather Armor: Armadura de Cuero Mítica
+    Mythic Orb: Orbe Mítico
+    Mythic Phylactery: Filacteria Mítica
+    Mythic Pistol: Pistola Mítica
+    Mythic Plate Mail: Armadura de Placas Mítica
+    Mythic Quiver: Carcaj Mítico
+    Mythic Ring of Earth: Anillo Mítico de Tierra
+    Mythic Ring of Fire: Anillo Mítico de Fuego
+    Mythic Ring of Moon: Anillo Mítico de la Luna
+    Mythic Ring of Sea: Anillo Mítico del Mar
+    Mythic Ring of Sun: Anillo Mítico del Sol
+    Mythic Robe: Túnica Mítica
+    Mythic Scepter: Cetro Mítico
+    Mythic Shield: Escudo Mítico
+    Mythic Staff: Bastón Mítico
+    Mythic Sword: Espada Mítica
+    Mythic Tabard: Tabardo Mítico
+    Mythic Tome: Tomo Mítico
+    Mythic Tower Shield: Escudo Torre Mítico
+    Mythic Vial: Vial Mítico
+    Mythic Wand: Varita Mítica
+    Radiant Amulet of Earth: Amuleto radiante de tierra
+    Radiant Amulet of Fire: Amuleto radiante de fuego
+    Radiant Amulet of Moon: Amuleto radiante de luna
+    Radiant Amulet of Sea: Amuleto radiante de mar
+    Radiant Amulet of Sun: Amuleto radiante de sol
+  General:
+    1st: 1er
+    1st Ascension: 1er Ascensión
+    2nd: 2do
+    2nd Ascension: 2do Ascensión
+    3rd: 3er
+    3rd Ascension: 3er Ascensión
+    A1 Attack: Ataque A1
+    A1 Gear: Equipo A1
+    A1 Health: Salud A1
+    A1 Talent: Talento A1
+    A2 Attack: Ataque A2
+    A2 Gear: Equipo A2
+    A2 Health: Salud A2
+    A2 Talent: Talento A2
+    A3 Attack: Ataque A3
+    A3 Gear: Equipo A3
+    A3 Health: Salud A3
+    A3 Talent: Talento A3
+    AI: IA
+    AI Speed: Velocidad de IA
+    Ascend: Ascender
+    Ascension: Ascensión
+    Ascension Talents: Talentos de Ascensión
+    Attack: Ataque
+    Barracks: Cuartel
+    Base: Base
+    Base AI: IA Base
+    Basic Attack: Ataque Básico
+    Basic Health: Salud Básica
+    Basic Talents: Talentos Básica
+    Basics: Conceptos Básicos
+    Cap: Límite
+    Category: Categoría
+    Character: Personaje
+    Class: Clase
+    Color: Color
+    Cross: Cruz
+    Gear: Equipo
+    Health: Salud
+    Hero: Héroe
+    Hero 3A: Héroe A3
+    Heroes: Héroes
+    Hero Description: Descripción del Héroe
+    Hero Gear: Equipo de Héroe
+    Hero Stats: Estadísticas de Héroe
+    Hero Talents: Talentos de Héroe
+    Hero Talents PicLess: Talentos de Héroe SinFoto
+    Hero Talent Compare: Comparación de Talentos de Héroe
+    Leader: Leader
+    Level: Nivel
+    Magic: Magia
+    Melee: Cuerpo a Cuerpo
+    Merge: Fusionar
+    Merge Talents: Fusionar Talentos
+    Ranged: A Distancia
+    Species: Especies
+    Star: Estrella
+    Stars: Estrellas
+    Stat Caps: Límite de Estadísticas
+    Tables: Mesas
+    Talent: Talento
+    Talents: Talentos
+    Template: Plantilla
+  Heroes:
+    Adana: Adana
+    Agatha: Agatha
+    Agil: Agil
+    Ahzura: Ahzura
+    Aigror: Aigror
+    Akasha: Akasha
+    Alaric: Alaric
+    Aldebaran: Aldebaran
+    Alyssandra: Alyssandra
+    Alyssandy: Alyssandy
+    Amberwing: Amberwing
+    Amelia: Amelia
+    Angus: Angus
+    Apollus: Apollus
+    Aquatic Agil: Agil acuático
+    Arafin: Arafin
+    Ariane: Ariane
+    Arilda: Arilda
+    Arkhan: Arkhan
+    Arryn: Arryn
+    Ashtalon: Ashtalon
+    Augar: Augar
+    Aurora: Aurora
+    Aveline: Aveline
+    Azgog: Azgog
+    Azurefang: Azurefang
+    Baldric: Baldric
+    Bari: Bari
+    Bastian: Bastian
+    Beatrix: Beatrix
+    Belladonna: Belladonna
+    Belle: Belle
+    Beloved Brianna: Brianna amada
+    Blackfire: Blackfire
+    Blaise: Blaise
+    Brakka: Brakka
+    Bramble: Bramble
+    Bramble Rose: Bramble rosa
+    Branchard: Branchard
+    Brandon: Brandon
+    Brassblade: Brassblade
+    Brianna: Brianna
+    Brightbrook: Brightbrook
+    Broxx: Broxx
+    Brula: Brula
+    Caldera: Caldera
+    Caledor: Caledor
+    Callista: Callista
+    Camron: Camron
+    Caraway: Caraway
+    Cassandra: Cassandra
+    Celeste: Celeste
+    Chivalrous Percival: Percival gallardo
+    Ciadrine: Ciadrine
+    Cindertongue: Cindertongue
+    Cinderwhisk: Cinderwhisk
+    Coalbone: Coalbone
+    Coppermaw: Coppermaw
+    Coralgrin: Coralgrin
+    Corinne: Corinne
+    Cragg: Cragg
+    Crystal: Crystal
+    Daedra: Daedra
+    Dahlia: Dahlia
+    Daryl: Daryl
+    Dashing Lysander: Lysander apuesto
+    Dawnshimmer: Dawnshimmer
+    Dianthe: Dianthe
+    Divine Einharl: Einharl divino
+    Dolorea: Dolorea
+    Dorian: Dorian
+    Dracyian: Dracyian
+    Draigh: Draigh
+    Dralgion: Dralgion
+    Dravok: Dravok
+    Drift: Drift
+    Durzol: Durzol
+    Dusk: Dusk
+    Earthblood: Earthblood
+    Ebon: Ebon
+    Einharl: Einharl
+    Elesha: Elesha
+    Elethas: Elethas
+    Elgar: Elgar
+    Ellarion: Ellarion
+    Elliot: Elliot
+    Elmenora: Elmenora
+    Elora: Elora
+    Emberheart: Emberheart
+    Emeraldcrown: Emeraldcrown
+    Emeray: Emeray
+    Emory: Emory
+    Farris: Farris
+    Fawke: Fawke
+    Fayra: Fayra
+    Fenreap: Fenreap
+    Fenris: Fenris
+    Fimbryn: Fimbryn
+    Firesoul: Firesoul
+    Flamescale: Flamescale
+    Flare: Flare
+    Flint: Flint
+    Floralgrin: Floralgrin
+    Frida: Frida
+    Frostgar: Frostgar
+    Fulgrin: Fulgrin
+    Furia: Furia
+    Genert: Genert
+    Geraint: Geraint
+    Gharn: Gharn
+    Ghastly Cragg: Ghastly Cragg
+    Giana: Giana
+    Glimmer: Glimmer
+    Gloom: Gloom
+    Gobar: Gobar
+    Golarg: Golarg
+    Goldclaw: Goldclaw
+    Golden Lyra: Lyra dorada
+    Gorenag: Gorenag
+    Gork: Gork
+    Gragnag: Gragnag
+    Greymoon: Greymoon
+    Grim Griselda: Griselda sombría
+    Grimfang: Grimfang
+    Grimholt: Grimholt
+    Grimmor: Grimmor
+    Grincholt: Grincholt
+    Griselda: Griselda
+    Grognard: Grognard
+    Gronn: Gronn
+    Grunhild: Grunhild
+    Heartwig: Heartwig
+    Hedwig: Hedwig
+    Hemlock: Hemlock
+    Hogard: Hogard
+    Idril: Idril
+    Illyria: Illyria
+    Iridian: Iridian
+    Iris: Iris
+    Ixora: Ixora
+    Jade: Jade
+    Jenya: Jenya
+    Jules: Jules
+    Juniper: Juniper
+    Kael: Kael
+    Kazz: Kazz
+    Kelp: Kelp
+    Khadush: Khadush
+    Kharasta: Kharasta
+    Kharza: Kharza
+    Korgan: Korgan
+    Koshak: Koshak
+    Kral: Kral
+    Kvash: Kvash
+    Kyara: Kyara
+    Kyron: Kyron
+    Lagoon: Lagoon
+    Lia: Lia
+    Lightheart: Lightheart
+    Lionel: Lionel
+    Liora: Liora
+    Lotus: Lotus
+    Lucent Daedra: Daedra luminosa
+    Lucia: Lucia
+    Lumi: Lumi
+    Luna: Luna
+    Lyra: Lyra
+    Lysander: Lysander
+    Lythar: Lythar
+    Magda: Magda
+    Malzareth: Malzareth
+    Maple: Maple
+    Marath: Marath
+    Maribel: Maribel
+    Meraldon: Meraldon
+    Moonshade: Moonshade
+    Moonshine: Moonshine
+    Moreia: Moreia
+    Morfyd: Morfyd
+    Mosstail: Mosstail
+    Murtag: Murtag
+    Nargol: Nargol
+    Nightmeria: Nightmeria
+    Nightsong: Nightsong
+    Nimbus: Nimbus
+    November: November
+    Nymeria: Nymeria
+    Oakscale: Escamaroble
+    Oasis: Oasis
+    Oberyn: Oberyn
+    Oleander: Oleander
+    Orik: Orik
+    Osric: Osric
+    Ozgar: Ozgar
+    Penelope: Penelope
+    Percival: Percival
+    Petalstep: Dracopétalo
+    Primrose: Primrose
+    Pyrrion: Pyrrion
+    Radek: Radek
+    Radomyr: Radomyr
+    Radomyrrh: Radomyrrh
+    Ragnar: Ragnar
+    Rakuhake: Rakuhake
+    Randolf: Randolf
+    Rathalok: Rathalok
+    Ravenna: Ravenna
+    Raze: Raze
+    Red-Eye: Red-Eye
+    Reveling Randolf: Randolf festivo
+    Richard: Richard
+    Ripple: Ripple
+    River: River
+    Robin: Robin
+    Roderick: Roderick
+    Ruby: Ruby
+    Runeglow: Runeglow
+    Rurik: Rurik
+    Sandor: Sandor
+    Sanguina: Sanguina
+    Sapphirecrown: Sapphirecrown
+    Sauriel: Sauriel
+    Scarlet: Scarlet
+    Scorch: Scorch
+    Scylla: Scylla
+    Serelune: Serelune
+    Serene: Serene
+    Shadowstep: Shadowstep
+    Shadra: Shadra
+    Shadragon: Shadragon
+    Shani: Shani
+    Sharpscale: Sharpscale
+    Shatterstorm: Shatterstorm
+    Sigyn: Sigyn
+    Silverstring: Silverstring
+    Skylar: Skylar
+    Skytail: Skytail
+    Sleetsong: Sleetsong
+    Sol: Sol
+    Sonya: Sonya
+    Sparklight: Sparklight
+    Sparrow: Sparrow
+    Sprig: Sprig
+    Spring Radek: Radek primaveral
+    Squall: Squall
+    Stalker: Stalker
+    Starmist: Starmist
+    Steelgrip: Steelgrip
+    Stormbreeze: Stormbreeze
+    Strixx: Strixx
+    Summershine: Summershine
+    Sunstrike: Sunstrike
+    Swiftcloud: Swiftcloud
+    Sylvain: Sylvain
+    Tess: Tess
+    Thargor: Thargor
+    Thistle: Thistle
+    Thronak: Thronak
+    Thunderclaw: Thunderclaw
+    Tiordan: Tiordan
+    Torkan: Torkan
+    Trillian: Trillian
+    Trisha: Trisha
+    Tristan: Tristan
+    Tropical Ariane: Ariane tropical
+    Tsunami: Tsunami
+    Two-Talon: Two-Talon
+    Ugaz: Ugaz
+    Urgax: Urgax
+    Vaelith: Vaelith
+    Valenor: Valenor
+    Valeria: Valeria
+    Vengeful Shani: Shani vengativa
+    Vera: Vera
+    Veridian: Veridian
+    Violet: Violet
+    Vorlos: Vorlos
+    Wavescale: Wavescale
+    Wild Caledor: Caledor salvaje
+    Wildfire: Wildfire
+    Wildheart: Wildheart
+    Willow: Willow
+    Windleaf: Windleaf
+    Wrathborne: Wrathborne
+    Wulfgar: Wulfgar
+    Xaakt: Xaakt
+    Xiv: Xiv
+    Yazgak: Yazgak
+    Yun: Yun
+    Zana: Zana
+    Zenith: Zenith
+    Zouen: Zouen
+  Species:
+    Beastfolk: Bestiales
+    Dragonborn: Nacidos de Dragón
+    Dwarf: Enano
+    Elf: Elfo
+    Human: Humano
+    Orc: Orco
+  Talents:
+    Acid Resistance: Resistencia al Ácido
+    Aquatic Ambush: Aquatic Ambush
+    Arcane Shield: Escudo Arcano
+    Arcane Vibrations: Vibraciones Arcanas
+    Armor of Blood: Armadura de Sangre
+    Armor of Earth: Armadura de Tierra
+    Armor of Fire: Armadura de Fuego
+    Armor of Moon: Armadura de la Luna
+    Armor of Sea: Armadura del Mar
+    Armor of Sun: Armadura del Sol
+    Aura of Cold: Aura de Frío
+    Aura of Fire: Aura de Fuego
+    Aura Of Immobilize: Aura of Immobilize
+    Aura of Immobilize: Aura of Immobilize
+    Aura of Poison: Aura de veneno
+    Backstab: Puñalada
+    Bad Medicine: Mala Medicina
+    Ballistic: Balístico
+    Bardic Song: Canción de Bardo
+    Barrier: Barrera
+    Berserk: Frenesí
+    Blade On A Chain: Cuchilla en una cadena
+    Bleed Resistance: Resistencia a Hemorragia
+    Blitz: Blitz
+    Bloodlust: Sed de Sangre
+    Brutal Attack: Ataque Brutal
+    Brutal Backstab: Puñalada Brutal
+    Cardinal Aim: Apuntar Cardinal
+    Cardinal Heal: Curación Cardinal
+    Cardinal Parry: Parada Cardinal
+    Chord of Blitz: Acorde de Blitz
+    Chord of Cardinal Aim: Acorde de Apuntar Cardinal
+    Chord of Critical Attack: Acorde de Ataque Crítico
+    Chord of Diagonal Aim: Acorde de Apuntar Diagonal
+    Chord of Exploit Weakness: Acorde de Explotar Debilidad
+    Chord of Point Blank: Acorde de Punto en Blanco
+    Chromatic Shield: Escudo Cromático
+    Chromatic Song: Canción Cromática
+    Cold Resistance: Resistencia al Frío
+    Critical Attack: Ataque Crítico
+    'Critical Attack: Ignite': 'Ataque Crítico: Encender'
+    'Critical Attack: Freeze': 'Ataque Crítico: Congelación'
+    'Critical Attack: Rupture': 'Ataque Crítico: Ruptura'
+    Critical Distraction: Critical Distraction
+    Critical Heal: Curación Crítica
+    Crushing Blow: Golpe Aplastante
+    Curse Resistance: Resistencia a Maldiciones
+    Cutlass & Flintlock: Alfanje y Pedernal
+    Dark Bargain: Dark Bargain
+    Dauntless: Dauntless
+    Dazzling: Deslumbrante
+    Deadly Syphon: Sifón Mortal
+    Death Blow: Golpe mortal
+    Demoralizing Strike: Golpe Desmoralizante
+    Diagonal Aim: Apuntar Diagonal
+    Diagonal Heal: Curación Diagonal
+    Diagonal Parry: Parada Diagonal
+    Disorienting Strike: Golpe Desorientador
+    Dodge: Esquivar
+    Double Strike: Ataque Doble
+    Drainwhirl: Drainwhirl
+    Exploit Weakness: Explotar Debilidad
+    Extra Time: Tiempo Extra
+    Favored Odds: Todo a favor
+    Finishing Blow: Golpe Final
+    Fire Resistance: Resistencia al Fuego
+    Fire Walker: Caminante del Fuego
+    Flank: Flanquear
+    Fleet-Footed: Pie Ligero
+    Focus: Enfoque
+    Foresight: Previsión
+    Fortify: Fortificar
+    Frostwhirl: Frostwhirl
+    Grappling Hook: Gancho de Agarre
+    Hamstring: Desgarrar Tendones
+    Healing Aura: Aura Curativa
+    Healing Focus: Enfoque Curativo
+    Healing Ray: Rayo Curativo
+    Healing Touch: Toque Curativo
+    Healing Wave: Onda sanadora
+    High Ground: Terreno Elevado
+    Ignition Point: Ignition Point
+    Immobilizing Strike: Golpe Inmovilizador
+    Immovable: Inamovible
+    Immune to Dazzled: Inmune a Deslumbramiento
+    Immune to Demoralization: Inmune a Desmoralización
+    Immune to Disorientation: Inmune a Desorientación
+    Immune to Silence: Inmune a Silencio
+    Immune to Stun: Inmune a Aturdimiento
+    Immune to Withering: Inmune a Marchitamiento
+    Impunity: Impunidad
+    'Initiative: Double Strike': 'Initiative: Double Strike'
+    'Initiative: Heroic Blow': 'Initiative: Heroic Blow'
+    Inner Peace: Paz Interior
+    Ironskin: Piel de Hierro
+    Lick and Drag: Lick and Drag
+    Life Drain: Drenaje de Vida
+    Life Drain Immunity: Inmunidad a Drenaje de Vida
+    Life Steal: Robo de Vida
+    Life-Draining Backstab: Puñalada Drenavida
+    Lingering Heal: Curación Persistente
+    Magic Parry: Parada Mágica
+    Majesty: Majestad
+    Meditate: Meditar
+    Melee Parry: Parada de Cuerpo a Cuerpo
+    Mighty Blow: Golpe Poderoso
+    Natural Harmony: Armonía Natural
+    Oath of Vengeance: Juramento de venganza
+    Pacifist: Pacifista
+    Pact Against Beasts: Pacto Contra Bestias
+    Pact Against Constructs: Pacto Contra Construcciones
+    Pact Against Elementals: Pacto Contra Elementales
+    Pact Against Insects: Pacto Contra Insectos
+    Pact Against Sylvans: Pacto Contra Silvanos
+    Pact Against Undead: Pacto Contra No-Muertos
+    Pact of Earth: Pacto de Tierra
+    Pact of Fire: Pacto de Fuego
+    Pact of Heroism: Pacto de Heroísmo
+    Pact of Moon: Pacto de la Luna
+    Pact of Sea: Pacto del Mar
+    Pact of Sun: Pacto del Sol
+    Pistoleer: Pistolero
+    Point Blank: Punto en Blanco
+    Poison Resistance: Resistencia al Veneno
+    Power Chord: Acorde de Poder
+    Predator: Depredador
+    Prepare: Preparar
+    Prepared Freeze: Congelación Preparada
+    Prepared Ignite: Encendido Preparado
+    Prepared Rupture: Ruptura Preparada
+    Protector: Protector
+    Push: Empujar
+    Raider: Saqueador
+    Ranged Parry: Parada a Distancia
+    Reactive Armor: Armadura Reactiva
+    Refresh: Refrescar
+    Regrowth: Rebrota
+    Rend: Desgarrar
+    Resilient: Resiliente
+    Resolute: Resolute
+    Resolve: Determinación
+    Resurgence: Resurgimiento
+    Revitalize: Revitalizar
+    Rune of Earth: Runa de Tierra
+    Rune of Fire: Runa de Fuego
+    Rune of Moon: Runa de la Luna
+    Rune of Sea: Runa del Mar
+    Rune of Sun: Runa del Sol
+    Sentinel: Centinela
+    Shroud: Shroud
+    Silencing Strike: Golpe Silenciador
+    Skirmisher: Escaramuzador
+    Slay Beast: Matar Bestia
+    Slay Celestial: Matar Celestial
+    Slay Construct: Matar Construcción
+    Slay Demon: Matar Demonio
+    Slay Dragon: Matar Dragón
+    Slay Elemental: Matar Elemental
+    Slay Insect: Matar Insecto
+    Slay Lizard: Matar Lagarto
+    Slay Monstrosity: Matar Monstruosidad
+    Slay Ooze: Matar Ooze
+    Slay Sylvan: Matar Silvano
+    Slay Troll: Matar Troll
+    Slay Undead: Matar No-Muerto
+    Sniper: Francotirador
+    Song of Acid: Canción de Ácido
+    Song of Blood: Canción de Sangre
+    Song of Cold: Canción de Frío
+    Song of Fire: Canción de Fuego
+    Song of Poison: Canción de Veneno
+    Soul Blade: Hoja de Alma
+    Split Second: Fracción de Segundo
+    Steady Heal: Curación Constante
+    Strongpoint: Plaza fuerte
+    Stunning Strike: Golpe Aturdidor
+    Survivor: Superviviente
+    Swashbuckler: Espadachín
+    Syphon Life: Sifón de Vida
+    Talents: Talentos
+    Taunt: Provocar
+    Testudo: Testudo
+    Toxic Exposure: Toxic Exposure
+    Triage: Triaje
+    True Shot: Disparo Certero
+    Tumble: Voltereta
+    Unstoppable Force: Fuerza Imparable
+    Vampirism: Vampirismo
+    Venom: Veneno
+    Water Walker: Caminante del Agua
+    Watery Grave: Tumba Acuática
+    Weakening Backstab: Puñalada Debilitante
+    Whirlwind: Torbellino
+    Zeal of Life: Afán de vida
