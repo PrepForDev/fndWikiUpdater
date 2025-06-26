@@ -17,6 +17,6 @@ class Config:
     self.GOOGLE_CREDS = os.getenv('GOOGLE_API_CREDS_JSON_FILE')
     self.PLAYSOME_KEY = os.getenv('PLAYSOME_KEY')
 
-    self.WIKI_API = os.getenv('WIKI_API_URL')
+    self.WIKI_URL = os.getenv('WIKI_URL')
     self.WIKI_USERNAME = os.getenv('WIKI_USERNAME')
     self.WIKI_PWD = os.getenv('WIKI_PWD')
