@@ -8,6 +8,7 @@ from glob import glob
 from utils.config import Config
 from utils.logger import Logger
 from utils.mongodb import Mongo
+from utils.backup import DatabaseBackupManager
 from utils.sheets import Sheets
 from utils.wiki import Wiki
 from utils.yml import Yml
@@ -64,11 +65,13 @@ def init_mongodb_connection(ctx: AppContext, args: ArgsClass) -> bool:
   if args.no_save:
     ctx.logger.info('MongoDB connection disabled by --no_save flag')
     return True
-  mongodb = Mongo(config=ctx.config, logger=ctx.logger)
-  connection_to_mongodb = mongodb.connect()
+  ctx.mongodb = Mongo(config=ctx.config, logger=ctx.logger)
+  connection_to_mongodb = ctx.mongodb.connect()
   if not connection_to_mongodb:
     ctx.logger.error('Failed to connect to MongoDB')
     return False
+  backup_manager = DatabaseBackupManager(config=ctx.config, mongodb=ctx.mongodb, logger=ctx.logger)
+  ctx.mongodb.set_backup_manager(backup_manager=backup_manager)
   return True
 
 def load_files(ctx: AppContext) -> bool:
@@ -120,6 +123,31 @@ def load_sheets_data(ctx: AppContext) -> bool:
   ctx.logger.info('Heroes parsed')
   return True
 
+def compare_sheets_data(ctx: AppContext, args: ArgsClass) -> bool:
+  """ Compare stored data to freshly extracted data """
+  if args.no_save:
+    return True
+  new_heroes = [hero.to_dict() for hero in ctx.heroes]
+  old_heroes = ctx.mongodb.read(collection='heroes')
+  if not old_heroes:
+    ctx.logger.info('No stored data: saving heroes and starting update')
+    if not ctx.mongodb.write(collection='heroes', data=new_heroes):
+      return False
+    return True
+  if ctx.mongodb.compare_data(old_data=old_heroes, new_data=new_heroes):
+    if args.force:
+      ctx.logger.info('No change in data: update forced due to --force argument')
+      return True
+    ctx.logger.warning('No change in data: update stopped -> restart with --force if you want to start updating anyway')
+    return False
+  ctx.logger.info('New data detected -> creating backup before update')
+  if not ctx.mongodb.backup_db():
+    return False
+  if not ctx.mongodb.write(collection='heroes', data=new_heroes):
+    return False
+  return True
+  
+
 def load_language(ctx: AppContext, lang_file: str) -> Dict|None:
   """ Load a specific language file """
   ctx.logger.info(f'Loading language file: {lang_file}')
@@ -169,10 +197,7 @@ def generate_pages_contents(ctx: AppContext) -> bool:
 
 def compare_and_update_wiki_pages(ctx: AppContext, args: ArgsClass) -> bool:
   """ Compare generated content with wiki pages content and update if different """
-  print('here')
-
   lang_code = ctx.generated_pages[0]['lang_code']
-  print(lang_code)
   wiki = Wiki(config=ctx.config, logger=ctx.logger, lang_code=lang_code)
   wiki_login = wiki.initialize()
   if not wiki_login:
@@ -231,8 +256,11 @@ def main():
       sys.exit(1)
 
     if not load_sheets_data(ctx):
-        ctx.logger.error('Exit due to failure to load sheet data')
-        sys.exit(1)
+      ctx.logger.error('Exit due to failure to load sheet data')
+      sys.exit(1)
+    
+    if not compare_sheets_data(ctx, args):
+      sys.exit(1)
     
     if not generate_pages_contents(ctx):
       ctx.logger.error('Exit due to failure to generate pages contents')
