@@ -1,4 +1,5 @@
 from pymongo import MongoClient
+from typing import List, Dict
 
 
 class Mongo:
@@ -10,9 +11,16 @@ class Mongo:
     """
     self.logger = logger
     self.config = config
-
+    self.backup = None
   
-  def connect(self):
+
+  def set_backup_manager(self, backup_manager):
+    """ Inject backup_manager after init to solve circular dependencies """
+    self.backup = backup_manager
+    self.logger.info('Backup manager initialisation success')
+
+
+  def connect(self) -> bool:
     """ MongoDB connexion
       Returns: True if connected, False instead
     """
@@ -27,7 +35,7 @@ class Mongo:
       return False
 
 
-  def read(self, collection):
+  def read(self, collection: str) -> List[Dict]|bool:
     """ Read a collection
       Args:
         collection (str): name of the collection
@@ -41,30 +49,31 @@ class Mongo:
       return False
     
 
-  def write(self, collection, data):
+  def write(self, collection: str, data: List[Dict]) -> bool:
     """ Overwrite a collection
       Args:
         collection (str): name of the collection
-        data (list[dict]): data to write
+        data (List[Dict]): data to write
     """
     if not data:
       self.logger.error(f'no data to write in {collection}')
       return False
-    self.db.get_collection(collection).delete_many({})
-    result = self.insert(collection, data)
-    if result.get('status'):
-      result.get('return').replace('inserted', 'written')
-    else:
-      result.get('return').replace('insert', 'write')
-    self.logger.info(f'write {collection} ok')
-    return result
+    try:
+      self.db.get_collection(collection).delete_many({})
+      result = self.db.get_collection(collection).insert_many(data)
+      lines = len(result.inserted_ids)
+      self.logger.info(f'{lines} document{'s' if lines > 1 else ''} written in {collection}')
+      return True
+    except Exception as e:
+      self.logger.error(f'Mongo write error : {e}')
+      return False
     
     
-  def delete(self, collection, filter_dict=None):
+  def delete(self, collection: str, filter_dict: Dict=None) -> bool:
     """ Delete documents from a collection
       Args:
         collection (str): name of the collection
-        filter_dict (dict): Filter to know which documents to delete, if None delete all documents
+        filter_dict (Dict): Filter to know which documents to delete, if None delete all documents
     """
     try:
       if filter_dict is None:
@@ -78,11 +87,11 @@ class Mongo:
       return False
   
 
-  def insert(self, collection, data):
+  def insert(self, collection: str, data: List[Dict]|Dict) -> bool:
     """ Add data to collection (without deletion)
       Args:
         collection (str): name of the collection
-        data (list[dict]): data to insert
+        data (List[Dict]|Dict): data to insert
     """
     try:
       if not data:
@@ -100,12 +109,12 @@ class Mongo:
       return False
   
 
-  def update(self, collection, filter_dict, update_dict):
+  def update(self, collection: str, filter_dict: Dict, update_dict: List[Dict]) -> bool:
     """ Update data in collection
       Args:
         collection (str): name of the collection
-        filter_dict (dict): Filter to know which documents to update
-        data (list[dict]): data to update
+        filter_dict (Dict): Filter to know which documents to update
+        data (List[Dict]): data to update
     """
     try:
       if not update_dict:
@@ -119,7 +128,7 @@ class Mongo:
       return False
   
   
-  def close(self):
+  def close(self) -> bool:
     """ Close mongoDB connexion"""
     if self.client:
       self.client.close()
@@ -127,3 +136,23 @@ class Mongo:
       return True
     self.logger.error('No MongoDB connexion to close')
     return False
+  
+  
+  def compare_data(self, old_data: List[Dict], new_data: List[Dict]) -> bool:
+    """ Compares old_data (previously extracted from a collection) to new_data (freshly extracted from Playsome's sheet) 
+      Returns : False on error or if old_data == new_data, True instead 
+    """
+    if not old_data or not new_data:
+      self.logger.error('No data to compare')
+      return False
+    old_cleaned_data = [{k: v for k, v in doc.items() if k != '_id'} for doc in old_data]
+    old_cleaned_data.sort(key=lambda x:x['name'])
+    new_data.sort(key=lambda x:x['name'])
+    return old_cleaned_data == new_data
+  
+
+  def backup_db(self) -> bool:
+    """ Creates backup """
+    if not self.backup.create_backup():
+      return False
+    return True
