@@ -1,10 +1,19 @@
+from typing import Dict
+
+
 class Language:
   def __init__(self, logger):
     self.logger = logger
-    
     self.code = None
     self.name = None
     self.translations = None
+
+  def to_dict(self) -> Dict:
+    return {
+      'name': self.name,
+      'code': self.code,
+      'translations': self.translations
+    }
 
   def load_language(self, data):
     if any([not data.get('Name'), not data.get('Code'), not data.get('Translations')]):
