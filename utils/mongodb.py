@@ -146,8 +146,10 @@ class Mongo:
       self.logger.error('No data to compare')
       return False
     old_cleaned_data = [{k: v for k, v in doc.items() if k != '_id'} for doc in old_data]
-    old_cleaned_data.sort(key=lambda x:x['name'])
-    new_data.sort(key=lambda x:x['name'])
+    if len(old_data) > 1:
+      old_cleaned_data.sort(key=lambda x:x['name'])
+    if len(new_data) > 1:
+      new_data.sort(key=lambda x:x['name'])
     return old_cleaned_data == new_data
   
 
