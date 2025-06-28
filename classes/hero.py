@@ -86,11 +86,10 @@ class Display():
 
 """ Hero class """
 class Hero:
-  def __init__(self, logger, special_heroes, events, elements_templates):
-    self.logger = logger
-    self.special_heroes = special_heroes
-    self.events = events
-    self.elements_templates = elements_templates
+  def __init__(self, ctx):
+    self.logger = ctx.logger
+    self.playsome_data = ctx.playsome_data
+    self.elements_templates = ctx.elements_templates
 
     self.name = None
     self.heroclass = None
@@ -145,7 +144,7 @@ class Hero:
     self.AI_speed = str(data[0][header.index('Speed')])
     self.color = data[0][header.index('Color')]
     self.species = data[0][header.index('Species')]
-    self.exclusivity = self.events[data[0][header.index('Exclusivity')]] if data[0][header.index('Exclusivity')] != '' else ''
+    self.exclusivity = self.playsome_data['Events'][data[0][header.index('Exclusivity')]] if data[0][header.index('Exclusivity')] != '' else ''
     for line in data:
       ascend = f'A{line[header.index('Ascension')]}'
       setattr(self.levelmax, ascend, line[header.index('LevelCap')])
@@ -201,7 +200,7 @@ class Hero:
           case 'AND':
             self.leaderA.species = line[header.index('Req A2')]
           case 'OR':
-            self.leaderA.extra = self.events[line[header.index('Req A2')]]
+            self.leaderA.extra = self.playsome_data['Events'][line[header.index('Req A2')]]
         self.leaderA.attack = line[header.index('LeaderAtkMultiplier')]
         self.leaderA.defense = line[header.index('LeaderDefMultiplier')]
         self.leaderB.species = line[header.index('Req B')]
@@ -212,9 +211,9 @@ class Hero:
 
   def _bard_talent_special_case(self, talent):
     try:
-      return self.special_heroes['Talents'][talent]
+      return self.playsome_data['Talents'][talent]
     except:
-      self.logger.error(f'{talent} not in Talents\' section of special_heroes.yml, please add it and run again')
+      self.logger.error(f'{talent} not in Talents\' section of playsome_data.yml, please add it and run again')
 
   def _add_spaces_to_talent(self, talent):
     if not talent:
@@ -230,8 +229,8 @@ class Hero:
   def _recolor_hero(self, name: str):
     try:
       if name[-1] == 'S':
-        return self.special_heroes['Heroes'][name]
+        return self.playsome_data['Heroes'][name]
       else:
         return name
     except:
-      self.logger.error(f'{name} not in Heroes\' section of special_heroes.yml, please add it and run again')
+      self.logger.error(f'{name} not in Heroes\' section of playsome_data.yml, please add it and run again')
