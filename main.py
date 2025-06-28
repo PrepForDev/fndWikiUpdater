@@ -1,6 +1,7 @@
 import sys
 import os
 import argparse
+import copy
 from dataclasses import dataclass
 from typing import Dict
 
@@ -30,12 +31,33 @@ class AppContext:
     self.lang = None
     self.mongodb = None
     
-    self.special_heroes = None
-    self.events = None
+    self.playsome_data = None
+    self.languages = []
     self.elements_templates = None
     self.pages_templates = None
     self.heroes = []
     self.generated_pages = []
+    
+    self.files_to_load = [
+      {'attr': 'playsome_data', 'data_dir': 'data', 'name': 'playsome_data.yml'},
+      {'attr': 'pages_templates', 'data_dir': 'data', 'name': 'pages_templates.yml'},
+      {'attr': 'elements_templates', 'data_dir': 'data', 'name': 'elements_templates.yml'}
+    ]
+    lang_files = glob(os.path.join('data','languages','language*.yml'))
+    if not lang_files:
+      self.logger.error('No language files found')
+    for lang_file in lang_files:
+      self.files_to_load.append({'attr': 'languages', 'data_dir': '', 'name': lang_file})
+
+  def init_stored_data(self):
+    self.stored_data = [
+      {'stored': 'heroes', 'new': [hero.to_dict() for hero in self.heroes]},
+      {'stored': 'elements_templates', 'new': copy.deepcopy([self.elements_templates])},
+      {'stored': 'pages_templates', 'new': copy.deepcopy([self.pages_templates])},
+      {'stored': 'playsome_data', 'new': copy.deepcopy([self.playsome_data])},
+      {'stored': 'languages', 'new': [lang.to_dict() for lang in self.languages]}
+    ]
+
 
 @dataclass
 class ArgsClass:
@@ -51,6 +73,7 @@ def parse_arguments() -> ArgsClass:
   parsed_args = parser.parse_args()
   return ArgsClass(force=parsed_args.force, no_save=parsed_args.no_save)
 
+
 def init_classes(ctx: AppContext):
   """ Initialize util classes stored in /utils """
   ctx.config = Config()
@@ -59,6 +82,7 @@ def init_classes(ctx: AppContext):
   ctx.sheets = Sheets(config=ctx.config, logger=ctx.logger)
   ctx.yml = Yml(logger=ctx.logger)
   ctx.lang = Language(logger=ctx.logger)
+
 
 def init_mongodb_connection(ctx: AppContext, args: ArgsClass) -> bool:
   """ Initialize MongoDB connexion """
@@ -74,31 +98,24 @@ def init_mongodb_connection(ctx: AppContext, args: ArgsClass) -> bool:
   ctx.mongodb.set_backup_manager(backup_manager=backup_manager)
   return True
 
+
 def load_files(ctx: AppContext) -> bool:
   """ Load .yml files """
   ctx.logger.info('Loading .yml files')
-  ctx.special_heroes = ctx.yml.load(file='special_heroes', data_dir='data')
-  if not ctx.special_heroes:
-    ctx.logger.error('Failed to load special_heroes.yml')
-    return False
-  
-  events_data = ctx.yml.load(file='events', data_dir='data')
-  if not events_data:
-    ctx.logger.error('Failed to load events.yml')
-    return False
-  ctx.events = events_data['Events']
-
-  ctx.elements_templates = ctx.yml.load(file='elements_templates', data_dir='data')
-  if not ctx.elements_templates:
-    ctx.logger.error('Failed to load elements_templates.yml')
-    return False
-  
-  ctx.pages_templates = ctx.yml.load(file='pages_templates', data_dir='data')
-  if not ctx.pages_templates:
-    ctx.logger.error('Failed to load pages_templates.yml')
-    return False
-  
+  for file in ctx.files_to_load:
+    content = ctx.yml.load(file=file.get('name'), data_dir=file.get('data_dir'))
+    if content:
+      if getattr(ctx, file.get('attr')) is None:
+        setattr(ctx, file.get('attr'), content)
+      else:
+        new_lang = Language(logger=ctx.logger)
+        if new_lang.load_language(content):
+          getattr(ctx, file.get('attr')).append(new_lang)
+    else:
+      ctx.logger.error(f'Failed to load {file.get('name')}')
+      return False
   return True
+
 
 def load_sheets_data(ctx: AppContext) -> bool:
   """ Load and process Playsome's datasheet """
@@ -116,68 +133,64 @@ def load_sheets_data(ctx: AppContext) -> bool:
   ctx.logger.info('Parse data into Heroes')
   ctx.heroes = []
   for group in groups:
-    hero = Hero(logger=ctx.logger, special_heroes=ctx.special_heroes, events=ctx.events, elements_templates=ctx.elements_templates)
+    hero = Hero(ctx)
     hero.create_hero(data=group, header=data[0])
     ctx.heroes.append(hero)
   ctx.heroes.sort(key=lambda x:x.name)
   ctx.logger.info('Heroes parsed')
   return True
 
-def compare_sheets_data(ctx: AppContext, args: ArgsClass) -> bool:
-  """ Compare stored data to freshly extracted data """
+
+def compare_actual_data_to_stored_data(ctx: AppContext, args: ArgsClass) -> bool:
+  """ Compare stored data to freshly loaded data """
   if args.no_save:
     return True
-  new_heroes = [hero.to_dict() for hero in ctx.heroes]
-  old_heroes = ctx.mongodb.read(collection='heroes')
-  if not old_heroes:
-    ctx.logger.info('No stored data: saving heroes and starting update')
-    if not ctx.mongodb.write(collection='heroes', data=new_heroes):
+  
+  ctx.init_stored_data()
+  has_new_data = False
+  has_errors = False
+  for d in ctx.stored_data:
+    new_data = d.get('new')
+    old_data = ctx.mongodb.read(collection=d.get('stored'))
+  
+    if not old_data:
+      ctx.logger.info(f'No stored data: saving new data in {d.get('stored')}')
+      if not ctx.mongodb.write(collection=d.get('stored'), data=d.get('new')):
+        has_errors = True
+      has_new_data = True
+    else:
+      if ctx.mongodb.compare_data(old_data=old_data, new_data=new_data):
+        if args.force:
+          ctx.logger.info('No change in data: update forced due to --force argument')
+          has_new_data = True
+  
+  if has_new_data and not has_errors:
+    ctx.logger.info('New data detected -> creating backup before update')
+    if not ctx.mongodb.backup_db():
       return False
-    return True
-  if ctx.mongodb.compare_data(old_data=old_heroes, new_data=new_heroes):
-    if args.force:
-      ctx.logger.info('No change in data: update forced due to --force argument')
-      return True
+    for d in ctx.stored_data:
+      if not ctx.mongodb.write(collection=d.get('stored'), data=d.get('new')):
+        return False
+  elif has_errors:
+    return False
+  elif not has_new_data:
     ctx.logger.warning('No change in data: update stopped -> restart with --force if you want to start updating anyway')
     return False
-  ctx.logger.info('New data detected -> creating backup before update')
-  if not ctx.mongodb.backup_db():
-    return False
-  if not ctx.mongodb.write(collection='heroes', data=new_heroes):
-    return False
+      
   return True
   
-
-def load_language(ctx: AppContext, lang_file: str) -> Dict|None:
-  """ Load a specific language file """
-  ctx.logger.info(f'Loading language file: {lang_file}')
-  lang_yml = ctx.yml.load(file=lang_file)
-  if not lang_yml:
-    ctx.logger.error(f'Failed to load language file: {lang_file}')
-    return None
-  
-  lang = Language(logger=ctx.logger)
-  language = lang.load_language(lang_yml)
-  if not language:
-    ctx.logger.error(f'Failed to process language data from: {lang_file}')
-    return None
-  return language
 
 def generate_pages_contents(ctx: AppContext) -> bool:
   """ Generate pages contents translated in all known languages """
   ctx.logger.info('Generating pages contents')
   ctx.generated_pages = []
-  lang_files = glob(os.path.join('data','languages','language*.yml'))
-  if not lang_files:
-    ctx.logger.error('No language files found')
-    return False
   
-  for lang_file in lang_files:
-    language = load_language(ctx=ctx, lang_file=lang_file)  
+  for language in ctx.languages:
+    ctx.logger.info(f'Language : {language.name}')
     processor = TemplateProcessor(logger=ctx.logger, elements_templates=ctx.elements_templates, pages_templates=ctx.pages_templates)
     to_update = processor.process_all_templates(ctx.heroes, language)
     if not to_update:
-      ctx.logger.warning(f'No content generated for language: {lang_file}')
+      ctx.logger.warning(f'No content generated for language: {language.name}')
       continue
     if isinstance(to_update, list):
       for upd in to_update:
@@ -191,9 +204,10 @@ def generate_pages_contents(ctx: AppContext) -> bool:
   
   ctx.generated_pages.sort(key=lambda x:(x['lang_code'], x['title']))
   pages_count = len(ctx.generated_pages)
-  lang_count = len(lang_files)
+  lang_count = len(ctx.languages)
   ctx.logger.info(f'Generated content for {int(pages_count/lang_count)} pages in {lang_count} different languages (total {pages_count} pages)')
   return True
+
 
 def compare_and_update_wiki_pages(ctx: AppContext, args: ArgsClass) -> bool:
   """ Compare generated content with wiki pages content and update if different """
@@ -246,27 +260,27 @@ def main():
   ctx = AppContext()
 
   try:
-    init_classes(ctx)
-    if not init_mongodb_connection(ctx, args):
-      ctx.logger.error('Exit due to MongoDB connexion failure -> restart with --no_save if it doesn\'t matter ;)')
-      sys.exit(1)
-      
+    init_classes(ctx)      
     if not load_files(ctx):
       ctx.logger.error('Exit due to failure to load required files')
+      sys.exit(1)
+    
+    if not init_mongodb_connection(ctx, args):
+      ctx.logger.error('Exit due to MongoDB connexion failure -> restart with --no_save if it doesn\'t matter ;)')
       sys.exit(1)
 
     if not load_sheets_data(ctx):
       ctx.logger.error('Exit due to failure to load sheet data')
       sys.exit(1)
     
-    if not compare_sheets_data(ctx, args):
+    if not compare_actual_data_to_stored_data(ctx, args):
       sys.exit(1)
     
     if not generate_pages_contents(ctx):
       ctx.logger.error('Exit due to failure to generate pages contents')
       sys.exit(1)
 
-    #ctx.generated_pages = [c for c in ctx.generated_pages if c.get('title') == 'Hero Stats' or c.get('title') == 'Estadísticas de Héroe' or c.get('title') == 'Statistiques du Héros'] # FOR TESTS
+    ctx.generated_pages = [c for c in ctx.generated_pages if c.get('title') == 'Hero Stats' or c.get('title') == 'Estadísticas de Héroe' or c.get('title') == 'Statistiques du Héros'] # FOR TESTS
 
     if not compare_and_update_wiki_pages(ctx, args):
       ctx.logger.error('Exit due to failure to compare and update wiki pages')
