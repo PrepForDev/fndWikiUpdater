@@ -14,8 +14,9 @@ class Config:
 
     self.LOG_FILE = os.getenv('LOG_FILE')
 
-    self.GOOGLE_CREDS = os.getenv('GOOGLE_API_CREDS_JSON_FILE')
-    self.PLAYSOME_KEY = os.getenv('PLAYSOME_KEY')
+    self.GOOGLE_CREDS = os.path.join('creds', os.getenv('GOOGLE_API_CREDS_JSON_FILE'))
+    self.PLAYSOME_SHEET_KEY = os.getenv('PLAYSOME_SHEET_KEY')
+    self.PLAYSOME_DRIVE_KEY = os.getenv('PLAYSOME_DRIVE_KEY')
 
     self.WIKI_URL = os.getenv('WIKI_URL')
     self.WIKI_USERNAME = os.getenv('WIKI_USERNAME')
