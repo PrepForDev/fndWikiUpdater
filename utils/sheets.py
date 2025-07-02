@@ -1,5 +1,6 @@
 import pygsheets
 import os
+from utils.google import GoogleAPIConnector
 
 
 class Sheets:
@@ -11,24 +12,14 @@ class Sheets:
 
   def _connect_to_sheets(self):
     """ Read credentials JSON file and connect to Google Sheets """
-    try:
-      self.logger.info('Attempting to connect to Google Sheets API...')
-      creds_file = os.path.join('creds', self.config.GOOGLE_CREDS)
-      self.gc = pygsheets.authorize(service_file=creds_file)
-      if not self.gc:
-        self.logger.error(f'Google Sheets authorization failed')
-        return False
-      self.logger.info('Google Sheets connexion success')
+    connector = GoogleAPIConnector(logger=self.logger, config=self.config)
+    creds = connector.connect()
+    if creds:
+      self.gc = pygsheets.authorize(custom_credentials=creds)
+      self.logger.info('Google Sheets ready')
       return True
-    except FileNotFoundError as e:
-      self.logger.error(f'Credentials JSON not found in {creds_file} - {e}')
-      return False
-    except pygsheets.exceptions.NoValidCredentialsError as e:
-        self.logger.error(f'Invalid credentials file: {e}')
-        return False
-    except Exception as e:
-      self.logger.error(f'Unexpected error while connecting to Google Sheets: {type(e).__name__} - {e}')
-      return False
+    self.logger.error('Sheets init failed')
+    return False
 
 
   def _read_sheet_data(self, sheet_key):
@@ -66,7 +57,7 @@ class Sheets:
     """ Connect to Google Sheets and return data """
     connect = self._connect_to_sheets()
     if connect:
-      playsome_data = self._read_sheet_data(self.config.PLAYSOME_KEY)
+      playsome_data = self._read_sheet_data(self.config.PLAYSOME_SHEET_KEY)
       if playsome_data:
         return playsome_data
     return False
