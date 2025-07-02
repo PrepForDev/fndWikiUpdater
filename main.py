@@ -3,7 +3,6 @@ import os
 import argparse
 import copy
 from dataclasses import dataclass
-from typing import Dict
 
 from glob import glob
 from utils.config import Config
@@ -15,9 +14,11 @@ from utils.wiki import Wiki
 from utils.yml import Yml
 from utils.misc import *
 from utils.language import Language
+from utils.drive import Drive
 
-from classes.hero import Hero
+from classes.hero import Hero, match_images_with_heroes
 from classes.template_processor import TemplateProcessor
+from classes.display_attributes import DisplayAttributes
 
 
 
@@ -30,6 +31,7 @@ class AppContext:
     self.yml = None
     self.lang = None
     self.mongodb = None
+    self.drive = None
     
     self.playsome_data = None
     self.languages = []
@@ -37,6 +39,7 @@ class AppContext:
     self.pages_templates = None
     self.heroes = []
     self.generated_pages = []
+    self.images = []
     
     self.files_to_load = [
       {'attr': 'playsome_data', 'data_dir': 'data', 'name': 'playsome_data.yml'},
@@ -48,6 +51,10 @@ class AppContext:
       self.logger.error('No language files found')
     for lang_file in lang_files:
       self.files_to_load.append({'attr': 'languages', 'data_dir': '', 'name': lang_file})
+
+    self.folders = [
+      {'name': 'Heroes', 'object': 'Hero'}
+    ]
 
   def init_stored_data(self):
     self.stored_data = [
@@ -82,6 +89,7 @@ def init_classes(ctx: AppContext):
   ctx.sheets = Sheets(config=ctx.config, logger=ctx.logger)
   ctx.yml = Yml(logger=ctx.logger)
   ctx.lang = Language(logger=ctx.logger)
+  ctx.drive = Drive(logger=ctx.logger, config=ctx.config)
 
 
 def init_mongodb_connection(ctx: AppContext, args: ArgsClass) -> bool:
@@ -140,6 +148,18 @@ def load_sheets_data(ctx: AppContext) -> bool:
   ctx.logger.info('Heroes parsed')
   return True
 
+def load_drive_data(ctx: AppContext) -> bool:
+  """ Load files from shared Google Drive and associate them with their heroes """
+  for folder in ctx.folders:
+    image_list = ctx.drive.find_images(folder=folder.get('name'))
+    if not image_list:
+      return False
+    
+    if folder.get('object') == 'Hero':
+      ctx.logger.info('Checking hero portraits...')
+      match_images_with_heroes(ctx=ctx, images=image_list, attribute='drive')
+
+  return True
 
 def compare_actual_data_to_stored_data(ctx: AppContext, args: ArgsClass) -> bool:
   """ Compare stored data to freshly loaded data """
@@ -176,7 +196,7 @@ def compare_actual_data_to_stored_data(ctx: AppContext, args: ArgsClass) -> bool
   elif not has_new_data:
     ctx.logger.warning('No change in data: update stopped -> restart with --force if you want to start updating anyway')
     return False
-      
+  
   return True
   
 
@@ -184,7 +204,7 @@ def generate_pages_contents(ctx: AppContext) -> bool:
   """ Generate pages contents translated in all known languages """
   ctx.logger.info('Generating pages contents')
   ctx.generated_pages = []
-  
+
   for language in ctx.languages:
     ctx.logger.info(f'Language : {language.name}')
     processor = TemplateProcessor(logger=ctx.logger, elements_templates=ctx.elements_templates, pages_templates=ctx.pages_templates)
@@ -215,19 +235,19 @@ def compare_and_update_wiki_pages(ctx: AppContext, args: ArgsClass) -> bool:
   wiki = Wiki(config=ctx.config, logger=ctx.logger, lang_code=lang_code)
   wiki_login = wiki.initialize()
   if not wiki_login:
-    ctx.logger.error("Failed to initialize wiki connection")
+    ctx.logger.error('Failed to initialize wiki connection')
     return False
   
   edit_count = 0
   for i, page in enumerate(ctx.generated_pages):
     if page.get('lang_code') != lang_code:
       if not wiki.switch_language(page.get('lang_code')):
-        ctx.logger.error(f"Could not switch to language {page.get('lang_code')}")
+        ctx.logger.error(f'Could not switch to language {page.get('lang_code')}')
         continue
       lang_code = page.get('lang_code')
     wiki_page_content = wiki.get_page_content(page.get('title'))
     if wiki_page_content is False:
-      ctx.logger.error(f"Failed to get content for {page.get('title')}")
+      ctx.logger.error(f'Failed to get content for {page.get('title')}')
       continue
     if not isinstance(wiki_page_content, bool):
       wiki_page_content = wiki_page_content.rstrip()
@@ -247,6 +267,41 @@ def compare_and_update_wiki_pages(ctx: AppContext, args: ArgsClass) -> bool:
   ctx.logger.info(f'{edit_count} pages edited out of {len(ctx.generated_pages)} checked')
   return True
 
+def compare_and_update_portrait_files(ctx: AppContext):
+  """ Compare drive files with wiki files, upload those which are not already in the wiki and update the TraitsAndPortraitsFiles page """
+  wiki = Wiki(config=ctx.config, logger=ctx.logger, lang_code='en')
+  wiki_login = wiki.initialize()
+  if not wiki_login:
+    ctx.logger.error('Failed to initialize wiki connection')
+    return False
+  file_list_str = wiki.get_page_content('TraitsAndPortraitsFiles')
+  if not file_list_str:
+    ctx.logger.error('Failed to get content for TraitsAndPortraitsFiles page')
+    return False
+  traits_and_portraits_list = file_list_str.split(' ')
+  match_images_with_heroes(ctx=ctx, images=[{'name': portrait} for portrait in traits_and_portraits_list if 'Portrait' in portrait], attribute='wiki')
+
+  has_new_images = False
+  for hero in ctx.heroes:
+    if hero.file.drive and not hero.file.wiki:
+      ctx.logger.info(f'---> New file found for {hero.name}')
+      file_path = ctx.drive.download_image(hero.file.drive)
+      if not file_path:
+        return False
+      wiki_filename = f'{hero.name.replace(' ', '_')}_Portrait.png'
+      wiki_upload = wiki.upload_file(filepath=file_path, wiki_filename=wiki_filename)
+      if not wiki_upload:
+        return False
+      has_new_images = True
+  
+  #if has_new_images:
+  update_wiki = wiki.update_traits_and_portraits_files_page()
+  if not update_wiki:
+    return False
+  
+  return True
+  
+
 
 def cleanup(ctx: AppContext, args: ArgsClass):
   """ Cleanup before close """
@@ -260,30 +315,39 @@ def main():
   ctx = AppContext()
 
   try:
-    init_classes(ctx)      
+    init_classes(ctx)
+
     if not load_files(ctx):
       ctx.logger.error('Exit due to failure to load required files')
       sys.exit(1)
-    
+    """
     if not init_mongodb_connection(ctx, args):
       ctx.logger.error('Exit due to MongoDB connexion failure -> restart with --no_save if it doesn\'t matter ;)')
       sys.exit(1)
-
+    """
     if not load_sheets_data(ctx):
       ctx.logger.error('Exit due to failure to load sheet data')
       sys.exit(1)
-    
+
+    if not load_drive_data(ctx):
+      ctx.logger.error('Exit due to failure to load files from shared drive')
+      sys.exit(1)
+    """
     if not compare_actual_data_to_stored_data(ctx, args):
       sys.exit(1)
-    
+    """
     if not generate_pages_contents(ctx):
       ctx.logger.error('Exit due to failure to generate pages contents')
       sys.exit(1)
-
+    """
     ctx.generated_pages = [c for c in ctx.generated_pages if c.get('title') == 'Hero Stats' or c.get('title') == 'Estadísticas de Héroe' or c.get('title') == 'Statistiques du Héros'] # FOR TESTS
-
+    
     if not compare_and_update_wiki_pages(ctx, args):
       ctx.logger.error('Exit due to failure to compare and update wiki pages')
+      sys.exit(1)
+    """
+    if not compare_and_update_portrait_files(ctx):
+      ctx.logger.error('Exit due to failure to compare wiki files with drive')
       sys.exit(1)
 
     ctx.logger.info('Script completed successfully')
