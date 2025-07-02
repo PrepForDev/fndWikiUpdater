@@ -3,6 +3,7 @@ from requests.exceptions import RequestException, Timeout, ConnectionError
 from datetime import datetime
 import time
 import random
+import os
 
 class Wiki:
 
@@ -42,7 +43,7 @@ class Wiki:
         return f'{self.base_url}{self.lang_code}/api.php'
 
 
-  def _make_request(self, method, params={}, data={}):
+  def _make_request(self, method, params={}, data={}, file=None):
     """ Util func to make requests """
     self._apply_request_delay()
     endpoint = self._get_api_endpoint()
@@ -61,6 +62,12 @@ class Wiki:
           data=data, 
           timeout=self.timeout
         )
+      elif method.upper() == 'POST UPLOAD':
+        response = self.session.post(
+          url=endpoint,
+          data=data,
+          files=file,
+          timeout=self.timeout)
       else:
         self.logger.error(f'Unsupported request method : {method}')
       response.raise_for_status()
@@ -383,3 +390,97 @@ class Wiki:
       return False
 
     return True
+  
+
+  def upload_file(self, filepath, wiki_filename: str, ignore_warnings=True) -> bool:
+    """ Upload a file to the wiki and delete local copy after upload
+      Args:
+        filepath: local path to the file (in /temp)
+        filename: file name as it appears on the wiki
+        ignore_warnings: if True, ignore warnings (duplicate)
+      Returns:
+        True on succes, False otherwise
+    """
+    if not os.path.isfile(filepath):
+      self.logger.error(f'File not found: {filepath}')
+      return False
+
+    self._apply_edit_delay()
+    try:
+      with open(filepath, 'rb') as file_stream:
+        file = {'file': (wiki_filename, file_stream, 'image/png')}
+        data = {
+          'action': 'upload',
+          'filename': wiki_filename,
+          'token': self.csrf_token,
+          'format': 'json',
+          'ignorewarnings': '1' if ignore_warnings else '0'
+        }
+
+        response = self._make_request('POST UPLOAD', data=data, file=file)
+        response.raise_for_status()
+        result = response.json()
+        if 'error' in result:
+          self.logger.error(f'Upload error: {result.get('error')}')
+          return False
+        upload_result = result.get('upload', {}).get('result')
+        if upload_result != 'Success':
+          self.logger.warning(f'Upload result: {upload_result}')
+          return False
+        self.logger.info(f'File {wiki_filename} uploaded successfully')          
+
+    except RequestException as e:
+      self.logger.error(f'Upload failed due to request error: {e}')
+      return False
+    except ValueError as e:
+      self.logger.error(f'Invalid JSON response during upload: {e}')
+      return False
+    
+    try:
+      os.remove(filepath)
+      return True
+    except OSError as e:
+      self.logger.warning(f'Error while removing file after upload : {e}')
+    
+
+  def update_traits_and_portraits_files_page(self):
+    """ Update the 'TraitsAndPortraitsFiles' page with all png files containing 'Trait' or 'Portrait' in their name """
+    filtered_files = []
+    params = {
+      'action': 'query',
+      'list': 'allimages',
+      'ailimit': '500',
+      'format': 'json'
+    }
+
+    while True:
+      response = self._make_request('GET', params=params)
+      if not response:
+        self.logger.error('Error while getting files list')
+        return False
+
+      data = response.json()
+      if 'error' in data:
+        self.logger.error(f'Error API allimages: {data.get('error')}')
+        return False
+
+      images = data.get('query', {}).get('allimages', [])
+      for img in images:
+        name = img.get('name', '')
+        if name.lower().endswith('.png') and ('trait' in name.lower() or 'portrait' in name.lower()):
+          filtered_files.append(name)
+
+      if 'continue' in data:
+        params.update(data.get('continue'))
+      else:
+        break
+
+    if not filtered_files:
+      self.logger.error('No traits nor portraits files found')
+      return False
+    
+    page_content = ' '.join(filename for filename in sorted(filtered_files))
+    return self.edit_request(
+      title='TraitsAndPortraitsFiles',
+      content=page_content
+    )
