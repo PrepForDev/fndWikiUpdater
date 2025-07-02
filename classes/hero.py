@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, List
 
 
 """ Hero sub-classes """
@@ -80,9 +80,28 @@ class Talent:
       'merge': self.merge
     }
   
-class Display():
+class FileClass:
   def __init__(self):
-    pass
+    self.drive = None
+    self.wiki = None
+
+  def from_dict(cls, data: Dict):
+    return cls(
+      drive = data.get('drive', None),
+      wiki = data.get('wiki', None)
+    )
+  
+  def to_dict(self) -> Dict:
+    return {
+      'drive': self.drive,
+      'wiki': self.wiki
+    }
+  
+  
+""" Empty Display class to be filled by prepare_display_data """
+class Display():
+  pass
+
 
 """ Hero class """
 class Hero:
@@ -92,6 +111,9 @@ class Hero:
     self.elements_templates = ctx.elements_templates
 
     self.name = None
+    self.playsome_name = None
+    self.playsome_art_id = None
+    self.file = FileClass()
     self.heroclass = None
     self.stars = None
     self.levelmax = StatsByAscend()
@@ -111,6 +133,8 @@ class Hero:
   def to_dict(self) -> Dict:
     return {
       'name': self.name,
+      'playsome_name': self.playsome_name,
+      'playsome_art_id': self.playsome_art_id,
       'heroclass': self.heroclass,
       'stars': self.stars,
       'levelmax': self.levelmax.to_dict(),
@@ -126,7 +150,8 @@ class Hero:
       'leaderA': self.leaderA.to_dict(),
       'leaderB': self.leaderB.to_dict()
     }
-
+  
+  """ class method to transform sheets data into hero object """
   def create_hero(self, data, header):
     """ Create Hero object
       Args:
@@ -135,7 +160,9 @@ class Hero:
       Returns:
         hero object (self)
     """
-    self.name = self._recolor_hero(data[0][header.index('Name')])
+    self.playsome_name = data[0][header.index('Name')]
+    self.name = self._recolor_hero(self.playsome_name)
+    self.playsome_art_id = data[0][header.index('Art ID')].replace('0', '')
     self.heroclass = data[0][header.index('Class')]
     self.stars = data[0][header.index('Stars')]
     self.AI = str.capitalize(data[0][header.index('AI')][:-3])
@@ -155,7 +182,7 @@ class Hero:
     self._get_leader(line=line[:-1], header=header)
     return self
   
-  """ class Hero private methods for sheets data parsing """
+  """ class private methods for sheets data parsing """
   def _get_gear(self, line, header):
     to_return = []
     for i, case in enumerate(header):
@@ -234,3 +261,16 @@ class Hero:
         return name
     except:
       self.logger.error(f'{name} not in Heroes\' section of playsome_data.yml, please add it and run again')
+
+
+def match_images_with_heroes(ctx, images: List[str], attribute: str):
+  """ Match image list with extracted heroes objects """
+  for image in images:
+    cleaned_image_name = image.get('name').split('.png')[0].split('_Portrait')[0].replace('0', '').replace('_',' ')
+    found_hero = next((hero for hero in ctx.heroes if cleaned_image_name == hero.playsome_art_id), None)
+    if found_hero:
+      setattr(found_hero.file, attribute, image)
+    else:
+      found_hero = next((hero for hero in ctx.heroes if cleaned_image_name == hero.name), None)
+      if found_hero:
+        setattr(found_hero.file, attribute, image)
