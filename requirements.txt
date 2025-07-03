@@ -1,4 +1,6 @@
 filelock==3.18.0
+google_api_python_client==2.89.0
+google_auth_oauthlib==1.2.2
 pygsheets==2.0.6
 pymongo==4.13.2
 python-dotenv==1.1.1
