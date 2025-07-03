@@ -114,6 +114,7 @@ class Hero:
     self.playsome_name = None
     self.playsome_art_id = None
     self.file = FileClass()
+    self.portrait = None
     self.heroclass = None
     self.stars = None
     self.levelmax = StatsByAscend()
