@@ -50,7 +50,6 @@ Translations:
     Trial by Fire: Trial by Fire
     Wintertide: Wintertide
   Gear:
-    Amulet: Amulet
     Brilliant Amulet of Earth: Brilliant Amulet of Earth
     Brilliant Amulet of Fire: Brilliant Amulet of Fire
     Brilliant Amulet of Moon: Brilliant Amulet of Moon
@@ -347,6 +346,7 @@ Translations:
     AI: AI
     AI Speed: AI Speed
     and: and
+    Amulet: Amulet
     Ascend: Ascend
     Ascension: Ascension
     Ascension Talents: Ascension Talents
@@ -358,10 +358,12 @@ Translations:
     Barracks: Barracks
     Base: Base
     Base AI: Base AI
+    Basic: Basic
     Basic Attack: Basic Attack
     Basic Health: Basic Health
     Basic Talents: Basic Talents
     Basics: Basics
+    Body: Body
     Cap: Cap
     Category: Category
     Character: Character
@@ -375,6 +377,7 @@ Translations:
     Exclusive: Exclusive
     for: for
     Gear: Gear
+    Head: Head
     Health: Health
     Hero: Hero
     Hero 3A: Hero 3A
@@ -391,9 +394,11 @@ Translations:
     Melee: Melee
     Merge: Merge
     Merge Talents: Merge Talents
+    Off-Hand: Off-Hand
     or: or
     Pattern: Pattern
     Ranged: Ranged
+    Ring: Ring
     Species: Species
     Star: Star
     Stars: Stars
@@ -403,6 +408,7 @@ Translations:
     Talents: Talents
     Template: Template
     Type: Type
+    Weapon: Weapon
   Heroes:
     Adana: Adana
     Agatha: Agatha
