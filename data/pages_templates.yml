@@ -47,6 +47,8 @@ Single Hero page:
     '''//translated.'1st Ascension'//'''//display.gear.A1.bullet_list//<br />
     '''//translated.'2nd Ascension'//'''//display.gear.A2.bullet_list//<br />
     '''//translated.'3rd Ascension'//'''//display.gear.A3.bullet_list//<br />
+  footer: |
+    **category.hero_template**
 
 Hero Stats:
   base object: hero
@@ -60,8 +62,7 @@ Hero Stats:
   header: |
     {|  class="fandom-table sortable" style="100%"
     |+
-    !Hero!!Class!!Color!!Species!!Stars!!Type!!Pattern_!!AttA0!!DefA0!!AttA1!!DefA1!!AttA2!!DefA2!!AttA3!!DefA3!!3A Leader Bonus A!!3A Leader Bonus B!!Base AI!!Exclusive
+    !//translated.'Hero'//!!//translated.'Class'//!!//translated.'Color'//!!//translated.'Species'//!!//translated.'Stars'//!!//translated.'Type'//!!//translated.'Pattern'//!!//translated.'AttA0'//!!//translated.'DefA0'//!!//translated.'AttA1'//!!//translated.'DefA1'//!!//translated.'AttA2'//!!//translated.'DefA2'//!!//translated.'AttA3'//!!//translated.'DefA3'//!!//translated.'3A Leader Bonus A'//!!//translated.'3A Leader Bonus B'//!!//translated.'Base AI'//!!//translated.'Exclusive'//
   footer: |
     |}
-    [[Category:Barracks]][[fr:Statistiques du Héros]][[es:Estadísticas de Héroe]]
-
+    [[//translated.'Category'//://translated.'Barracks'//]]

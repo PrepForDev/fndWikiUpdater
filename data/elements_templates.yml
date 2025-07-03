@@ -12,6 +12,9 @@
 #   /!\ if a new 'print' attribute is created and not calculated in the template processor, the template won't be processed and an error will show up in the log file
 #   exemple: base object: hero + attribute: display.stars.raw_list -> returns the value of the custom attribute hero.display.stars.raw_list
 #
+# elements between %% are processed directly in display_attributes.py
+#   exemple: %%lang_code%% shall be automatically replaced in the process of display_attributes.py
+#
 
 
 attack_pattern:
@@ -42,6 +45,18 @@ base_AI:
     {{BaseAI|Name=//AI//|Size=30}}
   translated_template: |
     {{BaseAI|Name=//AI//|Translated=//translated.AI//|Size=30}}
+
+category:
+  base_object: hero
+  hero_template: |
+    [[//translated.'Category'//://translated.'Hero'//]]
+    [[//translated.'Category'//://translated.color//]]
+    [[//translated.'Category'//://translated.species//]]
+    [[//translated.'Category'//://translated.heroclass//]]
+    [[//translated.'Category'//://stars//_//translated.'Stars'//]]
+    //display.talent_categories//
+  talent_template: |
+    [[//translated.'Category'//://translated.talent//]]
 
 character:
   base object: hero
