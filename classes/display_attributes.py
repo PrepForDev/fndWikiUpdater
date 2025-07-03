@@ -108,6 +108,8 @@ class DisplayAttributes:
           self._setattr_nested(hero.display, f'talents.{traits.get('attr')}.bullet_list', '')
       else:
         self._setattr_nested(hero.display, f'talents.{traits.get('attr')}.raw_list', traits.get('traits'))
+    self._setattr_nested(hero.display, f'talents.base.raw_list_picless', '<br />'.join(hero.talents.base))
+    self._setattr_nested(hero.display, f'talents.merge.raw_list_picless', '<br />'.join(hero.talents.merge))
   
   def _prepare_gear(self, hero: Hero):   
     """ Prepare formatted gear """
