@@ -288,16 +288,22 @@ def compare_and_update_portrait_files(ctx: AppContext):
       file_path = ctx.drive.download_image(hero.file.drive)
       if not file_path:
         return False
-      wiki_filename = f'{hero.name.replace(' ', '_')}_Portrait.png'
-      wiki_upload = wiki.upload_file(filepath=file_path, wiki_filename=wiki_filename)
+      hero.portrait = f'{hero.name.replace(' ', '_')}_Portrait.png'
+      wiki_upload = wiki.upload_file(filepath=file_path, wiki_filename=hero.portrait)
       if not wiki_upload:
         return False
       has_new_images = True
+    elif hero.file.wiki:
+      hero.portrait = f'{hero.name.replace(' ', '_')}_Portrait.png'
   
-  #if has_new_images:
-  update_wiki = wiki.update_traits_and_portraits_files_page()
-  if not update_wiki:
-    return False
+  if has_new_images:
+    update_wiki = wiki.update_traits_and_portraits_files_page()
+    if not update_wiki:
+      return False
+  
+  heroes_without_portrait = [h.name for h in ctx.heroes if h.portrait is None]
+  if len(heroes_without_portrait) > 0:
+    ctx.logger.warning(f'---> Heroes found without portrait : {', '.join(heroes_without_portrait)}')
   
   return True
   
