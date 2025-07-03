@@ -222,6 +222,8 @@ class Hero:
         self.leaderA.attack = line[header.index('LeaderAtkMultiplier')]
         self.leaderB.species = line[header.index('Req B')]
         self.leaderB.defense = line[header.index('LeaderDefMultiplier')]
+        if line[header.index('LeaderRequirement Operator')] == 'OR':
+          self.leaderA.extra = self.playsome_data['Events'][line[header.index('Req A2')]]
       case _:
         self.leaderA.color = line[header.index('Req A')]
         match line[header.index('LeaderRequirement Operator')]:
