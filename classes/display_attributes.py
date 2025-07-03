@@ -108,8 +108,18 @@ class DisplayAttributes:
           self._setattr_nested(hero.display, f'talents.{traits.get('attr')}.bullet_list', '')
       else:
         self._setattr_nested(hero.display, f'talents.{traits.get('attr')}.raw_list', traits.get('traits'))
+
     self._setattr_nested(hero.display, f'talents.base.raw_list_picless', '<br />'.join(hero.talents.base))
     self._setattr_nested(hero.display, f'talents.merge.raw_list_picless', '<br />'.join(hero.talents.merge))
+    
+    traits_to_process = [{'attr': 'base', 'traits': [self.template_processor.transform_attribute_to_element(attribute=t, which_template= 'trait.no_text_template', language=self.language) for t in hero.talents.base]}]
+    traits_to_process.append({'attr': 'ascend', 'traits': [self.template_processor.transform_attribute_to_element(attribute=t, which_template= 'trait.no_text_template', language=self.language) for t in ascend_talents]})
+    traits_to_process.append({'attr': 'merge', 'traits': [self.template_processor.transform_attribute_to_element(attribute=t, which_template= 'trait.no_text_template', language=self.language) for t in hero.talents.merge]})
+    for traits in traits_to_process:
+      if len(traits.get('traits')) > 0:
+        self._setattr_nested(hero.display, f'talents.{traits.get('attr')}.raw_list_no_text', ''.join(traits.get('traits')))
+      else:
+        self._setattr_nested(hero.display, f'talents.{traits.get('attr')}.raw_list_no_text', '')
   
   def _prepare_gear(self, hero: Hero):   
     """ Prepare formatted gear """
