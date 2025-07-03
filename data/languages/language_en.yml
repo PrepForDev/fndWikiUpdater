@@ -330,6 +330,8 @@ Translations:
     2nd Ascension: 2nd Ascension
     3rd: 3rd
     3rd Ascension: 3rd Ascension
+    3A Leader Bonus A: 3A_Leader_Bonus_A_______
+    3A Leader Bonus B: 3A_Leader_Bonus_B
     A1 Attack: A1 Attack
     A1 Gear: A1 Gear
     A1 Health: A1 Health
@@ -344,10 +346,15 @@ Translations:
     A3 Talent: A3 Talent
     AI: AI
     AI Speed: AI Speed
+    and: and
     Ascend: Ascend
     Ascension: Ascension
     Ascension Talents: Ascension Talents
     Attack: Attack
+    AttA0: AttA0
+    AttA1: AttA1
+    AttA2: AttA2
+    AttA3: AttA3
     Barracks: Barracks
     Base: Base
     Base AI: Base AI
@@ -361,6 +368,12 @@ Translations:
     Class: Class
     Color: Color
     Cross: Cross
+    DefA0: DefA0
+    DefA1: DefA1
+    DefA2: DefA2
+    DefA3: DefA3
+    Exclusive: Exclusive
+    for: for
     Gear: Gear
     Health: Health
     Hero: Hero
@@ -378,6 +391,8 @@ Translations:
     Melee: Melee
     Merge: Merge
     Merge Talents: Merge Talents
+    or: or
+    Pattern: Pattern
     Ranged: Ranged
     Species: Species
     Star: Star
@@ -387,6 +402,7 @@ Translations:
     Talent: Talent
     Talents: Talents
     Template: Template
+    Type: Type
   Heroes:
     Adana: Adana
     Agatha: Agatha
