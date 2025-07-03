@@ -11,10 +11,11 @@ class DynamicObject:
 
 
 class TemplateProcessor:
-  def __init__(self, logger, elements_templates, pages_templates):
+  def __init__(self, logger, elements_templates, pages_templates, all_languages):
     self.logger = logger
     self.elements_templates = elements_templates
     self.pages_templates = pages_templates
+    self.all_languages = all_languages
   
   def process_all_templates(self, entities: List[Any], language: Language) -> List[Dict]:
     """ Entry point to process all templates
@@ -58,7 +59,7 @@ class TemplateProcessor:
         template_title = template_data.get('template_title')
         if '//' in template_title:
           template_title = self._replace_direct_values(content=template_title, base_object=base_object, language=language)
-        full_content = self._build_full_content(template_config, processed_content)
+        full_content = self._build_full_content(template_data.get('template_title'), template_config, processed_content, base_object, language)
         results.append({'title': template_title, 'content': full_content})
       return results
     return None
@@ -73,10 +74,10 @@ class TemplateProcessor:
         processed_row = self._process_template_content(template_data.get('template_content'), base_object, language)
         all_rows.append(processed_row)
       combined_content = '\n'.join(all_rows)
-      full_content = self._build_full_content(template_config, combined_content)
       template_title = template_data.get('template_title')
       if '//' in template_title:
         template_title = self._replace_direct_values(content=template_title, base_object=base_object, language=language)
+      full_content = self._build_full_content(template_data.get('template_title'), template_config, combined_content, base_object, language)
       return {'title': template_title, 'content': full_content}
     
   def _check_template_data(self, template_name: str, template_config: Dict, language: Language) -> Dict|None:
@@ -95,16 +96,22 @@ class TemplateProcessor:
       return None
     return {'base_object_path': base_object_path, 'template_content': template_content, 'template_title': template_title}
   
-  def _build_full_content(self, template_config: Dict, main_content: str) -> str:
+  def _build_full_content(self, template_title: str, template_config: Dict, main_content: str, base_object: Any, language: Language) -> str:
     """ Adds header and footer to page content """
     header = template_config.get('header', '')
     footer = template_config.get('footer', '')
     parts = []
     if header:
-      parts.append(header)
+      processed_header = self._process_template_content(header, base_object, language)
+      parts.append(processed_header)
     parts.append(main_content)
     if footer:
-      parts.append(footer)
+      processed_footer = self._process_template_content(footer, base_object, language)
+      parts.append(processed_footer)
+    for l in self.all_languages:
+      if l != language:
+        translated_title = self._replace_direct_values(content=template_title, base_object=base_object, language=l)
+        parts.append(f'[[{l.code}:{translated_title}]]')
     return '\n'.join(parts)
   
   def _get_base_object(self, object, base_object_path: str):
@@ -204,7 +211,7 @@ class TemplateProcessor:
 
   def _prepare_print_data(self, entity, language: Language):
     """ Entry point for custom attributes calculation (in prevision for pets and/or traits) """
-    display = DisplayAttributes(logger=self.logger, elements_templates=self.elements_templates, language=language)
+    display = DisplayAttributes(logger=self.logger, elements_templates=self.elements_templates, language=language, all_languages=self.all_languages)
     display.init_template_processor(template_processor=self)
     if isinstance(entity, Hero):
       entity = display.prepare_hero_display_data(hero=entity)
