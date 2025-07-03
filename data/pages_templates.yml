@@ -18,6 +18,43 @@
 #   exemple : **color.translated_template** -> returns {{Color|Name=//color//|Translated=//translated.color//|Size=30}} taken from elements_template.yml
 #
 
+Hero Gear:
+  base_object: hero
+  type: full list
+  title: //translated.'Hero Gear'//
+  template: |
+    |-
+    |[[//translated.name//]]||//translated.'Basic'//||//display.gear.A0.table_list//
+    |-
+    |[[//translated.name//]]||//translated.'1st'//||//display.gear.A1.table_list//
+    |-
+    |[[//translated.name//]]||//translated.'2nd'//||//display.gear.A2.table_list//
+    |-
+    |[[//translated.name//]]||//translated.'3rd'//||//display.gear.A3.table_list//
+  header: |
+    {|  class="fandom-table sortable" style="100%"
+    |+
+    !//translated.'Hero'//!!//translated.'Ascension'//!!//translated.'Amulet'//!!//translated.'Weapon'//!!//translated.'Ring'//!!//translated.'Head'//!!//translated.'Off-Hand'//!!//translated.'Body'//
+  footer: |
+    |}
+    [[//translated.'Category'//://translated.'Barracks'//]]
+
+Hero Stats:
+  base object: hero
+  type: full list
+  title: //translated.'Hero Stats'//
+  template: |
+    {{HeroStatsTableRow|Name=//name//|NameTranslated=//translated.name//|Class=//heroclass//|ClassTranslated=//translated.heroclass//|Color=//color//|
+    Species=//species//|SpeciesTranslated=//translated.species//|Stars=//stars//|AttackType=**attack_type.no_text_template**|AttackPattern=**attack_pattern.no_text_template**|
+    AttA0=//attack.A0//|DefA0=//health.A0//|AttA1=//attack.A1//|DefA1=//health.A1//|AttA2=//attack.A2//|DefA2=//health.A2//|AttA3=//attack.A3//|DefA3=//health.A3//|
+    LeadA=//display.leadA.no_text//|LeadB=//display.leadB.no_text//|AI=//AI//|Speed=//AI_speed//|Exclusive=//exclusivity//}}
+  header: |
+    {|  class="fandom-table sortable" style="100%"
+    |+
+    !//translated.'Hero'//!!//translated.'Class'//!!//translated.'Color'//!!//translated.'Species'//!!//translated.'Stars'//!!//translated.'Type'//!!//translated.'Pattern'//!!//translated.'AttA0'//!!//translated.'DefA0'//!!//translated.'AttA1'//!!//translated.'DefA1'//!!//translated.'AttA2'//!!//translated.'DefA2'//!!//translated.'AttA3'//!!//translated.'DefA3'//!!//translated.'3A Leader Bonus A'//!!//translated.'3A Leader Bonus B'//!!//translated.'Base AI'//!!//translated.'Exclusive'//
+  footer: |
+    |}
+    [[//translated.'Category'//://translated.'Barracks'//]]
 
 Single Hero page:
   base object: hero
@@ -49,20 +86,3 @@ Single Hero page:
     '''//translated.'3rd Ascension'//'''//display.gear.A3.bullet_list//<br />
   footer: |
     **category.hero_template**
-
-Hero Stats:
-  base object: hero
-  type: full list
-  title: //translated.'Hero Stats'//
-  template: |
-    {{HeroStatsTableRow|Name=//name//|NameTranslated=//translated.name//|Class=//heroclass//|ClassTranslated=//translated.heroclass//|Color=//color//|
-    Species=//species//|SpeciesTranslated=//translated.species//|Stars=//stars//|AttackType=**attack_type.no_text_template**|AttackPattern=**attack_pattern.no_text_template**|
-    AttA0=//attack.A0//|DefA0=//health.A0//|AttA1=//attack.A1//|DefA1=//health.A1//|AttA2=//attack.A2//|DefA2=//health.A2//|AttA3=//attack.A3//|DefA3=//health.A3//|
-    LeadA=//display.leadA.no_text//|LeadB=//display.leadB.no_text//|AI=//AI//|Speed=//AI_speed//|Exclusive=//exclusivity//}}
-  header: |
-    {|  class="fandom-table sortable" style="100%"
-    |+
-    !//translated.'Hero'//!!//translated.'Class'//!!//translated.'Color'//!!//translated.'Species'//!!//translated.'Stars'//!!//translated.'Type'//!!//translated.'Pattern'//!!//translated.'AttA0'//!!//translated.'DefA0'//!!//translated.'AttA1'//!!//translated.'DefA1'//!!//translated.'AttA2'//!!//translated.'DefA2'//!!//translated.'AttA3'//!!//translated.'DefA3'//!!//translated.'3A Leader Bonus A'//!!//translated.'3A Leader Bonus B'//!!//translated.'Base AI'//!!//translated.'Exclusive'//
-  footer: |
-    |}
-    [[//translated.'Category'//://translated.'Barracks'//]]
