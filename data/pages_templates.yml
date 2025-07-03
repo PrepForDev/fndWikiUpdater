@@ -70,6 +70,21 @@ Hero Talents:
     |}
     [[//translated.'Category'//://translated.'Barracks'//]]
 
+Hero Talents PicLess:
+  base object: hero
+  type: full list
+  title: //translated.'Hero Talents PicLess'//
+  template: |
+    {{HeroTalentsTableRow|Name=//name//|Translated=//translated.name//|noimage=True|BasicTalents=//display.talents.base.raw_list_picless//|AscTalents=//translated.talents.A1// <sup>//translated.'1st'//</sup><br />//translated.talents.A2// <sup>//translated.'2nd'//</sup><br />//translated.talents.A3// <sup>//translated.'3rd'//</sup><br />|MergeTalents=//display.talents.merge.raw_list_picless//}}
+  header: |
+    {|  class="fandom-table sortable" style="100%"
+    |+
+    [[//translated.'Hero Talents'//]]
+    !//translated.'Hero'//!!//translated.'Basic Talents'//!!//translated.'Ascension Talents'//!!//translated.'Merge Talents'//
+  footer: |
+    |}
+    [[//translated.'Category'//://translated.'Barracks'//]]
+
 Single Hero page:
   base object: hero
   type: single
