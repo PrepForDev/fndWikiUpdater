@@ -101,7 +101,7 @@ class DisplayAttributes:
     for traits in traits_to_process:
       if isinstance(traits.get('traits'), list):
         if len(traits.get('traits')) > 0:
-          self._setattr_nested(hero.display, f'talents.{traits.get('attr')}.raw_list', '<br />'.join([''] + traits.get('traits')))
+          self._setattr_nested(hero.display, f'talents.{traits.get('attr')}.raw_list', '<br />'.join(traits.get('traits')))
           self._setattr_nested(hero.display, f'talents.{traits.get('attr')}.bullet_list', '<br />&nbsp;&nbsp;'.join([''] + traits.get('traits')))
         else:
           self._setattr_nested(hero.display, f'talents.{traits.get('attr')}.raw_list', '')
