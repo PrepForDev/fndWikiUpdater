@@ -70,6 +70,21 @@ Hero Talents:
     |}
     [[//translated.'Category'//://translated.'Barracks'//]]
 
+Hero Talent Compare:
+  base object: hero
+  type: full list
+  title: //translated.'Hero Talent Compare'//
+  template: |
+    {{HeroTalentCompareTableRow|Name=//name//|NameTranslated=//translated.name//|Stars=//stars//|Class=//heroclass//|ClassTranslated=//translated.heroclass//|Color=//color//|
+    Attack=//display.attack.max.total//|Defense=//display.health.max.total//|BasicTalents=//display.talents.base.raw_list_no_text//|AscTalents=//display.talents.ascend.raw_list_no_text//|MergeTalents=//display.talents.merge.raw_list_no_text//}}
+  header: |
+    {|  class="fandom-table sortable" style="100%"
+    |+
+    !//translated.'Hero'//!!//translated.'Stars'//!!//translated.'Class'//!!//translated.'Color'//!!{{HeroStat|Name=Attack}}!!{{HeroStat|Name=Defense}}!!//translated.'Basic Talents'//!!//translated.'Ascend'//!!//translated.'Merge'//
+  footer: |
+    |}
+    [[//translated.'Category'//://translated.'Tables'//]]
+
 Hero Talents PicLess:
   base object: hero
   type: full list
