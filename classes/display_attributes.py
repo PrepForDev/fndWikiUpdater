@@ -112,9 +112,11 @@ class DisplayAttributes:
   def _prepare_gear(self, hero: Hero):   
     """ Prepare formatted gear """
     for ascend in ['A0', 'A1', 'A2', 'A3']:
-      translated_gear = [self.language.translate(g) for g in getattr(hero.gear, ascend) if g != '']
-      self._setattr_nested(hero.display, f'gear.{ascend}.raw_list', '<br />'.join([''] + translated_gear))
-      self._setattr_nested(hero.display, f'gear.{ascend}.bullet_list', '<br />&nbsp;&nbsp;'.join([''] + translated_gear))
+      translated_gear_without_empty_gear = [self.language.translate(g) for g in getattr(hero.gear, ascend) if g != '']
+      translated_gear_with_empty_gear = [self.language.translate(g) if g != '' else '' for g in getattr(hero.gear, ascend)]
+      self._setattr_nested(hero.display, f'gear.{ascend}.raw_list', '<br />'.join([''] + translated_gear_without_empty_gear))
+      self._setattr_nested(hero.display, f'gear.{ascend}.bullet_list', '<br />&nbsp;&nbsp;'.join([''] + translated_gear_without_empty_gear))
+      self._setattr_nested(hero.display, f'gear.{ascend}.table_list', '||'.join(translated_gear_with_empty_gear))
   
   def _prepare_stars(self, hero: Hero):
     """ Prepare stars """
