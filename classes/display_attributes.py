@@ -1,4 +1,4 @@
-from typing import Dict, Any
+from typing import Any, List
 from math import ceil
 
 from classes.hero import Hero, Leader, Display
@@ -7,11 +7,12 @@ from utils.logger import Logger
 
 
 class DisplayAttributes:
-  def __init__(self, logger: Logger, elements_templates, language: Language):
+  def __init__(self, logger: Logger, elements_templates, language: Language, all_languages: List[Language]):
     self.logger = logger
     self.elements_templates = elements_templates
     self.language = language
     self.template_processor = None
+    self.all_languages = all_languages
   
   def init_template_processor(self, template_processor):
     self.template_processor = template_processor
@@ -27,6 +28,7 @@ class DisplayAttributes:
     self._prepare_gear(hero)
     self._prepare_stars(hero)
     self._prepare_leader_data(hero)
+    self._prepare_talent_categories(hero)
     return hero
 
   def _prepare_attack_pattern_and_type(self, hero: Hero):
@@ -122,14 +124,14 @@ class DisplayAttributes:
     """ Prepare formatted leader data """
     self._setattr_nested(hero.display, f'leadA.no_text', self._format_leader_bonus(leader=hero.leaderA, template_type='no_text_template'))
     self._setattr_nested(hero.display, f'leadB.no_text', self._format_leader_bonus(leader=hero.leaderB, template_type='no_text_template'))
-    self._setattr_nested(hero.display, f'leadA.with_text', self._format_leader_bonus(leader=hero.leaderA, template_type='template'))
-    self._setattr_nested(hero.display, f'leadB.with_text', self._format_leader_bonus(leader=hero.leaderB, template_type='template'))
+    self._setattr_nested(hero.display, f'leadA.with_text', f'{self._format_leader_bonus(leader=hero.leaderA, template_type='template')} {self.language.translate('Heroes')}')
+    self._setattr_nested(hero.display, f'leadB.with_text', f'{self._format_leader_bonus(leader=hero.leaderB, template_type='template')} {self.language.translate('Heroes')}')
   
   def _format_leader_bonus(self, leader: Leader, template_type: str) -> str:
     """ Format leader data into str """
     lead = ''   
     if leader.attack and leader.defense:
-      lead = f'x{float(leader.attack):.2f} att and {float(leader.attack):.2f} def'
+      lead = f'x{float(leader.attack):.2f} att {self.language.translate('and')} {float(leader.attack):.2f} def'
     elif leader.attack:
       lead = f'x{float(leader.attack):.2f} att'
     elif leader.defense:
@@ -137,14 +139,21 @@ class DisplayAttributes:
     elif leader.talent:
       lead = self.template_processor.transform_attribute_to_element(attribute=leader.talent, which_template=f'trait.{template_type}', language=self.language)
     if lead != '':
-      lead += ' for '
+      lead += f' {self.language.translate('for')} '
       if leader.color:
         lead += self.template_processor.transform_attribute_to_element(attribute=leader.color, which_template=f'color.{template_type}', language=self.language)
       if leader.species:
         lead += self.template_processor.transform_attribute_to_element(attribute=leader.species, which_template=f'species.{template_type}', language=self.language)
       if leader.extra:
-        lead += f' or {self.template_processor.transform_attribute_to_element(attribute=leader.extra, which_template=f'trait.{template_type}', language=self.language)}'
+        lead += f' {self.language.translate('or')} {self.template_processor.transform_attribute_to_element(attribute=leader.extra, which_template=f'trait.{template_type}', language=self.language)}'
     return lead
+  
+  def _prepare_talent_categories(self, hero: Hero):
+    unique_talents = set(hero.talents.base) | set(hero.talents.merge) | {hero.talents.A1, hero.talents.A2, hero.talents.A3}
+    talent_categories = ''
+    for t in unique_talents:
+      talent_categories += self.template_processor.transform_attribute_to_element(attribute=t, which_template='category.talent_template', language=self.language)
+    setattr(hero.display, 'talent_categories', talent_categories)
   
   def _setattr_nested(self, obj, attribute_path: str, value) -> Any:
     """ Set multiple nested attributes which don't exist initially
