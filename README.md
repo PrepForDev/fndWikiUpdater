@@ -30,13 +30,13 @@ Tool to update Friends & Dragons Wiki
    - process pages from pages_templates on by one using the template_processor class  
      **/!\ if any new data is needed in templates/pages, it should be added in class/template_processor.py**
 7. connects to the wiki language by language and compare pages content with generated content -> update only if contents are not the same
+8. connects to Google Drive, checks for new new heroes portraits compared to the existing file list in the TraitsAndPortraitsFiles page
+   -> if new files are found, download them, upload them to the wiki, update the TraitsAndPortraitsFiles and then delete the temp files
 
 all of this is logged both in your shell and in a log file
 
 ## TODO-LIST: ##
 - add other hero pages in pages_templates.yml
-- figure out how to automatize files upload from Google Drive (the hard part for me since I never did that before, new challenge !)
-- TraitAndPortraitsFiles page update
 - add other languages (whichones ?)
 - add pet pages / talent pages
 
