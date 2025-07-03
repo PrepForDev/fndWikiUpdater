@@ -4,9 +4,15 @@ Tool to update Friends & Dragons Wiki
 ## Quick install: ##
 1. clone repo + create your dev environnement (optional)
 2. install requirements (pip install -r requirements.txt)
-3. create a /cred directory c/p your google api .json file in it (https://developers.google.com/workspace/sheets/api/quickstart/python for more info)
-4. rename .env-tpl file to .env and fill it
-5. run script (py main.py)
+3.  Go to [console.cloud.google.com](https://console.cloud.google.com/) to set up your API access [see help](https://developers.google.com/workspace/sheets/api/quickstart/python) :
+      - create a project
+      - activate Sheets and Drive API
+      - create access credentials -> [OAuth client ID](https://developers.google.com/workspace/guides/create-credentials#oauth-client-id)
+      - download your client_secret***.json file, create a /cred directory in your cloned repo and c/p your .json file in it
+4. create a Fandom bot password [see help](https://community.fandom.com/wiki/Help:Bots#Using_Special:BotPasswords)
+5. (optional) -> create a MongoDB free cluster to store data and get your cluster connection information [see help](https://www.mongodb.com/docs/atlas/tutorial/connect-to-your-cluster)
+6. rename .env-tpl file to .env and fill it
+7. run script (py main.py)
 
 ## Command Line Arguments: ##
 --no_save : skip mongoDB data storage and backups if you don't want to bother with it  
@@ -30,7 +36,7 @@ Tool to update Friends & Dragons Wiki
    - process pages from pages_templates on by one using the template_processor class  
      **/!\ if any new data is needed in templates/pages, it should be added in class/template_processor.py**
 7. connects to the wiki language by language and compare pages content with generated content -> update only if contents are not the same
-8. connects to Google Drive, checks for new new heroes portraits compared to the existing file list in the TraitsAndPortraitsFiles page
+8. connects to Google Drive, checks for new heroes portraits compared to the existing file list in the TraitsAndPortraitsFiles page
    -> if new files are found, download them, upload them to the wiki, update the TraitsAndPortraitsFiles and then delete the temp files
 
 all of this is logged both in your shell and in a log file
