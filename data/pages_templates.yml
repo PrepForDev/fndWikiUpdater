@@ -56,6 +56,20 @@ Hero Stats:
     |}
     [[//translated.'Category'//://translated.'Barracks'//]]
 
+Hero Talents:
+  base object: hero
+  type: full list
+  title: //translated.'Hero Talents'//
+  template: |
+    {{HeroTalentsTableRow|Name=//name//|Translated=//translated.name//|BasicTalents=//display.talents.base.raw_list//|AscTalents=//display.talents.A1.raw_list// <sup>//translated.'1st'//</sup><br />//display.talents.A2.raw_list// <sup>//translated.'2nd'//</sup><br />//display.talents.A3.raw_list// <sup>//translated.'3rd'//</sup><br />|MergeTalents=//display.talents.merge.raw_list//}}
+  header: |
+    {|  class="fandom-table sortable" style="100%"
+    |+
+    !//translated.'Hero'//!!//translated.'Basic Talents'//!!//translated.'Ascension Talents'//!!//translated.'Merge Talents'//
+  footer: |
+    |}
+    [[//translated.'Category'//://translated.'Barracks'//]]
+
 Single Hero page:
   base object: hero
   type: single
