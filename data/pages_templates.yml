@@ -18,6 +18,20 @@
 #   exemple : **color.translated_template** -> returns {{Color|Name=//color//|Translated=//translated.color//|Size=30}} taken from elements_template.yml
 #
 
+Hero 3A:
+  base_object: hero
+  type: full list
+  title: //translated.'Hero 3A'//
+  template: |
+    {{Hero3ATableRow|Name=//name//|Translated=//translated.name//|Color=//color//|Stars=//stars//|Amulet=//display.gear.A3.amulet//|Attack=//display.attack.A3_gain//|Defense=//display.health.A3_gain//|Talent=//display.talents.A3.with_link//}}
+  header: |
+    {|  class="fandom-table sortable" style="100%"
+    |+
+    !//translated.'Hero'//!!//translated.'Color'//!!//translated.'Stars'//!!//translated.'Amulet'//!!//translated.'3A Atk Upgrade'//!!//translated.'3A Def Upgrade'//!!//translated.'Talent'//
+  footer: |
+    |}
+    [[//translated.'Category'//://translated.'Barracks'//]]
+
 Hero Gear:
   base_object: hero
   type: full list
