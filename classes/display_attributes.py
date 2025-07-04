@@ -77,17 +77,14 @@ class DisplayAttributes:
       self._setattr_nested(hero.display, f'health.{ascend}.total_base_gear', int(getattr(hero.health, ascend)) + health_gear)
       self._setattr_nested(hero.display, f'health.{ascend}.total_base_gear_merge', int(getattr(hero.health, ascend)) + health_gear + health_merge)
     
-    self._setattr_nested(hero.display, 'attack.max.base', max([int(hero.attack.A0), int(hero.attack.A1), int(hero.attack.A2), int(hero.attack.A3)]))
-    self._setattr_nested(hero.display, 'attack.max.gear', max([int(hero.display.attack.A0.gear), int(hero.display.attack.A1.gear), int(hero.display.attack.A2.gear), int(hero.display.attack.A3.gear)]))
-    self._setattr_nested(hero.display, 'attack.max.merge', max([int(hero.display.attack.A0.merge), int(hero.display.attack.A1.merge), int(hero.display.attack.A2.merge), int(hero.display.attack.A3.merge)]))
-    self._setattr_nested(hero.display, 'attack.max.total', int(hero.display.attack.max.base) + int(hero.display.attack.max.gear) + int(hero.display.attack.max.merge))
+    for attr in ['attack', 'health']:
+      self._setattr_nested(hero.display, f'{attr}.max.base', max([int(self._getattr_nested(hero, f'{attr}.A0')), int(self._getattr_nested(hero, f'{attr}.A1')), int(self._getattr_nested(hero, f'{attr}.A2')), int(self._getattr_nested(hero, f'{attr}.A3'))]))
+      self._setattr_nested(hero.display, f'{attr}.max.gear', max([int(self._getattr_nested(hero.display, f'{attr}.A0.gear')), int(self._getattr_nested(hero.display, f'{attr}.A1.gear')), int(self._getattr_nested(hero.display, f'{attr}.A2.gear')), int(self._getattr_nested(hero.display, f'{attr}.A3.gear'))]))
+      self._setattr_nested(hero.display, f'{attr}.max.merge', max([int(self._getattr_nested(hero.display, f'{attr}.A0.merge')), int(self._getattr_nested(hero.display, f'{attr}.A1.merge')), int(self._getattr_nested(hero.display, f'{attr}.A2.merge')), int(self._getattr_nested(hero.display, f'{attr}.A3.merge'))]))
+      self._setattr_nested(hero.display, f'{attr}.max.total', int(self._getattr_nested(hero.display, f'{attr}.max.base')) + int(self._getattr_nested(hero.display, f'{attr}.max.gear')) + int(self._getattr_nested(hero.display, f'{attr}.max.merge')))
+      self._setattr_nested(hero.display, f'{attr}.A3_gain', f'{((int(self._getattr_nested(hero.display, f'{attr}.max.total')) - int(self._getattr_nested(hero.display, f'{attr}.A2.total_base_gear_merge'))) / int(self._getattr_nested(hero.display, f'{attr}.A2.total_base_gear_merge')) * 100):.1f}%')
 
-    self._setattr_nested(hero.display, 'health.max.base', max([int(hero.health.A0), int(hero.health.A1), int(hero.health.A2), int(hero.health.A3)]))
-    self._setattr_nested(hero.display, 'health.max.gear', max([int(hero.display.health.A0.gear), int(hero.display.health.A1.gear), int(hero.display.health.A2.gear), int(hero.display.health.A3.gear)]))
-    self._setattr_nested(hero.display, 'health.max.merge', max([int(hero.display.health.A0.merge), int(hero.display.health.A1.merge), int(hero.display.health.A2.merge), int(hero.display.health.A3.merge)]))
-    self._setattr_nested(hero.display, 'health.max.total', int(hero.display.health.max.base) + int(hero.display.health.max.gear) + int(hero.display.health.max.merge))
-
-    self._setattr_nested(hero.display, 'max_level', max([int(hero.levelmax.A0), int(hero.levelmax.A1) ,int(hero.levelmax.A2) ,int(hero.levelmax.A3)]))
+    self._setattr_nested(hero.display, 'max_level', max([int(hero.levelmax.A0), int(hero.levelmax.A1), int(hero.levelmax.A2), int(hero.levelmax.A3)]))
   
   def _prepare_talents(self, hero: Hero):
     """ Prepare formatted talents """
@@ -120,6 +117,8 @@ class DisplayAttributes:
         self._setattr_nested(hero.display, f'talents.{traits.get('attr')}.raw_list_no_text', ''.join(traits.get('traits')))
       else:
         self._setattr_nested(hero.display, f'talents.{traits.get('attr')}.raw_list_no_text', '')
+
+    self._setattr_nested(hero.display, 'talents.A3.with_link', self.template_processor.transform_attribute_to_element(attribute=hero.talents.A3, which_template= 'trait.translated_linked_template', language=self.language))
   
   def _prepare_gear(self, hero: Hero):   
     """ Prepare formatted gear """
@@ -129,6 +128,7 @@ class DisplayAttributes:
       self._setattr_nested(hero.display, f'gear.{ascend}.raw_list', '<br />'.join([''] + translated_gear_without_empty_gear))
       self._setattr_nested(hero.display, f'gear.{ascend}.bullet_list', '<br />&nbsp;&nbsp;'.join([''] + translated_gear_without_empty_gear))
       self._setattr_nested(hero.display, f'gear.{ascend}.table_list', '||'.join(translated_gear_with_empty_gear))
+    self._setattr_nested(hero.display, f'gear.A3.amulet', self.language.translate(hero.gear.A2[0]))
   
   def _prepare_stars(self, hero: Hero):
     """ Prepare stars """
@@ -183,3 +183,21 @@ class DisplayAttributes:
         setattr(obj, attr, Display())
       obj = getattr(obj, attr)
     setattr(obj, attrs[-1], value)
+
+  def _getattr_nested(self, obj: Any, attribute_path: str) -> Any:
+    """ Get the value of a nested attribute with multiple nestings handler
+      Args:
+        obj: object with initial existing attribute (ex: hero.display)
+        attribute_path: str with attributes to get (ex: talents.base.raw_list)
+      Returns:
+        value of the obj (ex: hero.display.talents.base.raw_list.value)
+    """
+    try:
+      current = obj
+      for attr in attribute_path.split('.'):
+        current = getattr(current, attr, None)
+        if current is None:
+          return None
+      return current
+    except (AttributeError, TypeError):
+      return None
