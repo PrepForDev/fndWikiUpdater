@@ -21,7 +21,7 @@ class TemplateProcessor:
   def process_all_templates(self, entities: List[Dict], language: Language) -> List[Dict]:
     """ Entry point to process all templates
       Args:
-        entities: List[Dict] {'type of objects': list of objects (Hero, Heroclass ...)}
+        entities: List[Dict] of type {'object': object_name.lower(), 'list': list of objects (Hero, Heroclass ...)}
         language: Language instance (for translation)
       Returns:
         List[Dict] with processed template -> {'title': 'XX', 'content': 'XX'}
