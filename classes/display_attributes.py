@@ -2,6 +2,7 @@ from typing import Any, List
 from math import ceil
 
 from classes.hero import Hero, Leader, Display
+from classes.heroclass import Heroclass
 from utils.language import Language
 from utils.logger import Logger
 
@@ -17,8 +18,15 @@ class DisplayAttributes:
   def init_template_processor(self, template_processor):
     self.template_processor = template_processor
 
-  """ class method to calc display data (by language or not)"""
-  def prepare_hero_display_data(self, hero: Hero):
+  """ entry point to calc display data """
+  def prepare_display_data(self, entity: Hero|Heroclass):
+    if isinstance(entity, Hero):
+      return self._prepare_hero_display_data(hero=entity)
+    if isinstance(entity, Heroclass):
+      return self._prepare_heroclass_display_data(heroclass=entity)
+    
+
+  def _prepare_hero_display_data(self, hero: Hero):
     """ Prepare hero custom data with formatted values """
     self.logger.debug(f'Calculate custom data for {hero.name}')
     self._prepare_attack_pattern_and_type(hero)
@@ -145,7 +153,7 @@ class DisplayAttributes:
     """ Format leader data into str """
     lead = ''   
     if leader.attack and leader.defense:
-      lead = f'x{float(leader.attack):.2f} att {self.language.translate('and')} {float(leader.attack):.2f} def'
+      lead = f'x{float(leader.attack):.2f} att {self.language.translate('and')} {float(leader.defense):.2f} def'
     elif leader.attack:
       lead = f'x{float(leader.attack):.2f} att'
     elif leader.defense:
@@ -168,6 +176,33 @@ class DisplayAttributes:
     for t in unique_talents:
       talent_categories += self.template_processor.transform_attribute_to_element(attribute=t, which_template='category.talent_template', language=self.language)
     setattr(hero.display, 'talent_categories', talent_categories)
+
+
+  
+  def _prepare_heroclass_display_data(self, heroclass: Heroclass):
+    """ Prepare heroclass data with formatted values """
+    setattr(heroclass.display, 'header', '!!'.join([self.template_processor.transform_attribute_to_element(attribute=c, which_template= 'class.no_text_template', language=self.language) for c in heroclass.classes]))
+    
+    table_output = '|-\n'
+    table_output += f'|- style="background-color: {heroclass.color_hex}"\n'
+
+    for i in range(len(heroclass.table)):
+      if i == 0:
+        table_output += f'|{self.template_processor.transform_attribute_to_element(attribute=heroclass.name, which_template='color.no_text_template', language=self.language)}'
+      else:
+        table_output += f'|{self.template_processor.transform_attribute_to_element(attribute=heroclass.name, which_template='color.no_text_small_template', language=self.language)}'
+        table_output += f' {self.template_processor.transform_attribute_to_element(attribute=heroclass.name, which_template=f'stars.template_{i}', language=self.language)}'
+      table_output += '||'.join([''] + [str(h) for h in heroclass.table[i]])
+      table_output += f'\n|-\n'
+    setattr(heroclass.display, 'table_output', table_output)
+    
+    footer = f'|- style="background-color: #d3d3d3"\n'
+    footer += f'|{self.language.translate('Totals')}'
+    footer += '||'.join([''] + [str(h) for h in heroclass.totals])
+    setattr(heroclass.display, 'footer', footer)
+    
+    return heroclass
+    
   
   def _setattr_nested(self, obj, attribute_path: str, value) -> Any:
     """ Set multiple nested attributes which don't exist initially
