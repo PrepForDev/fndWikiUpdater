@@ -98,7 +98,7 @@ class FileClass:
     }
   
   
-""" Empty Display class to be filled by prepare_display_data """
+""" Empty Display class to be filled by display_attributes.py """
 class Display():
   pass
 
