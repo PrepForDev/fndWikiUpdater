@@ -3,6 +3,7 @@ from typing import Dict, List, Any
 
 from classes.hero import Hero
 from classes.display_attributes import DisplayAttributes
+from classes.heroclass import Heroclass
 from utils.language import Language
 
 class DynamicObject:
@@ -17,32 +18,39 @@ class TemplateProcessor:
     self.pages_templates = pages_templates
     self.all_languages = all_languages
   
-  def process_all_templates(self, entities: List[Any], language: Language) -> List[Dict]:
+  def process_all_templates(self, entities: List[Dict], language: Language) -> List[Dict]:
     """ Entry point to process all templates
       Args:
-        entities: List of objects with print attribute (Hero, etc.)
+        entities: List[Dict] {'type of objects': list of objects (Hero, Heroclass ...)}
         language: Language instance (for translation)
       Returns:
         List[Dict] with processed template -> {'title': 'XX', 'content': 'XX'}
     """
     results = []
-    processed_entities = []
-    for entity in entities:
-      processed_entities.append(self._prepare_print_data(entity=entity, language=language))
-    for template_name, template_config in self.pages_templates.items():
-      self.logger.info(f'Processing {template_name} template')
-      processed = None
-      template_type = template_config.get('type')
-      if template_type == 'single':
-        processed = self._process_single_templates(template_name, template_config, entities, language)
-        if processed:
-          results.extend(processed)
-      elif template_type == 'full list':
-        processed = self._process_full_list_template(template_name, template_config, entities, language)
-        if processed:
-          results.append(processed)
-      else:
-        self.logger.error(f'type missing in {template_name}, please check pages_templates.yml and run again')
+    
+    for entity_dict in entities:
+      processed_entities = []
+      for entity in entity_dict.get('list'):
+        display = DisplayAttributes(logger=self.logger, elements_templates=self.elements_templates, language=language, all_languages=self.all_languages)
+        display.init_template_processor(template_processor=self)
+        processed_entities.append(display.prepare_display_data(entity=entity))
+
+      for template_name, template_config in self.pages_templates.items():
+        if template_config.get('base object') == entity_dict.get('object'):
+          self.logger.info(f'Processing {template_name} template')
+          processed = None
+          template_type = template_config.get('type')
+          
+          if template_type == 'single':
+            processed = self._process_single_templates(template_name, template_config, processed_entities, language)
+            if processed:
+              results.extend(processed)
+          elif template_type == 'full list':
+            processed = self._process_full_list_template(template_name, template_config, processed_entities, language)
+            if processed:
+              results.append(processed)
+          else:
+            self.logger.error(f'type missing in {template_name}, please check pages_templates.yml and run again')
     return results
   
 
@@ -116,7 +124,7 @@ class TemplateProcessor:
   
   def _get_base_object(self, object, base_object_path: str):
       """ Get base object for template processing with multiple nestings handler """
-      if base_object_path == 'hero':
+      if '.' not in base_object_path:
         return object
       else:
         obj = object
@@ -205,18 +213,7 @@ class TemplateProcessor:
         return match.group(0)
     
     return re.sub(pattern, replace_value, content)
-  
-
-  """ class private methods to create hero's missing attributes in Playsome's sheet """
-
-  def _prepare_print_data(self, entity, language: Language):
-    """ Entry point for custom attributes calculation (in prevision for pets and/or traits) """
-    display = DisplayAttributes(logger=self.logger, elements_templates=self.elements_templates, language=language, all_languages=self.all_languages)
-    display.init_template_processor(template_processor=self)
-    if isinstance(entity, Hero):
-      entity = display.prepare_hero_display_data(hero=entity)
-    return entity
-        
+          
   
   """ class utils (private methods to get nested attributes in an object and get nested values in a dict) """
 
