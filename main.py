@@ -18,7 +18,7 @@ from utils.drive import Drive
 
 from classes.hero import Hero, match_images_with_heroes
 from classes.template_processor import TemplateProcessor
-from classes.display_attributes import DisplayAttributes
+from classes.heroclass import create_heroclasses
 
 
 
@@ -40,6 +40,7 @@ class AppContext:
     self.heroes = []
     self.generated_pages = []
     self.images = []
+    self.heroclasses = []
     
     self.files_to_load = [
       {'attr': 'playsome_data', 'data_dir': 'data', 'name': 'playsome_data.yml'},
@@ -148,6 +149,10 @@ def load_sheets_data(ctx: AppContext) -> bool:
   ctx.logger.info('Heroes parsed')
   return True
 
+def create_classes_from_heroes(ctx: AppContext) -> bool:
+  ctx.heroclasses = create_heroclasses(heroes=ctx.heroes)
+  return True
+
 def load_drive_data(ctx: AppContext) -> bool:
   """ Load files from shared Google Drive and associate them with their heroes """
   for folder in ctx.folders:
@@ -207,8 +212,9 @@ def generate_pages_contents(ctx: AppContext) -> bool:
 
   for language in ctx.languages:
     ctx.logger.info(f'Language : {language.name}')
-    processor = TemplateProcessor(logger=ctx.logger, elements_templates=ctx.elements_templates, pages_templates=ctx.pages_templates)
-    to_update = processor.process_all_templates(ctx.heroes, language)
+    processor = TemplateProcessor(logger=ctx.logger, elements_templates=ctx.elements_templates, pages_templates=ctx.pages_templates, all_languages=ctx.languages)
+    to_process = [{'object': 'hero', 'list': ctx.heroes}, {'object': 'heroclass', 'list': ctx.heroclasses}]
+    to_update = processor.process_all_templates(to_process, language)
     if not to_update:
       ctx.logger.warning(f'No content generated for language: {language.name}')
       continue
@@ -326,36 +332,40 @@ def main():
     if not load_files(ctx):
       ctx.logger.error('Exit due to failure to load required files')
       sys.exit(1)
-    """
+    
     if not init_mongodb_connection(ctx, args):
       ctx.logger.error('Exit due to MongoDB connexion failure -> restart with --no_save if it doesn\'t matter ;)')
       sys.exit(1)
-    """
+    
     if not load_sheets_data(ctx):
       ctx.logger.error('Exit due to failure to load sheet data')
+      sys.exit(1)
+
+    if not create_classes_from_heroes(ctx):
+      ctx.logger.error('Exit due to failure to create classes objects')
       sys.exit(1)
 
     if not load_drive_data(ctx):
       ctx.logger.error('Exit due to failure to load files from shared drive')
       sys.exit(1)
-    """
+    
     if not compare_actual_data_to_stored_data(ctx, args):
       sys.exit(1)
-    """
+    
     if not generate_pages_contents(ctx):
       ctx.logger.error('Exit due to failure to generate pages contents')
       sys.exit(1)
-    """
-    ctx.generated_pages = [c for c in ctx.generated_pages if c.get('title') == 'Hero Stats' or c.get('title') == 'Estadísticas de Héroe' or c.get('title') == 'Statistiques du Héros'] # FOR TESTS
+    
+    #ctx.generated_pages = [c for c in ctx.generated_pages if c.get('title') == 'Hero Class Analysis' or c.get('title') == 'Análisis de la clase de Héroe' or c.get('title') == 'Analyse des classes de Héros'] # FOR TESTS
     
     if not compare_and_update_wiki_pages(ctx, args):
       ctx.logger.error('Exit due to failure to compare and update wiki pages')
       sys.exit(1)
-    """
+    
     if not compare_and_update_portrait_files(ctx):
       ctx.logger.error('Exit due to failure to compare wiki files with drive')
       sys.exit(1)
-
+    
     ctx.logger.info('Script completed successfully')
 
   except Exception as e:
