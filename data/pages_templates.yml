@@ -19,7 +19,7 @@
 #
 
 Hero 3A:
-  base_object: hero
+  base object: hero
   type: full list
   title: //translated.'Hero 3A'//
   template: |
@@ -32,8 +32,31 @@ Hero 3A:
     |}
     [[//translated.'Category'//://translated.'Barracks'//]]
 
+Hero Class Analysis:
+  base object: heroclass
+  type: full list
+  title: //translated.'Hero Class Analysis'//
+  template: |
+    |-
+    | colspan="23" style="border-top:4px solid black; padding:0; line-height:1px; height:1px;" |
+    |-
+    //display.table_output//
+  header: |
+    {|  class="fandom-table article-table sortable"
+    //translated.'Number of heroes for each class'//
+    |+
+    !//translated.'Color'//-//translated.'Stars'//!!//display.header//!!//translated.'Total'//
+  footer: |
+    |-
+    | colspan="23" style="border-top:4px solid black; padding:0; line-height:1px; height:1px;" |
+    |-
+    //display.footer//
+    |-
+    |}
+    [[//translated.'Category'//://translated.'Barracks'//]]
+
 Hero Gear:
-  base_object: hero
+  base object: hero
   type: full list
   title: //translated.'Hero Gear'//
   template: |
