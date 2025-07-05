@@ -384,6 +384,7 @@ Translations:
     Hero: Héros
     Hero 3A: Héros A3
     Heroes: Héros
+    Hero Class Analysis: Analyse des classes de Héros
     Hero Description: Description du Héros
     Hero Gear: Équipement du Héros
     Hero Stats: Statistiques du Héros
@@ -396,6 +397,7 @@ Translations:
     Melee: Mêlée
     Merge: Fusion
     Merge Talents: Talents de merge
+    Number of heroes for each class: Nombre de héros de chaque classe
     Off-Hand: Main gauche
     or: ou
     Pattern: Modèle
@@ -409,6 +411,8 @@ Translations:
     Talent: Talent
     Talents: Talents
     Template: Modèle
+    Total: Total
+    Totals: Totaux
     Type: Type
     Weapon: Arme
   Heroes:
