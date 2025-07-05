@@ -104,6 +104,8 @@ color:
     {{Color|Name=//color//|Size=30}}
   no_text_template: |
     {{Color|Name=//color//|Size=30|notext=True}}
+  no_text_small_template: |
+    {{Color|Name=//color//|Size=15|notext=True}}
   translated_template: |
     {{Color|Name=//color//|Translated=//translated.color//|Size=30}}
   translated_no_text_template: |
@@ -135,6 +137,16 @@ stars:
   base object: hero
   template: |
     {{Stars|Stars=//Stars//|Size=30}}
+  template_1: |
+    {{Stars|Stars=1|Size=19}}
+  template_2: |
+    {{Stars|Stars=2|Size=23}}
+  template_3: |
+    {{Stars|Stars=3|Size=27}}
+  template_4: |
+    {{Stars|Stars=4|Size=31}}
+  template_5: |
+    {{Stars|Stars=5|Size=35}}
 
 trait:
   base object: hero
