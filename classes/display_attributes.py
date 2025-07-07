@@ -3,6 +3,7 @@ from math import ceil
 
 from classes.hero import Hero, Leader, Display
 from classes.heroclass import Heroclass
+from classes.talent import Talent
 from utils.language import Language
 from utils.logger import Logger
 
@@ -24,6 +25,8 @@ class DisplayAttributes:
       return self._prepare_hero_display_data(hero=entity)
     if isinstance(entity, Heroclass):
       return self._prepare_heroclass_display_data(heroclass=entity)
+    if isinstance(entity, Talent):
+      return self._prepare_talent_display_data(talent=entity)
     
 
   def _prepare_hero_display_data(self, hero: Hero):
@@ -202,6 +205,20 @@ class DisplayAttributes:
     setattr(heroclass.display, 'footer', footer)
     
     return heroclass
+  
+
+
+  def _prepare_talent_display_data(self, talent: Talent):
+    """ Prepare talent data with formatted values """
+    heroes = []
+    for hero in talent.heroes:
+      hero_output = f'[[{hero.get('name')}]] ('
+      if len(hero.get('position')) > 1:
+        hero_output += f'x{len(hero.get('position'))} : '
+      hero_output += f'{', '.join(hero.get('position'))})'
+      heroes.append(hero_output)
+    setattr(talent.display, 'heroes_list', ', '.join(heroes))
+    return talent
     
   
   def _setattr_nested(self, obj, attribute_path: str, value) -> Any:
