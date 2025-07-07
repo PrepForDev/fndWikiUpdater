@@ -1,14 +1,8 @@
 import re
 from typing import Dict, List, Any
 
-from classes.hero import Hero
 from classes.display_attributes import DisplayAttributes
-from classes.heroclass import Heroclass
 from utils.language import Language
-
-class DynamicObject:
-  """ Empty class to create objects with dynamic attributes """
-  pass
 
 
 class TemplateProcessor:
