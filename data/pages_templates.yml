@@ -167,3 +167,18 @@ Single Hero page:
     '''//translated.'3rd Ascension'//'''//display.gear.A3.bullet_list//<br />
   footer: |
     **category.hero_template**
+
+Talents of Heroes:
+  base object: talent
+  type: full list
+  title: //translated.'Talents of Heroes'//
+  template: |
+    {{TalentsTableRow|TraitName=//name//|TraitTranslated=//translated.name//|Heroes=//display.heroes_list//}}
+  header: |
+    {|  class="fandom-table sortable" style="100%"
+    |+
+    !//translated.'Talent'//
+    !//translated.'Heroes'//
+  footer: |
+    |}
+    [[//translated.'Category'//://translated.'Tables'//]]
