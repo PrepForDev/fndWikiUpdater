@@ -19,6 +19,7 @@ from utils.drive import Drive
 from classes.hero import Hero, match_images_with_heroes
 from classes.template_processor import TemplateProcessor
 from classes.heroclass import create_heroclasses
+from classes.talent import create_talents
 
 
 
@@ -41,7 +42,7 @@ class AppContext:
     self.generated_pages = []
     self.images = []
     self.heroclasses = []
-    
+    self.talents = []   
     self.files_to_load = [
       {'attr': 'playsome_data', 'data_dir': 'data', 'name': 'playsome_data.yml'},
       {'attr': 'pages_templates', 'data_dir': 'data', 'name': 'pages_templates.yml'},
@@ -64,6 +65,13 @@ class AppContext:
       {'stored': 'pages_templates', 'new': copy.deepcopy([self.pages_templates])},
       {'stored': 'playsome_data', 'new': copy.deepcopy([self.playsome_data])},
       {'stored': 'languages', 'new': [lang.to_dict() for lang in self.languages]}
+    ]
+
+  def init_data_to_process(self):
+    self.data_to_process = [
+      {'object': 'hero', 'list': self.heroes},
+      {'object': 'heroclass', 'list': self.heroclasses},
+      {'object': 'talent', 'list': self.talents}
     ]
 
 
@@ -153,6 +161,10 @@ def create_classes_from_heroes(ctx: AppContext) -> bool:
   ctx.heroclasses = create_heroclasses(heroes=ctx.heroes)
   return True
 
+def create_talents_from_heroes(ctx: AppContext) -> bool:
+  ctx.talents = create_talents(heroes=ctx.heroes)
+  return True
+
 def load_drive_data(ctx: AppContext) -> bool:
   """ Load files from shared Google Drive and associate them with their heroes """
   for folder in ctx.folders:
@@ -213,8 +225,8 @@ def generate_pages_contents(ctx: AppContext) -> bool:
   for language in ctx.languages:
     ctx.logger.info(f'Language : {language.name}')
     processor = TemplateProcessor(logger=ctx.logger, elements_templates=ctx.elements_templates, pages_templates=ctx.pages_templates, all_languages=ctx.languages)
-    to_process = [{'object': 'hero', 'list': ctx.heroes}, {'object': 'heroclass', 'list': ctx.heroclasses}]
-    to_update = processor.process_all_templates(to_process, language)
+    ctx.init_data_to_process()
+    to_update = processor.process_all_templates(ctx.data_to_process, language)
     if not to_update:
       ctx.logger.warning(f'No content generated for language: {language.name}')
       continue
@@ -345,6 +357,10 @@ def main():
       ctx.logger.error('Exit due to failure to create classes objects')
       sys.exit(1)
 
+    if not create_talents_from_heroes(ctx):
+      ctx.logger.error('Exit due to failure to create talents objects')
+      sys.exit(1)
+
     if not load_drive_data(ctx):
       ctx.logger.error('Exit due to failure to load files from shared drive')
       sys.exit(1)
@@ -356,7 +372,7 @@ def main():
       ctx.logger.error('Exit due to failure to generate pages contents')
       sys.exit(1)
     
-    #ctx.generated_pages = [c for c in ctx.generated_pages if c.get('title') == 'Hero Class Analysis' or c.get('title') == 'Análisis de la clase de Héroe' or c.get('title') == 'Analyse des classes de Héros'] # FOR TESTS
+    ctx.generated_pages = [c for c in ctx.generated_pages if c.get('title') == 'Talents of Heroes' or c.get('title') == 'Talentos de héroes' or c.get('title') == 'Talents des Héros'] # FOR TESTS
     
     if not compare_and_update_wiki_pages(ctx, args):
       ctx.logger.error('Exit due to failure to compare and update wiki pages')
