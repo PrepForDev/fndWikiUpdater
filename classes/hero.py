@@ -64,7 +64,7 @@ class Talent:
   
   def from_dict(cls, data: Dict):
     return cls(
-      base = data.get('attack', []),
+      base = data.get('base', []),
       A1 = data.get('A1', ''),
       A2 = data.get('A2', ''),
       A3 = data.get('A3', ''),
