@@ -22,7 +22,15 @@ class Language:
     self.code = data.get('Code')
     self.name = data.get('Name')
     self.translations = {}
-    for d in (data['Translations']['Heroes'], data['Translations']['Classes'], data['Translations']['AI'], data['Translations']['Colors'], data['Translations']['Species'], data['Translations']['Talents'], data['Translations']['Gear'], data['Translations']['General']):
+    for d in (data['Translations']['Heroes'],
+              data['Translations']['Classes'],
+              data['Translations']['AI'],
+              data['Translations']['Colors'],
+              data['Translations']['Species'],
+              data['Translations']['Talents'],
+              data['Translations']['Gear'],
+              data['Translations']['General'],
+              data['Translations']['Pets']):
       self.translations.update(d)
     self.logger.info(f'Language {self.name} loaded')
     return self
