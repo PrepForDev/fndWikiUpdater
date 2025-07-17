@@ -17,6 +17,7 @@ from utils.language import Language
 from utils.drive import Drive
 
 from classes.hero import Hero, match_images_with_heroes
+from classes.pet import Pet
 from classes.template_processor import TemplateProcessor
 from classes.heroclass import create_heroclasses
 from classes.talent import create_talents
@@ -39,6 +40,7 @@ class AppContext:
     self.elements_templates = None
     self.pages_templates = None
     self.heroes = []
+    self.pets = []
     self.generated_pages = []
     self.images = []
     self.heroclasses = []
@@ -61,6 +63,7 @@ class AppContext:
   def init_stored_data(self):
     self.stored_data = [
       {'stored': 'heroes', 'new': [hero.to_dict() for hero in self.heroes]},
+      {'stored': 'pets', 'new': [pet.to_dict() for pet in self.pets]},
       {'stored': 'elements_templates', 'new': copy.deepcopy([self.elements_templates])},
       {'stored': 'pages_templates', 'new': copy.deepcopy([self.pages_templates])},
       {'stored': 'playsome_data', 'new': copy.deepcopy([self.playsome_data])},
@@ -71,7 +74,8 @@ class AppContext:
     self.data_to_process = [
       {'object': 'hero', 'list': self.heroes},
       {'object': 'heroclass', 'list': self.heroclasses},
-      {'object': 'talent', 'list': self.talents}
+      {'object': 'talent', 'list': self.talents},
+      {'object': 'pet', 'list': self.pets}
     ]
 
 
@@ -135,14 +139,14 @@ def load_files(ctx: AppContext) -> bool:
 
 
 def load_sheets_data(ctx: AppContext) -> bool:
-  """ Load and process Playsome's datasheet """
-  data = ctx.sheets.grab_sheets_data()
-  if not data:
-    ctx.logger.error('Failed to grab sheets data')
+  """ Load and process Googlesheets (Playsome's heroes and personnal Pets) """
+  heroes_data = ctx.sheets.grab_sheets_data(key=ctx.config.PLAYSOME_SHEET_KEY)
+  if not heroes_data:
+    ctx.logger.error('Failed to grab Playsome\'s sheet data')
     return False
   
   ctx.logger.info('Group Playsome Data by hero')
-  groups = group_data_by_hero(data)
+  groups = group_data_by_hero(heroes_data)
   if not groups:
     ctx.logger.error('Failed to group data by hero')
     return False
@@ -151,10 +155,24 @@ def load_sheets_data(ctx: AppContext) -> bool:
   ctx.heroes = []
   for group in groups:
     hero = Hero(ctx)
-    hero.create_hero(data=group, header=data[0])
+    hero.create_hero(data=group, header=heroes_data[0])
     ctx.heroes.append(hero)
   ctx.heroes.sort(key=lambda x:x.name)
   ctx.logger.info('Heroes parsed')
+
+  pets_data = ctx.sheets.grab_sheets_data(key=ctx.config.PET_SHEET_KEY)
+  if not pets_data:
+    ctx.logger.error('Failed to grab Pets sheet data')
+    return False
+  
+  ctx.logger.info('Parse data into Pets')
+  ctx.pets = []
+  for pet_data in pets_data[1:]:
+    pet = Pet(ctx)
+    pet.create_pet(data=pet_data, header=pets_data[0])
+    ctx.pets.append(pet)
+  ctx.pets.sort(key=lambda x:x.name)
+  ctx.logger.info('Pets parsed')
   return True
 
 def create_classes_from_heroes(ctx: AppContext) -> bool:
@@ -372,7 +390,7 @@ def main():
       ctx.logger.error('Exit due to failure to generate pages contents')
       sys.exit(1)
     
-    ctx.generated_pages = [c for c in ctx.generated_pages if c.get('title') == 'Talents of Heroes' or c.get('title') == 'Talentos de héroes' or c.get('title') == 'Talents des Héros'] # FOR TESTS
+    ctx.generated_pages = [c for c in ctx.generated_pages if c.get('title') == 'Pet Stats' or c.get('title') == 'Estadísticas de Mascotas' or c.get('title') == 'Statistiques des Familiers'] # FOR TESTS
     
     if not compare_and_update_wiki_pages(ctx, args):
       ctx.logger.error('Exit due to failure to compare and update wiki pages')
