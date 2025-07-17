@@ -4,6 +4,7 @@ from math import ceil
 from classes.hero import Hero, Leader, Display
 from classes.heroclass import Heroclass
 from classes.talent import Talent
+from classes.pet import Pet
 from utils.language import Language
 from utils.logger import Logger
 
@@ -27,6 +28,8 @@ class DisplayAttributes:
       return self._prepare_heroclass_display_data(heroclass=entity)
     if isinstance(entity, Talent):
       return self._prepare_talent_display_data(talent=entity)
+    if isinstance(entity, Pet):
+      return self._prepare_pet_display_data(pet=entity)
     
 
   def _prepare_hero_display_data(self, hero: Hero):
@@ -205,6 +208,21 @@ class DisplayAttributes:
     setattr(heroclass.display, 'footer', footer)
     
     return heroclass
+  
+
+
+  def _prepare_pet_display_data(self, pet: Pet):
+    """ Prepare pet data with formatted values """
+    setattr(pet.display, 'signature', pet.signature[0])
+    setattr(pet.display, 'signature_translated', self.language.translate(pet.signature[0]))
+    if len(pet.signature) > 1:
+      setattr(pet.display, 'signature_bis', pet.signature[1])
+      setattr(pet.display, 'signature_bis_translated', self.language.translate(pet.signature[1]))
+      print(pet.display.signature_bis)
+    else:
+      setattr(pet.display, 'signature_bis', '')
+      setattr(pet.display, 'signature_bis_translated', '')
+    return pet
   
 
 
