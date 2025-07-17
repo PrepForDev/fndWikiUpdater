@@ -53,11 +53,11 @@ class Sheets:
       return False
     
 
-  def grab_sheets_data(self):
+  def grab_sheets_data(self, key):
     """ Connect to Google Sheets and return data """
     connect = self._connect_to_sheets()
     if connect:
-      playsome_data = self._read_sheet_data(self.config.PLAYSOME_SHEET_KEY)
-      if playsome_data:
-        return playsome_data
+      data = self._read_sheet_data(key)
+      if data:
+        return data
     return False
