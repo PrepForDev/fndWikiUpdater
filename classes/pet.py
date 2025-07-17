@@ -6,6 +6,7 @@ class Talent:
     self.base = 0
     self.silver = 0
     self.gold = ''
+    self.gold_pic = ''
     self.full = ''
     self.merge = []
   
@@ -14,6 +15,7 @@ class Talent:
       base = data.get('base', ''),
       silver = data.get('silver', ''),
       gold = data.get('gold', ''),
+      gold_pic = data.get('gold_pic', ''),
       full = data.get('full', ''),
       merge = data.get('merge', [])
     )
@@ -23,6 +25,7 @@ class Talent:
       'base': self.base,
       'silver': self.silver,
       'gold': self.gold,
+      'gold_pic': self.gold_pic,
       'full': self.full,
       'merge': self.merge
     }
@@ -90,15 +93,15 @@ class Pet:
   def _get_signature_heroes(self, data, header):
     signature_start = header.index('Signature')
     self.signature = [data[s] for s in range(signature_start, signature_start + 2) if data[s] != '']
-    
   
   def _get_talents(self, data, header):
     self.talents.base = data[header.index('Base Talents')]
     self.talents.silver = data[header.index('Silver Talents')]
     self.talents.gold = data[header.index('Gold Talent')]
+    self.talents.gold_pic = data[header.index('Gold Talent Pic')]
     self.talents.full = data[header.index('Full Talent')] if data[header.index('Full Talent')] != '' else None
     talents_start = header.index('Talents')
-    talents_end = self._get_last_index(header, 'Talents')
+    talents_end = self._get_last_index(header, 'Talents') + 1
     for i in range(talents_start, talents_end):
       self.talents.merge.append(data[i])
     
