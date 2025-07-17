@@ -137,6 +137,23 @@ Hero Talents PicLess:
     |}
     [[//translated.'Category'//://translated.'Barracks'//]]
 
+Pet Stats:
+  base object: pet
+  type: full list
+  title: //translated.'Pet Stats'//
+  template: |
+    {{PetStatsTableRow|Name=//name//|NameTranslated=//translated.name//|ForcePetPic=//special_art_id//|Stars=//stars//|Class=//petclass//|ClassTranslated=//translated.petclass//|Color=//color//|
+    SignatureName=//display.signature//|SignatureNameTranslated=//display.signature_translated//|AlternateSignatureName=//display.signature_bis//|
+    AlternateSignatureNameTranslated=//display.signature_bis_translated//|Att=//attack//|Def=//health//|Manacost=//manacost//}}
+  header: |
+    {|  class="fandom-table sortable" style="100%"
+    |+
+    !//translated.'Pet'//!!//translated.'Stars'//!!//translated.'Class'//!!//translated.'Color'//!!//translated.'Signature Hero'//!!//translated.'Alternate Signature Hero'//!!//translated.'%Att'//!!//translated.'%Def'//!!//translated.'Mana Cost'//
+  footer: |
+    |}
+    [[//translated.'Category'//://translated.'Pets'//]]
+    [[//translated.'Category'//://translated.'PetTables'//]]
+
 Single Hero page:
   base object: hero
   type: single
