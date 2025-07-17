@@ -323,6 +323,8 @@ Translations:
     Radiant Amulet of Sea: Radiant Amulet of Sea
     Radiant Amulet of Sun: Radiant Amulet of Sun
   General:
+    '%Att': '%Att'
+    '%Def': '%Def'
     1st: 1st
     1st Ascension: 1st Ascension
     2nd: 2nd
@@ -347,6 +349,7 @@ Translations:
     A3 Talent: A3 Talent
     AI: AI
     AI Speed: AI Speed
+    Alternate Signature Hero: Alternate Signature Hero
     and: and
     Amulet: Amulet
     Ascend: Ascend
@@ -394,6 +397,7 @@ Translations:
     Leader: Leader
     Level: Level
     Magic: Magic
+    Mana Cost: Mana Cost
     Melee: Melee
     Merge: Merge
     Merge Talents: Merge Talents
@@ -401,8 +405,13 @@ Translations:
     Off-Hand: Off-Hand
     or: or
     Pattern: Pattern
+    Pet: Pet
+    Pets: Pets
+    PetTables: PetTables
+    Pet Stats: Pet Stats
     Ranged: Ranged
     Ring: Ring
+    Signature Hero: Signature Hero
     Species: Species
     Star: Star
     Stars: Stars
@@ -709,6 +718,198 @@ Translations:
     Zana: Zana
     Zenith: Zenith
     Zouen: Zouen
+  Pets:
+    Adelaide: Adelaide
+    Aeliana: Aeliana
+    Agnes: Agnes
+    Aldon: Aldon
+    Alfie: Alfie
+    Almond: Almond
+    Amaranth: Amaranth
+    Amaranthe: Amaranthe
+    Amora: Amora
+    Amun: Amun
+    Anastasia: Anastasia
+    Aria: Aria
+    Arthur: Arthur
+    Asladon: Asladon
+    Astra: Astra
+    Atove: Atove
+    Atticus: Atticus
+    Avalanche: Avalanche
+    Avalon: Avalon
+    Bernice: Bernice
+    Biscuit: Biscuit
+    Bonsai: Bonsai
+    Breeze: Breeze
+    Brewster: Brewster
+    Bristlefur: Bristlefur
+    Bubbles: Bubbles
+    Bucky: Bucky
+    Burno: Burno
+    Buttercup: Buttercup
+    Cap 'n: Cap 'n
+    Caramel: Caramel
+    Charlotte: Charlotte
+    Chopper: Chopper
+    Churro: Churro
+    Cipher: Cipher
+    Cira: Cira
+    Clarissa: Clarissa
+    Colby: Colby
+    Corsair: Corsair
+    Cragjaw: Cragjaw
+    Crescent: Crescent
+    Croak: Croak
+    Daphne: Daphne
+    Dawn: Dawn
+    Dax: Dax
+    Diva: Diva
+    Dizzy: Dizzy
+    Dori: Dori
+    Dorothea: Dorothea
+    Dreamer: Dreamer
+    Drexel: Drexel
+    Dusty: Dusty
+    Echo: Echo
+    Eclair: Eclair
+    Eclipse: Eclipse
+    Einar: Einar
+    Elmo: Elmo
+    Elvira: Elvira
+    Elyrian: Elyrian
+    Elysia: Elysia
+    Enigma: Enigma
+    Eruption: Eruption
+    Evar: Evar
+    Fable: Fable
+    Faelen: Faelen
+    Felicity: Felicity
+    Fernia: Fernia
+    Fuego: Fuego
+    Funky: Funky
+    Fuzzy: Fuzzy
+    Gallant: Gallant
+    Ginger: Ginger
+    Glider: Glider
+    Glint: Glint
+    Glitterhoof: Glitterhoof
+    Goldie: Goldie
+    Gossamer: Gossamer
+    Gracie: Gracie
+    Greed: Greed
+    Gregorius: Gregorius
+    Grizzle: Grizzle
+    Gunner: Gunner
+    Gust: Gust
+    Gwynn: Gwynn
+    Harmony: Harmony
+    Hazel: Hazel
+    Hoshi: Hoshi
+    Illusia: Illusia
+    Inara: Inara
+    Inky: Inky
+    Ivaldi: Ivaldi
+    Ivy: Ivy
+    Jinx: Jinx
+    Joy: Joy
+    Junemoss: Junemoss
+    Kaia: Kaia
+    Khan: Khan
+    Kilbo: Kilbo
+    Kismet: Kismet
+    Klarion: Klarion
+    Kodiak: Kodiak
+    Kormit: Kormit
+    Lemon: Lemon
+    Lenny: Lenny
+    Leopold: Leopold
+    Linus: Linus
+    Looter: Looter
+    Luminara: Luminara
+    Lurgrim: Lurgrim
+    Lyssa: Lyssa
+    Marlowe: Marlowe
+    Matey: Matey
+    Maximilian: Maximilian
+    Melody: Melody
+    Midnight: Midnight
+    Miracle: Miracle
+    Mist: Mist
+    Montague: Montague
+    Mystique: Mystique
+    Nebula: Nebula
+    Nori: Nori
+    Oddball: Oddball
+    Onslaught: Onslaught
+    Ozzy: Ozzy
+    Pandora: Pandora
+    Prince: Prince
+    Prospero: Prospero
+    Rajah: Rajah
+    Rapscallion: Rapscallion
+    Rascal: Rascal
+    Reaper: Reaper
+    Rebel: Rebel
+    Ricky: Ricky
+    Rohan: Rohan
+    Rolli: Rolli
+    Roxie: Roxie
+    Ruffian: Ruffian
+    Rufus: Rufus
+    Runar: Runar
+    Rusty: Rusty
+    Sapphira: Sapphira
+    Sarge: Sarge
+    Sasha: Sasha
+    Scipio: Scipio
+    Scout: Scout
+    Scurvy: Scurvy
+    Scythe: Scythe
+    Sebastian: Sebastian
+    Seedling: Seedling
+    Seraph: Seraph
+    Serenade: Serenade
+    Shiverbark: Shiverbark
+    Shroudweaver: Shroudweaver
+    Sifu: Sifu
+    Silvermist: Silvermist
+    Sirocco: Sirocco
+    Snickers: Snickers
+    Snowball: Snowball
+    Snuggle: Snuggle
+    Strider: Strider
+    Sundancer: Sundancer
+    Sunny: Sunny
+    Sunny: Sunny
+    Sunset: Sunset
+    Sven: Sven
+    Swindler: Swindler
+    Taffy: Taffy
+    Taz: Taz
+    Toby: Toby
+    Topaz: Topaz
+    Torrent: Torrent
+    Tracker: Tracker
+    Tucker: Tucker
+    Twilight: Twilight
+    Umbra: Umbra
+    Upton: Upton
+    Velma: Velma
+    Vesper: Vesper
+    Vex: Vex
+    Vomitous: Vomitous
+    Wendell: Wendell
+    Widna: Widna
+    Wilder: Wilder
+    Windjammer: Windjammer
+    Winston: Winston
+    Xavier: Xavier
+    Xylon: Xylon
+    Yarrow: Yarrow
+    Zelda: Zelda
+    Zephyr: Zephyr
+    Ziggy: Ziggy
   Species:
     Beastfolk: Beastfolk
     Dragonborn: Dragonborn
