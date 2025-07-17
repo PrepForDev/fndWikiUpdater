@@ -177,7 +177,7 @@ class DisplayAttributes:
     return lead
   
   def _prepare_talent_categories(self, hero: Hero):
-    unique_talents = set(hero.talents.base) | set(hero.talents.merge) | {hero.talents.A1, hero.talents.A2, hero.talents.A3}
+    unique_talents = sorted(set(hero.talents.base) | set(hero.talents.merge) | {hero.talents.A1, hero.talents.A2, hero.talents.A3})
     talent_categories = ''
     for t in unique_talents:
       talent_categories += self.template_processor.transform_attribute_to_element(attribute=t, which_template='category.talent_template', language=self.language)
@@ -218,10 +218,24 @@ class DisplayAttributes:
     if len(pet.signature) > 1:
       setattr(pet.display, 'signature_bis', pet.signature[1])
       setattr(pet.display, 'signature_bis_translated', self.language.translate(pet.signature[1]))
-      print(pet.display.signature_bis)
     else:
       setattr(pet.display, 'signature_bis', '')
       setattr(pet.display, 'signature_bis_translated', '')
+
+    gold = self.template_processor.transform_attribute_to_element(attribute=pet.talents.gold, which_template=f'trait.template', language=self.language)
+    gold = f'{gold.split('}}')[0]}|ForcePic={pet.talents.gold_pic}' + '}}'
+    setattr(pet.display, 'gold_talent', gold)
+    if pet.talents.full:
+      full = self.template_processor.transform_attribute_to_element(attribute=pet.talents.full, which_template=f'trait.template', language=self.language)
+    else:
+      full = ''
+    setattr(pet.display, 'full_talent', full)
+    merge = []
+    for index, m in enumerate(pet.talents.merge):
+      merge.append(f'Merge{str(index + 1)}={self.template_processor.transform_attribute_to_element(attribute=m, which_template=f'trait.template', language=self.language)}')
+    merge_talents = '|'.join(merge)
+    setattr(pet.display, 'merge_talents', merge_talents)
+
     return pet
   
 
