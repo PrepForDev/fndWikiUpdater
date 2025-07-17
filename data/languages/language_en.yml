@@ -381,7 +381,9 @@ Translations:
     DefA3: DefA3
     Exclusive: Exclusive
     for: for
+    Full Talent: Full Talent
     Gear: Gear
+    Gold Talent: Gold Talent
     Head: Head
     Health: Health
     Hero: Hero
@@ -409,9 +411,11 @@ Translations:
     Pets: Pets
     PetTables: PetTables
     Pet Stats: Pet Stats
+    Pet Talents: Pet Talents
     Ranged: Ranged
     Ring: Ring
     Signature Hero: Signature Hero
+    Silver Talents: Silver Talents
     Species: Species
     Star: Star
     Stars: Stars
@@ -608,6 +612,7 @@ Translations:
     Mosstail: Mosstail
     Murtag: Murtag
     Nargol: Nargol
+    Needleroot: Needleroot
     Nightmeria: Nightmeria
     Nightsong: Nightsong
     Nimbus: Nimbus
@@ -659,6 +664,7 @@ Translations:
     Shani: Shani
     Sharpscale: Sharpscale
     Shatterstorm: Shatterstorm
+    Shoal: Shoal
     Sigyn: Sigyn
     Silverstring: Silverstring
     Skylar: Skylar
@@ -880,8 +886,8 @@ Translations:
     Snuggle: Snuggle
     Strider: Strider
     Sundancer: Sundancer
-    Sunny: Sunny
-    Sunny: Sunny
+    Sunny (Shani): Sunny (Shani)
+    Sunny (Skytail): Sunny (Skytail)
     Sunset: Sunset
     Sven: Sven
     Swindler: Swindler
@@ -971,6 +977,7 @@ Translations:
     Dazzling: Dazzling
     Deadly Syphon: Deadly Syphon
     Death Blow: Death Blow
+    Death Ward: Death Ward
     Demoralizing Strike: Demoralizing Strike
     Diagonal Aim: Diagonal Aim
     Diagonal Heal: Diagonal Heal
@@ -979,6 +986,7 @@ Translations:
     Dodge: Dodge
     Double Strike: Double Strike
     Drainwhirl: Drainwhirl
+    Eagle Eye: Eagle Eye
     Exploit Weakness: Exploit Weakness
     Extra Time: Extra Time
     Favored Odds: Favored Odds
@@ -1049,6 +1057,7 @@ Translations:
     Prepared Ignite: Prepared Ignite
     Prepared Rupture: Prepared Rupture
     Protector: Protector
+    Pulverize: Pulverize
     Push: Push
     Raider: Raider
     Ranged Parry: Ranged Parry
