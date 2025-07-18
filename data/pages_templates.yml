@@ -160,11 +160,11 @@ Pet Talents:
   title: //translated.'Pet Talents'//
   template: |
     {{PetTalentsTableRow|Name=//name//|Translated=//translated.name//|ForcePetPic=//special_art_id//|BasicTalents=//talents.base//|SilverTalents=//talents.silver//|
-    GoldTalent=//display.gold_talent//|FullTalent=//display.full_talent//|//display.merge_talents//}}
+    GoldTalent=//display.gold_talent//|FullTalent=//display.full_talent//|//display.merge_talents.table_list//}}
   header: |
     {|  class="fandom-table sortable" style="100%"
     |+
-    !//translated.'Pet'//____________!!//translated.'Basic Talents'//!!//translated.'Silver Talents'//!!//translated.'Gold Talent'//____________!!//translated.'Full Talent'//____________!!//translated.'Merge'//:1_________!!//translated.'Merge'//:2_________!!//translated.'Merge'//:3_________!!//translated.'Merge'//:4_________!!//translated.'Merge'//:5_________!!//translated.'Merge'//:6_________!!//translated.'Merge'//:7_________!!//translated.'Merge'//:8_________!!//translated.'Merge'//:9_________!!//translated.'Merge'//:10_________
+    !//translated.'Pet'//____________!!//translated.'Basic Talents'//!!//translated.'Silver Talents'//!!//translated.'Active Talent'//____________!!//translated.'Passive Talent'//____________!!//translated.'Merge'//:1_________!!//translated.'Merge'//:2_________!!//translated.'Merge'//:3_________!!//translated.'Merge'//:4_________!!//translated.'Merge'//:5_________!!//translated.'Merge'//:6_________!!//translated.'Merge'//:7_________!!//translated.'Merge'//:8_________!!//translated.'Merge'//:9_________!!//translated.'Merge'//:10_________
   footer: |
     |}
     [[//translated.'Category'//://translated.'Pets'//]]
@@ -178,7 +178,7 @@ Single Hero page:
     **character.template**
     == //translated.'Basics'// ==
     '''//translated.'Color'// :''' **color.translated_template**<br />
-    '''//translated.'Class'// :''' **class.translated_template**<br />
+    '''//translated.'Class'// :''' **heroclass.translated_template**<br />
     '''//translated.'Species'// :''' **species.translated_template**<br />
     '''//translated.'Stars'// :''' //display.stars//<br />
     '''//translated.'Attack'// :''' **attack_type.translated_template****attack_pattern.translated_template**<br />
@@ -200,6 +200,27 @@ Single Hero page:
     '''//translated.'3rd Ascension'//'''//display.gear.A3.bullet_list//<br />
   footer: |
     **category.hero_template**
+
+Single Pet page:
+  base object: pet
+  type: single
+  title: //translated.name//
+  template: |
+    **pet.template**
+    == //translated.'Basics'// ==
+    '''//translated.'Color'// :''' **color.translated_template**<br />
+    '''//translated.'Class'// :''' **petclass.translated_template**<br />
+    '''//translated.'Stars'// :''' //display.stars//<br />
+    //display.signature_heroes_with_title//<br />
+    == //translated.'Cap'// ==
+    '''//translated.'Attack'// :''' //attack//% //display.stats_details//<br />
+    '''//translated.'Health'// :''' //health//% //display.stats_details//<br />
+    '''//translated.'Mana Cost'// :''' //display.manacost_details//
+    == //translated.'Talents'// ==
+    '''//translated.'Active Talent'//'''<br />&nbsp;&nbsp;//display.gold_talent// //translated.'for'// //display.signature_heroes_single_list//<br />
+    '''//translated.'Passive Talent'//'''<br />&nbsp;&nbsp;//display.full_talent// //translated.'for'// :<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//display.passive_matching_heroes//<br />
+    '''//translated.'Merge'//'''<br />&nbsp;&nbsp;//display.merge_talents.row_list//<br />
+
 
 Talents of Heroes:
   base object: talent
