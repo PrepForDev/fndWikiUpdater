@@ -6,11 +6,13 @@ from utils.language import Language
 
 
 class TemplateProcessor:
-  def __init__(self, logger, elements_templates, pages_templates, all_languages):
+  def __init__(self, logger, elements_templates, pages_templates, all_languages, all_pets, all_heroes):
     self.logger = logger
     self.elements_templates = elements_templates
     self.pages_templates = pages_templates
     self.all_languages = all_languages
+    self.all_pets = all_pets
+    self.all_heroes = all_heroes
   
   def process_all_templates(self, entities: List[Dict], language: Language) -> List[Dict]:
     """ Entry point to process all templates
@@ -25,7 +27,7 @@ class TemplateProcessor:
     for entity_dict in entities:
       processed_entities = []
       for entity in entity_dict.get('list'):
-        display = DisplayAttributes(logger=self.logger, elements_templates=self.elements_templates, language=language, all_languages=self.all_languages)
+        display = DisplayAttributes(logger=self.logger, elements_templates=self.elements_templates, language=language, all_languages=self.all_languages, all_heroes=self.all_heroes, all_pets=self.all_pets)
         display.init_template_processor(template_processor=self)
         processed_entities.append(display.prepare_display_data(entity=entity))
 
