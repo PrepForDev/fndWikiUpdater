@@ -242,7 +242,7 @@ def generate_pages_contents(ctx: AppContext) -> bool:
 
   for language in ctx.languages:
     ctx.logger.info(f'Language : {language.name}')
-    processor = TemplateProcessor(logger=ctx.logger, elements_templates=ctx.elements_templates, pages_templates=ctx.pages_templates, all_languages=ctx.languages)
+    processor = TemplateProcessor(logger=ctx.logger, elements_templates=ctx.elements_templates, pages_templates=ctx.pages_templates, all_languages=ctx.languages, all_heroes=ctx.heroes, all_pets=ctx.pets)
     ctx.init_data_to_process()
     to_update = processor.process_all_templates(ctx.data_to_process, language)
     if not to_update:
@@ -284,19 +284,20 @@ def compare_and_update_wiki_pages(ctx: AppContext, args: ArgsClass) -> bool:
     wiki_page_content = wiki.get_page_content(page.get('title'))
     if wiki_page_content is False:
       ctx.logger.error(f'Failed to get content for {page.get('title')}')
-      continue
-    if not isinstance(wiki_page_content, bool):
-      wiki_page_content = wiki_page_content.rstrip()
-    if wiki_page_content and wiki_page_content != page.get('content').rstrip():
-      edit_count += 1
-      ctx.logger.info(f'New content: edit {lang_code}/{page.get('title')}...')
-      success = wiki.edit_request(title=page.get('title'), content=page.get('content').rstrip())
-      if not success:
-        ctx.logger.error(f'Failed to edit {page.get('title')}')
-      else:
-        ctx.logger.info(f'{page.get('title')} successfully edited')
+      return False
+    elif wiki_page_content is None:
+      ctx.logger.info(f'Page {page.get('title')} doesn\'t exist')
     else:
-      ctx.logger.info(f'Same content: skip {lang_code}/{page.get('title')}')
+      if wiki_page_content and wiki_page_content.rstrip() != page.get('content').rstrip():
+        edit_count += 1
+        ctx.logger.info(f'New content: edit {lang_code}/{page.get('title')}...')
+        success = wiki.edit_request(title=page.get('title'), content=page.get('content').rstrip())
+        if not success:
+          ctx.logger.error(f'Failed to edit {page.get('title')}')
+        else:
+          ctx.logger.info(f'{page.get('title')} successfully edited')
+      else:
+        ctx.logger.info(f'Same content: skip {lang_code}/{page.get('title')}')
     
     if i % 50 == 0:
       ctx.logger.info(f'Progression: {i+1}/{len(ctx.generated_pages)} pages checked, {edit_count} edited')
@@ -305,41 +306,42 @@ def compare_and_update_wiki_pages(ctx: AppContext, args: ArgsClass) -> bool:
 
 def compare_and_update_portrait_files(ctx: AppContext):
   """ Compare drive files with wiki files, upload those which are not already in the wiki and update the TraitsAndPortraitsFiles page """
-  wiki = Wiki(config=ctx.config, logger=ctx.logger, lang_code='en')
-  wiki_login = wiki.initialize()
-  if not wiki_login:
-    ctx.logger.error('Failed to initialize wiki connection')
-    return False
-  file_list_str = wiki.get_page_content('TraitsAndPortraitsFiles')
-  if not file_list_str:
-    ctx.logger.error('Failed to get content for TraitsAndPortraitsFiles page')
-    return False
-  traits_and_portraits_list = file_list_str.split(' ')
-  match_images_with_heroes(ctx=ctx, images=[{'name': portrait} for portrait in traits_and_portraits_list if 'Portrait' in portrait], attribute='wiki')
-
-  has_new_images = False
-  for hero in ctx.heroes:
-    if hero.file.drive and not hero.file.wiki:
-      ctx.logger.info(f'---> New file found for {hero.name}')
-      file_path = ctx.drive.download_image(hero.file.drive)
-      if not file_path:
-        return False
-      hero.portrait = f'{hero.name.replace(' ', '_')}_Portrait.png'
-      wiki_upload = wiki.upload_file(filepath=file_path, wiki_filename=hero.portrait)
-      if not wiki_upload:
-        return False
-      has_new_images = True
-    elif hero.file.wiki:
-      hero.portrait = f'{hero.name.replace(' ', '_')}_Portrait.png'
-  
-  if has_new_images:
-    update_wiki = wiki.update_traits_and_portraits_files_page()
-    if not update_wiki:
+  for lang in ctx.languages:
+    wiki = Wiki(config=ctx.config, logger=ctx.logger, lang_code=lang.code)
+    wiki_login = wiki.initialize()
+    if not wiki_login:
+      ctx.logger.error('Failed to initialize wiki connection')
       return False
-  
-  heroes_without_portrait = [h.name for h in ctx.heroes if h.portrait is None]
-  if len(heroes_without_portrait) > 0:
-    ctx.logger.warning(f'---> Heroes found without portrait : {', '.join(heroes_without_portrait)}')
+    file_list_str = wiki.get_page_content('TraitsAndPortraitsFiles')
+    if not file_list_str:
+      ctx.logger.error('Failed to get content for TraitsAndPortraitsFiles page')
+      return False
+    traits_and_portraits_list = file_list_str.split(' ')
+    match_images_with_heroes(ctx=ctx, images=[{'name': portrait} for portrait in traits_and_portraits_list if 'Portrait' in portrait], attribute='wiki')
+
+    has_new_images = False
+    for hero in ctx.heroes:
+      if hero.file.drive and not hero.file.wiki:
+        ctx.logger.info(f'---> New file found for {hero.name}')
+        file_path = ctx.drive.download_image(hero.file.drive)
+        if not file_path:
+          return False
+        hero.portrait = f'{hero.name.replace(' ', '_')}_Portrait.png'
+        wiki_upload = wiki.upload_file(filepath=file_path, wiki_filename=hero.portrait)
+        if not wiki_upload:
+          return False
+        has_new_images = True
+      elif hero.file.wiki:
+        hero.portrait = f'{hero.name.replace(' ', '_')}_Portrait.png'
+    
+    if has_new_images:
+      update_wiki = wiki.update_traits_and_portraits_files_page()
+      if not update_wiki:
+        return False
+    
+    heroes_without_portrait = [h.name for h in ctx.heroes if h.portrait is None]
+    if len(heroes_without_portrait) > 0:
+      ctx.logger.warning(f'---> Heroes found without portrait : {', '.join(heroes_without_portrait)}')
   
   return True
   
@@ -390,7 +392,7 @@ def main():
       ctx.logger.error('Exit due to failure to generate pages contents')
       sys.exit(1)
     
-    ctx.generated_pages = [c for c in ctx.generated_pages if c.get('title') == 'Pet Stats' or c.get('title') == 'Estadísticas de Mascotas' or c.get('title') == 'Statistiques des Familiers'] # FOR TESTS
+    #ctx.generated_pages = [c for c in ctx.generated_pages if c.get('title') == 'Almond' or c.get('title') == 'Almond' or c.get('title') == 'Almond'] # FOR TESTS
     
     if not compare_and_update_wiki_pages(ctx, args):
       ctx.logger.error('Exit due to failure to compare and update wiki pages')
