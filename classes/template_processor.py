@@ -1,18 +1,19 @@
 import re
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional
 
 from classes.display_attributes import DisplayAttributes
 from utils.language import Language
 
 
 class TemplateProcessor:
-  def __init__(self, logger, elements_templates, pages_templates, all_languages, all_pets, all_heroes):
+  def __init__(self, logger, elements_templates, pages_templates, all_languages, all_pets, all_heroes, templates: Optional[List[str]] = None):
     self.logger = logger
     self.elements_templates = elements_templates
     self.pages_templates = pages_templates
     self.all_languages = all_languages
     self.all_pets = all_pets
     self.all_heroes = all_heroes
+    self.templates = [t.lower() for t in templates] if templates else None
   
   def process_all_templates(self, entities: List[Dict], language: Language) -> List[Dict]:
     """ Entry point to process all templates
@@ -32,6 +33,9 @@ class TemplateProcessor:
         processed_entities.append(display.prepare_display_data(entity=entity))
 
       for template_name, template_config in self.pages_templates.items():
+        if self.templates and template_name.lower() not in self.templates:
+          self.logger.info(f'Skipping {template_name} (not in --templates)')
+          continue
         if template_config.get('base object') == entity_dict.get('object'):
           self.logger.info(f'Processing {template_name} template')
           processed = None
