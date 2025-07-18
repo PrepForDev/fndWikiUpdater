@@ -10,12 +10,14 @@ from utils.logger import Logger
 
 
 class DisplayAttributes:
-  def __init__(self, logger: Logger, elements_templates, language: Language, all_languages: List[Language]):
+  def __init__(self, logger: Logger, elements_templates, language: Language, all_languages: List[Language], all_heroes: List[Hero], all_pets: List[Pet]):
     self.logger = logger
     self.elements_templates = elements_templates
     self.language = language
     self.template_processor = None
     self.all_languages = all_languages
+    self.all_heroes = all_heroes
+    self.all_pets = all_pets
   
   def init_template_processor(self, template_processor):
     self.template_processor = template_processor
@@ -35,17 +37,17 @@ class DisplayAttributes:
   def _prepare_hero_display_data(self, hero: Hero):
     """ Prepare hero custom data with formatted values """
     self.logger.debug(f'Calculate custom data for {hero.name}')
-    self._prepare_attack_pattern_and_type(hero)
-    self._prepare_image(hero)
-    self._prepare_stats(hero)
-    self._prepare_talents(hero)
-    self._prepare_gear(hero)
-    self._prepare_stars(hero)
-    self._prepare_leader_data(hero)
-    self._prepare_talent_categories(hero)
+    self._prepare_hero_attack_pattern_and_type(hero)
+    self._prepare_hero_image(hero)
+    self._prepare_hero_stats(hero)
+    self._prepare_hero_talents(hero)
+    self._prepare_hero_gear(hero)
+    self._prepare_hero_stars(hero)
+    self._prepare_hero_leader_data(hero)
+    self._prepare_hero_talent_categories(hero)
     return hero
 
-  def _prepare_attack_pattern_and_type(self, hero: Hero):
+  def _prepare_hero_attack_pattern_and_type(self, hero: Hero):
     """ Prepare attack pattern and attack type """
     match hero.heroclass:
       case 'Assassin' | 'Druid' | 'Guardian' | 'Knight' | 'Warrior' | 'Paladin' | 'Pirate':
@@ -69,12 +71,12 @@ class DisplayAttributes:
     setattr(hero.display, 'attack_type', attack_type)
     setattr(hero.display, 'attack_pattern', attack_pattern)
 
-  def _prepare_image(self, hero: Hero):
+  def _prepare_hero_image(self, hero: Hero):
     """ Prepare image filename """
     image_name = f'{hero.name.replace(' \'', '_\'')}_Portrait.png'
     self._setattr_nested(hero.display, 'image', image_name)
   
-  def _prepare_stats(self, hero: Hero):
+  def _prepare_hero_stats(self, hero: Hero):
     """ Prepare attack and health stats """
     for ascend in ['A0', 'A1', 'A2', 'A3']:
       att_gear = ceil(int(getattr(hero.attack, ascend)) * 5 / 100 * sum(1 for g in getattr(hero.gear, ascend)[:3] if g))
@@ -100,7 +102,7 @@ class DisplayAttributes:
 
     self._setattr_nested(hero.display, 'max_level', max([int(hero.levelmax.A0), int(hero.levelmax.A1), int(hero.levelmax.A2), int(hero.levelmax.A3)]))
   
-  def _prepare_talents(self, hero: Hero):
+  def _prepare_hero_talents(self, hero: Hero):
     """ Prepare formatted talents """
     traits_to_process = [{'attr': 'base', 'traits': [self.template_processor.transform_attribute_to_element(attribute=t, which_template= 'trait.translated_template', language=self.language) for t in hero.talents.base]}]
     traits_to_process.append({'attr': 'A1', 'traits': self.template_processor.transform_attribute_to_element(attribute=hero.talents.A1, which_template= 'trait.translated_template', language=self.language)})
@@ -134,7 +136,7 @@ class DisplayAttributes:
 
     self._setattr_nested(hero.display, 'talents.A3.with_link', self.template_processor.transform_attribute_to_element(attribute=hero.talents.A3, which_template= 'trait.translated_linked_template', language=self.language))
   
-  def _prepare_gear(self, hero: Hero):   
+  def _prepare_hero_gear(self, hero: Hero):   
     """ Prepare formatted gear """
     for ascend in ['A0', 'A1', 'A2', 'A3']:
       translated_gear_without_empty_gear = [self.language.translate(g) for g in getattr(hero.gear, ascend) if g != '']
@@ -144,11 +146,11 @@ class DisplayAttributes:
       self._setattr_nested(hero.display, f'gear.{ascend}.table_list', '||'.join(translated_gear_with_empty_gear))
     self._setattr_nested(hero.display, f'gear.A3.amulet', self.language.translate(hero.gear.A2[0]))
   
-  def _prepare_stars(self, hero: Hero):
+  def _prepare_hero_stars(self, hero: Hero):
     """ Prepare stars """
     self._setattr_nested(hero.display, 'stars', '&#11088; ' * int(hero.stars))
   
-  def _prepare_leader_data(self,  hero: Hero):
+  def _prepare_hero_leader_data(self,  hero: Hero):
     """ Prepare formatted leader data """
     self._setattr_nested(hero.display, f'leadA.no_text', self._format_leader_bonus(leader=hero.leaderA, template_type='no_text_template'))
     self._setattr_nested(hero.display, f'leadB.no_text', self._format_leader_bonus(leader=hero.leaderB, template_type='no_text_template'))
@@ -176,7 +178,7 @@ class DisplayAttributes:
         lead += f' {self.language.translate('or')} {self.template_processor.transform_attribute_to_element(attribute=leader.extra, which_template=f'trait.{template_type}', language=self.language)}'
     return lead
   
-  def _prepare_talent_categories(self, hero: Hero):
+  def _prepare_hero_talent_categories(self, hero: Hero):
     unique_talents = sorted(set(hero.talents.base) | set(hero.talents.merge) | {hero.talents.A1, hero.talents.A2, hero.talents.A3})
     talent_categories = ''
     for t in unique_talents:
@@ -187,7 +189,7 @@ class DisplayAttributes:
   
   def _prepare_heroclass_display_data(self, heroclass: Heroclass):
     """ Prepare heroclass data with formatted values """
-    setattr(heroclass.display, 'header', '!!'.join([self.template_processor.transform_attribute_to_element(attribute=c, which_template= 'class.no_text_template', language=self.language) for c in heroclass.classes]))
+    setattr(heroclass.display, 'header', '!!'.join([self.template_processor.transform_attribute_to_element(attribute=c, which_template= 'heroclass.no_text_template', language=self.language) for c in heroclass.classes]))
     
     table_output = '|-\n'
     table_output += f'|- style="background-color: {heroclass.color_hex}"\n'
@@ -213,15 +215,47 @@ class DisplayAttributes:
 
   def _prepare_pet_display_data(self, pet: Pet):
     """ Prepare pet data with formatted values """
+    self._prepare_pet_image(pet=pet)
+    self._prepare_signature_heroes(pet=pet)
+    self._prepare_pet_talents(pet=pet)
+    setattr(pet.display, 'stars', '&#11088; ' * int(pet.stars))
+    self._prepare_pet_stats(pet=pet)
+    self._prepare_pet_manacost(pet=pet)
+    return pet
+  
+  def _prepare_pet_image(self, pet: Pet):
+    pet_image = pet.special_art_id if pet.special_art_id else pet.name
+    setattr(pet.display, 'image', f'{pet_image}_Portrait.png')
+
+  def _prepare_signature_heroes(self, pet: Pet):
     setattr(pet.display, 'signature', pet.signature[0])
     setattr(pet.display, 'signature_translated', self.language.translate(pet.signature[0]))
+    signature_hero = next(h for h in self.all_heroes if h.name == pet.signature[0])
+    signature = self.template_processor.transform_attribute_to_element(attribute=signature_hero, which_template='portrait.translated_small_size_template', language=self.language)
+    setattr(pet.display, 'signature_template', signature)
+    single_list = signature
+    with_title = f"'''{self.language.translate('Signature Hero')} :''' {signature}"
     if len(pet.signature) > 1:
       setattr(pet.display, 'signature_bis', pet.signature[1])
       setattr(pet.display, 'signature_bis_translated', self.language.translate(pet.signature[1]))
+      signature_bis_hero = next(h for h in self.all_heroes if h.name == pet.signature[1])
+      signature_bis = self.template_processor.transform_attribute_to_element(attribute=signature_bis_hero, which_template='portrait.translated_small_size_template', language=self.language)
+      setattr(pet.display, 'signature_bis_template', signature_bis)
+      single_list += f' {self.language.translate('and')} {signature_bis}'
+      with_title += f"<br />\n'''{self.language.translate('Alternate Signature Hero')} :''' {signature_bis}"
     else:
       setattr(pet.display, 'signature_bis', '')
       setattr(pet.display, 'signature_bis_translated', '')
-
+      setattr(pet.display, 'signature_bis_template', '')
+    setattr(pet.display, 'signature_heroes_single_list', single_list)
+    setattr(pet.display, 'signature_heroes_with_title', with_title)
+    heroes_matching = [h for h in self.all_heroes if h.color == pet.color and h.heroclass == pet.petclass]
+    if len(pet.signature) > 1:
+      heroes_matching.append(signature_bis_hero)
+    passive_matching_heroes = '<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.join([self.template_processor.transform_attribute_to_element(attribute=h, which_template='portrait.translated_small_size_template', language=self.language) for h in sorted(heroes_matching, key=lambda x: x.name)])
+    setattr(pet.display, 'passive_matching_heroes', passive_matching_heroes)
+  
+  def _prepare_pet_talents(self, pet: Pet):
     gold = self.template_processor.transform_attribute_to_element(attribute=pet.talents.gold, which_template=f'trait.template', language=self.language)
     gold = f'{gold.split('}}')[0]}|ForcePic={pet.talents.gold_pic}' + '}}'
     setattr(pet.display, 'gold_talent', gold)
@@ -230,14 +264,38 @@ class DisplayAttributes:
     else:
       full = ''
     setattr(pet.display, 'full_talent', full)
-    merge = []
+    merge_with_text = []
+    merge_no_text = []
     for index, m in enumerate(pet.talents.merge):
-      merge.append(f'Merge{str(index + 1)}={self.template_processor.transform_attribute_to_element(attribute=m, which_template=f'trait.template', language=self.language)}')
-    merge_talents = '|'.join(merge)
-    setattr(pet.display, 'merge_talents', merge_talents)
+      merge_with_text.append(f'Merge{str(index + 1)}={self.template_processor.transform_attribute_to_element(attribute=m, which_template=f'trait.template', language=self.language)}')
+      merge_no_text.append(self.template_processor.transform_attribute_to_element(attribute=m, which_template=f'trait.template', language=self.language))
+    merge_talents = '|'.join(merge_with_text)
+    self._setattr_nested(pet.display, 'merge_talents.table_list', merge_talents)
+    merge_talents = '<br />&nbsp;&nbsp;'.join(merge_no_text)
+    self._setattr_nested(pet.display, 'merge_talents.row_list', merge_talents)
 
-    return pet
-  
+  def _prepare_pet_stats(self, pet: Pet):
+    talents_stats = int(pet.talents.base) + (int(pet.talents.silver) * 2)
+    merge_stats = len([t for t in pet.talents.merge if 'Attack' in t])
+    base_stats = int(pet.attack) - talents_stats - merge_stats
+    stats_details = f'({self.language.translate('Base')} {str(base_stats)}% + {self.language.translate('Talents')} {str(talents_stats)}%'
+    if merge_stats > 0:
+      stats_details += f' + {self.language.translate('Merge')} {str(merge_stats)}%)'
+    else:
+      stats_details += ')'
+    setattr(pet.display, 'stats_details', stats_details)
+
+  def _prepare_pet_manacost(self, pet: Pet):
+    merge_manacost = len([t for t in pet.talents.merge if 'Efficiency' in t])
+    active_manacost = 25 - merge_manacost - int(pet.manacost)
+    mana_capacity = len([t for t in pet.talents.merge if 'Capacity' in t])
+    mana_reserves = len([t for t in pet.talents.merge if 'Reserves' in t])
+    manacost = f'<br />&nbsp;&nbsp;{self.language.translate('Base')} : 25<br />&nbsp;&nbsp;{self.language.translate('Active')} : {str(active_manacost)}<br />&nbsp;&nbsp;{self.language.translate('Full merge')} : {str(pet.manacost)}<br />\n'
+    if mana_capacity > 0:
+      manacost += f"'''{self.language.translate('Mana Capacity')} :''' +{str(mana_capacity)} {self.language.translate('maximum Mana')}<br />\n"
+    if mana_reserves > 0:
+      manacost += f"'''{self.language.translate('Mana Reserves')} :''' +{str(mana_reserves)} {self.language.translate('Mana in the beginning of battle')}<br />\n"
+    setattr(pet.display, 'manacost_details', manacost)
 
 
   def _prepare_talent_display_data(self, talent: Talent):
