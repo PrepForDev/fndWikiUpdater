@@ -2,7 +2,8 @@ import sys
 import os
 import argparse
 import copy
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from typing import List
 
 from glob import glob
 from utils.config import Config
@@ -84,14 +85,28 @@ class ArgsClass:
   """ Dataclass to store command line arguments """
   force: bool = False
   no_save: bool = False
+  templates: List[str] = field(default_factory=list)
   
-def parse_arguments() -> ArgsClass:
+def parse_arguments(ctx: AppContext) -> ArgsClass:
   """ Parse command line arguments """
-  parser = argparse.ArgumentParser(description='Friends & Dragons Wiki Updater')
-  parser.add_argument('--force', action='store_true', help='Force updates even if content hasn\'t changed')
-  parser.add_argument('--no_save', action='store_true', help='Desactivate MongoDB data storage and backups')
-  parsed_args = parser.parse_args()
-  return ArgsClass(force=parsed_args.force, no_save=parsed_args.no_save)
+  parser = argparse.ArgumentParser(prog='fndWikiUpdater', description='Friends & Dragons Wiki Updater', formatter_class=argparse.RawTextHelpFormatter)
+  parser.add_argument('--force', action='store_true', help='force updates even if content hasn\'t changed')
+  parser.add_argument('--no_save', action='store_true', help='desactivate MongoDB data storage and backups')
+
+  template_help = 'update only listed templates :\n' + '\n'.join([f'  - {k.lower()}' for k in ctx.pages_templates.keys()]) + '\nexemple: py main.py --template "hero 3a" "hero gear"'
+  parser.add_argument('--templates', nargs='*', help=template_help)
+  try:
+    parsed_args = parser.parse_args()
+    if parsed_args.templates:
+      valid_templates = [k.lower() for k in ctx.pages_templates.keys()]
+      invalid = [t for t in parsed_args.templates if t.lower() not in valid_templates]
+      if invalid:
+        ctx.logger.error(f"Invalid template name(s): {', '.join(invalid)}")
+        parser.print_help()
+        exit(1)
+  except SystemExit:
+    exit(0)
+  return ArgsClass(force=parsed_args.force, no_save=parsed_args.no_save, templates=parsed_args.templates or [])
 
 
 def init_classes(ctx: AppContext):
@@ -235,14 +250,14 @@ def compare_actual_data_to_stored_data(ctx: AppContext, args: ArgsClass) -> bool
   return True
   
 
-def generate_pages_contents(ctx: AppContext) -> bool:
+def generate_pages_contents(ctx: AppContext, args: ArgsClass) -> bool:
   """ Generate pages contents translated in all known languages """
   ctx.logger.info('Generating pages contents')
   ctx.generated_pages = []
 
   for language in ctx.languages:
     ctx.logger.info(f'Language : {language.name}')
-    processor = TemplateProcessor(logger=ctx.logger, elements_templates=ctx.elements_templates, pages_templates=ctx.pages_templates, all_languages=ctx.languages, all_heroes=ctx.heroes, all_pets=ctx.pets)
+    processor = TemplateProcessor(logger=ctx.logger, elements_templates=ctx.elements_templates, pages_templates=ctx.pages_templates, all_languages=ctx.languages, all_heroes=ctx.heroes, all_pets=ctx.pets, templates=args.templates)
     ctx.init_data_to_process()
     to_update = processor.process_all_templates(ctx.data_to_process, language)
     if not to_update:
@@ -355,7 +370,6 @@ def cleanup(ctx: AppContext, args: ArgsClass):
 
 def main():
   """ Main function """
-  args = parse_arguments()
   ctx = AppContext()
 
   try:
@@ -364,6 +378,8 @@ def main():
     if not load_files(ctx):
       ctx.logger.error('Exit due to failure to load required files')
       sys.exit(1)
+
+    args = parse_arguments(ctx)
     
     if not init_mongodb_connection(ctx, args):
       ctx.logger.error('Exit due to MongoDB connexion failure -> restart with --no_save if it doesn\'t matter ;)')
@@ -388,7 +404,7 @@ def main():
     if not compare_actual_data_to_stored_data(ctx, args):
       sys.exit(1)
     
-    if not generate_pages_contents(ctx):
+    if not generate_pages_contents(ctx, args):
       ctx.logger.error('Exit due to failure to generate pages contents')
       sys.exit(1)
     
@@ -403,16 +419,16 @@ def main():
       sys.exit(1)
     
     ctx.logger.info('Script completed successfully')
-
+  except SystemExit as e:
+    return
   except Exception as e:
     if ctx.logger:
       ctx.logger.error(f'Unexpected error: {str(e)}')
     else:
       print(f'Error: {str(e)}')
       sys.exit(1)
-
-  finally:
-    cleanup(ctx, args)
+    if args is not None:
+      cleanup(ctx, args)
 
 
 if __name__ == '__main__':
