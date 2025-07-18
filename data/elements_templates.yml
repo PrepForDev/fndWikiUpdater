@@ -87,17 +87,6 @@ character:
     | asc3_gear    =//display.gear.A3.raw_list//
     }}
 
-class:
-  base object: hero
-  template: |
-    {{Class|Name=//heroclass//|Size=30}}
-  no_text_template: |
-    {{Class|Name=//heroclass//|Size=30|notext=True}}
-  translated_template: |
-    {{Class|Name=//heroclass//|Translated=//translated.heroclass//|Size=30}}
-  translated_no_text_template: |
-    {{Class|Name=//heroclass//|Translated=//translated.heroclass//|Size=30|notext=True}}
-
 color:
   base object: hero
   template: |
@@ -111,6 +100,51 @@ color:
   translated_no_text_template: |
     {{Color|Name=//color//|Translated=//translated.color//|Size=30|notext=True}}
 
+heroclass:
+  base object: hero
+  template: |
+    {{Class|Name=//heroclass//|Size=30}}
+  no_text_template: |
+    {{Class|Name=//heroclass//|Size=30|notext=True}}
+  translated_template: |
+    {{Class|Name=//heroclass//|Translated=//translated.heroclass//|Size=30}}
+  translated_no_text_template: |
+    {{Class|Name=//heroclass//|Translated=//translated.heroclass//|Size=30|notext=True}}
+
+pet:
+  base object: pet
+  template: |
+    {{Pet
+    | name           =//translated.name//
+    | image          =//display.image//
+    | class          =**petclass.translated_template**
+    | color          =**color.translated_template**
+    | hero           =//display.signature_template//
+    | alternate_hero =//display.signature_bis_template//
+    | stars          ={{Stars|Stars=//stars//}}
+    | passive_talent =//display.full_talent//
+    | manacost       =//manacost//
+    | active_talent  =//display.gold_talent//
+    | attack         =//attack//
+    | health         =//health//
+    }}
+
+petclass:
+  base object: pet
+  template: |
+    {{Class|Name=//petclass//|Size=30}}
+  no_text_template: |
+    {{Class|Name=//petclass//|Size=30|notext=True}}
+  translated_template: |
+    {{Class|Name=//petclass//|Translated=//translated.petclass//|Size=30}}
+  translated_no_text_template: |
+    {{Class|Name=//petclass//|Translated=//translated.petclass//|Size=30|notext=True}}
+
+petstars:
+  base object: pet
+  template: |
+    
+
 portrait:
   base object: hero
   template: |
@@ -119,6 +153,8 @@ portrait:
     {{Portrait|Name=//name//|link=True|Size=50|noimage=True}}
   translated_template: |
     {{Portrait|Name=//name//|Translated=//translated.name//|link=True|Size=50}}
+  translated_small_size_template: |
+    {{Portrait|Name=//name//|Translated=//translated.name//|link=True|Size=30}}
   translated_picless_template: |
     {{Portrait|Name=//name//|Translated=//translated.name//|link=True|Size=50|noimage=True}}
 
