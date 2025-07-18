@@ -26,13 +26,13 @@ class Wiki:
 
   def initialize(self) -> bool:
     """ Initialise wiki connexion """
-    self.get_login_token()
-    if self.login_token:
-      self.login_request()
-    self.get_csrf_token()
-    if self.csrf_token:
-      return True
-    return None
+    if not self.get_login_token():
+      return False
+    if not self.login_request():
+      return False
+    if not self.get_csrf_token():
+      return False
+    return True
 
 
   def _get_api_endpoint(self):
@@ -43,8 +43,13 @@ class Wiki:
         return f'{self.base_url}{self.lang_code}/api.php'
 
 
-  def _make_request(self, method, params={}, data={}, file=None):
+  def _make_request(self, method, params=None, data=None, file=None):
     """ Util func to make requests """
+    if params is None:
+        params = {}
+    if data is None:
+        data = {}
+        
     self._apply_request_delay()
     endpoint = self._get_api_endpoint()
     try:
@@ -70,15 +75,19 @@ class Wiki:
           timeout=self.timeout)
       else:
         self.logger.error(f'Unsupported request method : {method}')
+        return None
       response.raise_for_status()
       return response
     
     except Timeout:
       self.logger.error('Timeout while requesting wiki')
+      return None
     except ConnectionError:
-      self.logger.error('Unable to login to wiki')
+      self.logger.error('Unable to connect to wiki')
+      return None
     except RequestException as e:
       self.logger.error(f'Request error : {e}')
+      return None
 
 
   def _extract_values(self, data, *keys):
@@ -206,20 +215,21 @@ class Wiki:
         self.logger.debug(f'Applying delay: {delay:.1f}s')
         time.sleep(delay)
     
-    if self.consecutive_edits > 0 and self.consecutive_edits % self.batch_pause_threshold == 0:
-        pause = self.batch_pause_duration + random.uniform(-5, 10)
-        self.logger.info(f'Batch pause after {self.consecutive_edits} requests: {pause:.1f}s')
-        time.sleep(pause)
     self.last_edit_time = time.time()
 
   def _apply_edit_delay(self):
-    """ Apply extra delay between edits """
+    """ Apply extra delay between edits and batch pause logic """
     extra_delay = random.uniform(1, 3)
     self.logger.debug(f'Extra edit delay: {extra_delay:.1f}s')
     time.sleep(extra_delay)
+    
+    if self.consecutive_edits > 0 and self.consecutive_edits % self.batch_pause_threshold == 0:
+        pause = self.batch_pause_duration + random.uniform(-2, 5)
+        self.logger.info(f'Batch pause after {self.consecutive_edits} edits: {pause:.1f}s')
+        time.sleep(pause)
 
   def _build_page_title(self, title):
-    return title.strip().replace(' ', '_').replace('\'','%27').replace('&', '%26')
+    return title.strip().replace(' ', '_')
   
 
   def _build_page_url(self, title):
@@ -295,7 +305,12 @@ class Wiki:
     
 
   def get_page_content(self, title):
-    """ Get the content of a wiki page """
+    """ Get the content of a wiki page
+      Returns:
+      - String content if page exists
+      - None if page doesn't exist
+      - False if there was an error
+    """
     if not title or not title.strip():
       self.logger.error('Page title cannot be empty')
       return False
@@ -322,14 +337,14 @@ class Wiki:
       pages = data.get('query', {}).get('pages', {})
       for page_id, page_data in pages.items():
         if page_id == '-1':
-          self.logger.error(f'Page "{title}" does not exist')
-          return True
+          self.logger.warning(f'Page "{title}" does not exist')
+          return None
         
         revisions = page_data.get('revisions', [])
         if revisions:
           return revisions[0].get('slots', {}).get('main', {}).get('*')
         else:
-          self.logger.error(f'No revisions found for page "{title}"')
+          self.logger.warning(f'No revisions found for page "{title}"')
           return ''
         
     except ValueError as e:
@@ -438,9 +453,11 @@ class Wiki:
     
     try:
       os.remove(filepath)
+      self.logger.info(f'Local file {filepath} removed after upload')
       return True
     except OSError as e:
       self.logger.warning(f'Error while removing file after upload : {e}')
+      return True
     
 
   def update_traits_and_portraits_files_page(self):
