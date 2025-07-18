@@ -347,6 +347,8 @@ Translations:
     A3 Gear: Equipo A3
     A3 Health: Salud A3
     A3 Talent: Talento A3
+    Active: Activo
+    Active Talent: Talento Activo
     AI: IA
     AI Speed: Velocidad de IA
     Alternate Signature Hero: Héroe de Firma Alternativa
@@ -381,9 +383,8 @@ Translations:
     DefA3: DefA3
     Exclusive: Exclusivo
     for: para
-    Full Talent: Talento completo
+    Full merge: Fusión completa
     Gear: Equipo
-    Gold Talent: Talento de Oro
     Head: Cabeza
     Health: Salud
     Hero: Héroe
@@ -400,12 +401,15 @@ Translations:
     Level: Nivel
     Magic: Magia
     Mana Cost: Costo de Maná
+    Mana in the beginning of battle: Maná al comienzo de la batalla
+    maximum Mana: Maná máximo
     Melee: Cuerpo a Cuerpo
     Merge: Fusionar
     Merge Talents: Fusionar Talentos
     Number of heroes for each class: Número de héroes de cada clase
     Off-Hand: Mano Izquierda
     or: o
+    Passive Talent: Talento Pasivo
     Pattern: Patrón
     Pet: Mascota
     Pets: Mascotas
@@ -934,6 +938,7 @@ Translations:
     Armor of Moon: Armadura de la Luna
     Armor of Sea: Armadura del Mar
     Armor of Sun: Armadura del Sol
+    Attack Bonus: Bono de ataque
     Aura of Cold: Aura de Frío
     Aura of Fire: Aura de Fuego
     Aura Of Immobilize: Aura of Immobilize
@@ -978,6 +983,7 @@ Translations:
     Deadly Syphon: Sifón Mortal
     Death Blow: Golpe mortal
     Death Ward: Death Ward
+    Defense Bonus: Bono de defensa
     Demoralizing Strike: Golpe Desmoralizante
     Diagonal Aim: Apuntar Diagonal
     Diagonal Heal: Curación Diagonal
@@ -1029,6 +1035,12 @@ Translations:
     Lingering Heal: Curación Persistente
     Magic Parry: Parada Mágica
     Majesty: Majestad
+    Mana Capacity: Capacidad de Maná
+    Mana Current: Corriente de Maná
+    Mana Efficiency: Eficiencia de Maná
+    Mana Release: Liberación de Maná
+    Mana Reserves: Reservas de Maná
+    Mana Reset: Reinicio de Maná
     Meditate: Meditar
     Melee Parry: Parada de Cuerpo a Cuerpo
     Mighty Blow: Golpe Poderoso

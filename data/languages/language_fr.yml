@@ -347,6 +347,8 @@ Translations:
     A3 Gear: Équipement A3
     A3 Health: Santé A3
     A3 Talent: A3 Talent
+    Active: Actif
+    Active Talent: Talent Actif
     AI: IA
     AI Speed: Vitesse IA
     Alternate Signature Hero: Héros Signature Alternatif
@@ -381,9 +383,8 @@ Translations:
     DefA3: DefA3
     Exclusive: Exclusif
     for: pour
-    Full Talent: Talent Complet
+    Full merge: Fusion complète
     Gear: Équipement
-    Gold Talent: Talent Or
     Head: Tête
     Health: Santé
     Hero: Héros
@@ -400,12 +401,15 @@ Translations:
     Level: Niveau
     Magic: Magique
     Mana Cost: Coût en Mana
+    Mana in the beginning of battle: Mana au début du combat
+    maximum Mana: Mana maximum
     Melee: Mêlée
     Merge: Fusion
-    Merge Talents: Talents de merge
+    Merge Talents: Talents de fusion
     Number of heroes for each class: Nombre de héros de chaque classe
     Off-Hand: Main gauche
     or: ou
+    Passive Talent: Talent Passif
     Pattern: Modèle
     Pet: Familier
     Pets: Familiers
@@ -934,6 +938,7 @@ Translations:
     Armor of Moon: Armor of Moon
     Armor of Sea: Armor of Sea
     Armor of Sun: Armor of Sun
+    Attack Bonus: Bonus d'attaque
     Aura of Cold: Aura of Cold
     Aura Of Immobilize: Aura of Immobilize
     Aura of Immobilize: Aura of Immobilize
@@ -978,6 +983,7 @@ Translations:
     Deadly Syphon: Deadly Syphon
     Death Blow: Coup mortel
     Death Ward: Death Ward
+    Defense Bonus: Bonus de défense
     Demoralizing Strike: Demoralizing Strike
     Diagonal Aim: Diagonal Aim
     Diagonal Heal: Diagonal Heal
@@ -1029,6 +1035,12 @@ Translations:
     Lingering Heal: Lingering Heal
     Magic Parry: Parry Magique
     Majesty: Majesty
+    Mana Capacity: Capacité de Mana
+    Mana Current: Flux de Mana
+    Mana Efficiency: Efficacité de Mana
+    Mana Release: Libération de Mana
+    Mana Reserves: Réserves de Mana
+    Mana Reset: Réinitialisation de Mana
     Meditate: Meditate
     Melee Parry: Melee Parry
     Mighty Blow: Coup puissant
