@@ -407,6 +407,33 @@ class Wiki:
     return True
   
 
+  def file_exists_in_shared_repo(self, filename: str) -> bool:
+    """Check if the file exists in the shared Fandom repository (Commons)"""
+    params = {
+        'action': 'query',
+        'titles': f'File:{filename}',
+        'prop': 'imageinfo',
+        'iiprop': 'url',
+        'format': 'json'
+    }
+
+    try:
+      response = self.session.get(self._get_api_endpoint(), params=params)
+      response.raise_for_status()
+      data = response.json()
+
+      pages = data.get('query', {}).get('pages', {})
+      for page in pages.values():
+        imageinfo = page.get('imageinfo')
+        if imageinfo:
+          repo = imageinfo[0].get('repo')
+          return repo == 'shared'
+      return False
+    except Exception as e:
+      self.logger.warning(f'Error while checking shared repo for {filename}: {e}')
+      return False
+
+
   def upload_file(self, filepath, wiki_filename: str, ignore_warnings=True) -> bool:
     """ Upload a file to the wiki and delete local copy after upload
       Args:
@@ -421,6 +448,7 @@ class Wiki:
       return False
 
     self._apply_edit_delay()
+    result_ok = False
     try:
       with open(filepath, 'rb') as file_stream:
         file = {'file': (wiki_filename, file_stream, 'image/png')}
@@ -436,68 +464,77 @@ class Wiki:
         response.raise_for_status()
         result = response.json()
         if 'error' in result:
-          self.logger.error(f'Upload error: {result.get('error')}')
-          return False
+          code = result['error'].get('code')
+          if code == 'fileexists-shared-forbidden':
+            self.logger.info(f'File already exists in the shared file repo : {wiki_filename}')
+            result_ok = True
+          else:
+            self.logger.error(f'Upload error: {result.get('error')}')
         upload_result = result.get('upload', {}).get('result')
-        if upload_result != 'Success':
+        if upload_result == 'Success':
+          self.logger.info(f'File {wiki_filename} uploaded successfully')
+          result_ok = True
+        else:
           self.logger.warning(f'Upload result: {upload_result}')
-          return False
-        self.logger.info(f'File {wiki_filename} uploaded successfully')          
+          result_ok = False
 
     except RequestException as e:
       self.logger.error(f'Upload failed due to request error: {e}')
-      return False
+      result_ok = False
     except ValueError as e:
       self.logger.error(f'Invalid JSON response during upload: {e}')
+      result_ok = False
+    finally:
+      try:
+        os.remove(filepath)
+        self.logger.info(f'Local file {filepath} removed after upload')
+      except OSError as e:
+        self.logger.warning(f'Error while removing file after upload : {e}')
+    return result_ok
+  
+  def update_files_page(self, page_title='FilesPage', file_list=None):
+    """ Update the 'FilesPage' with a given list of image filenames. """
+    if not file_list:
+      self.logger.error('No files provided to update the FilesPage')
       return False
-    
-    try:
-      os.remove(filepath)
-      self.logger.info(f'Local file {filepath} removed after upload')
-      return True
-    except OSError as e:
-      self.logger.warning(f'Error while removing file after upload : {e}')
-      return True
-    
 
-  def update_traits_and_portraits_files_page(self):
-    """ Update the 'TraitsAndPortraitsFiles' page with all png files containing 'Trait' or 'Portrait' in their name """
-    filtered_files = []
+    filtered_files = [
+      name for name in file_list
+      if name.lower().endswith('.png') and any(term in name.lower() for term in ['trait', 'portrait', 'monster', 'boss'])
+    ]
+
+    if not filtered_files:
+      self.logger.error('No valid trait, portrait, monster, or boss files to add to FilesPage')
+      return False
+
+    page_content = ' '.join(sorted(filtered_files))
+    return self.edit_request(
+      title=page_title,
+      content=page_content
+    )
+  
+  def list_all_images(self):
+    """ Return a list of all image filenames from the wiki. """
+    all_files = []
     params = {
       'action': 'query',
       'list': 'allimages',
       'ailimit': '500',
       'format': 'json'
     }
-
     while True:
       response = self._make_request('GET', params=params)
       if not response:
-        self.logger.error('Error while getting files list')
-        return False
-
+        self.logger.error('Error while retrieving allimages')
+        return []
       data = response.json()
       if 'error' in data:
-        self.logger.error(f'Error API allimages: {data.get('error')}')
-        return False
-
+        self.logger.error(f'API error in list_all_images: {data["error"]}')
+        return []
       images = data.get('query', {}).get('allimages', [])
-      for img in images:
-        name = img.get('name', '')
-        if name.lower().endswith('.png') and ('trait' in name.lower() or 'portrait' in name.lower()):
-          filtered_files.append(name)
-
+      all_files.extend([img.get('name') for img in images if 'name' in img])
       if 'continue' in data:
-        params.update(data.get('continue'))
+        params.update(data['continue'])
       else:
         break
-
-    if not filtered_files:
-      self.logger.error('No traits nor portraits files found')
-      return False
-    
-    page_content = ' '.join(filename for filename in sorted(filtered_files))
-    return self.edit_request(
-      title='TraitsAndPortraitsFiles',
-      content=page_content
-    )
+    return all_files
