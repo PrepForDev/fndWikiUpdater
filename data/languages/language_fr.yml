@@ -34,10 +34,10 @@ Translations:
     Light: Lumière
     Red: Rouge
   Events:
-    All Hallows Eve: All Hallows Eve
-    Obsidian Carnival: Obsidian Carnival
-    Dragon Egg Hunt: Dragon Egg Hunt
-    Festival of Friendship: Festival of Friendship
+    All Hallows Eve: Halloween
+    Obsidian Carnival: Carnaval d'obsidienne
+    Dragon Egg Hunt: Chasse aux œufs de dragon
+    Festival of Friendship: Festival de l'amitié
     Alpha Genesis: Alpha Genesis
     Gold Summon: Gold Summon
     Harvest Festival: Harvest Festival
@@ -47,7 +47,7 @@ Translations:
     Soul Summon: Soul Summon
     Spring Break: Spring Break
     Summer Solstice: Summer Solstice
-    Trial by Fire: Épreuve du feu
+    Trial by Fire: Trial by Fire
     Wintertide: Wintertide
   Gear:
     Brilliant Amulet of Earth: Amulette de la terre brillante
@@ -414,8 +414,8 @@ Translations:
     Pet: Familier
     Pets: Familiers
     PetTables: Tables des Familiers
-    Pet Stats: Statistiques des Familiers
-    Pet Talents: Talents des Familiers
+    Pet Stats: Statistiques du Familier
+    Pet Talents: Talents du Familier
     Ranged: Distant
     Ring: Anneau
     Signature Hero: Héros Signature
@@ -678,7 +678,7 @@ Translations:
     Sonya: Sonya
     Sparklight: Lumière étincelante
     Sparrow: Sparrow
-    Sprig: Sprig
+    Sprig: Brindille
     Spring Radek: Radek de printemps
     Squall: Bourrasque
     Stalker: Ombre
