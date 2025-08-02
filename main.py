@@ -300,19 +300,21 @@ def compare_and_update_wiki_pages(ctx: AppContext, args: ArgsClass) -> bool:
     if wiki_page_content is False:
       ctx.logger.error(f'Failed to get content for {page.get('title')}')
       return False
-    elif wiki_page_content is None:
-      ctx.logger.info(f'Page {page.get('title')} doesn\'t exist')
-    else:
-      if wiki_page_content and wiki_page_content.rstrip() != page.get('content').rstrip():
-        edit_count += 1
-        ctx.logger.info(f'New content: edit {lang_code}/{page.get('title')}...')
-        success = wiki.edit_request(title=page.get('title'), content=page.get('content').rstrip())
-        if not success:
-          ctx.logger.error(f'Failed to edit {page.get('title')}')
-        else:
-          ctx.logger.info(f'{page.get('title')} successfully edited')
+    
+    current_content = wiki_page_content.rstrip() if wiki_page_content is not None else None
+    new_content = page.get('content').rstrip()
+    if current_content is None:
+      ctx.logger.info(f"Page {page.get('title')} doesn't exist")
+    if current_content != new_content:
+      edit_count += 1
+      ctx.logger.info(f"New content: edit {lang_code}/{page.get('title')}...")
+      success = wiki.edit_request(title=page.get('title'), content=new_content)
+      if not success:
+        ctx.logger.error(f"Failed to edit {page.get('title')}")
       else:
-        ctx.logger.info(f'Same content: skip {lang_code}/{page.get('title')}')
+        ctx.logger.info(f"{page.get('title')} successfully edited")
+    else:
+      ctx.logger.info(f"Same content: skip {lang_code}/{page.get('title')}")
     
     if i % 50 == 0:
       ctx.logger.info(f'Progression: {i+1}/{len(ctx.generated_pages)} pages checked, {edit_count} edited')
@@ -420,7 +422,7 @@ def main():
       ctx.logger.error('Exit due to failure to generate pages contents')
       sys.exit(1)
     
-    ctx.generated_pages = [c for c in ctx.generated_pages if c.get('title') == 'Pet Talents' or c.get('title') == 'Talents des Familiers' or c.get('title') == 'Talentos de Mascotas'] # FOR TESTS
+    #ctx.generated_pages = [c for c in ctx.generated_pages if c.get('title') == 'Pet Talents' or c.get('title') == 'Talents des Familiers' or c.get('title') == 'Talentos de Mascotas'] # FOR TESTS
 
     if not compare_and_update_wiki_pages(ctx, args):
       ctx.logger.error('Exit due to failure to compare and update wiki pages')
