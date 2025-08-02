@@ -35,6 +35,7 @@ Tool to update Friends & Dragons Wiki
 4. connects to Google Sheets :
    - reads Playsome's data and transform it into a list of Hero objects 
    - reads another sheet data and transform it into a list of Pet objects **(ask me if you want access to both sheets)**
+   **/!\ If you launch this script for the first time (or if your token has expired), a Google Auth page will open for you to authorize the script**   
 6. compares sheets data to stored data (skipped with --no_save) and creates a backup db if any new content is found. If nothing has changed, the script stops unless forced to process with --force
 7. process pages from pages_templates one by one using the template_processor class  
    **/!\ if any new data is needed in templates/pages, it should be added in class/display_attributes.py**
