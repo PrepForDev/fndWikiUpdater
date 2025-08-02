@@ -4,7 +4,7 @@ Translations:
   AI:
     Charge: Charge
     Evade: Esquive
-    Supporter: Défenseur
+    Supporter: Soutien
   Classes:
     Archer: Archer
     Assassin: Assassin
@@ -42,12 +42,12 @@ Translations:
     Gold Summon: Gold Summon
     Harvest Festival: Harvest Festival
     Lunar New Year: Lunar New Year
-    Carnival of Light: Carnival of Light
+    Carnival of Light: Fête des lanternes
     Raid Summon: Raid Summon
     Soul Summon: Soul Summon
     Spring Break: Spring Break
     Summer Solstice: Summer Solstice
-    Trial by Fire: Trial by Fire
+    Trial by Fire: Épreuve du feu
     Wintertide: Wintertide
   Gear:
     Brilliant Amulet of Earth: Amulette de la terre brillante
@@ -331,22 +331,22 @@ Translations:
     2nd Ascension: 2ème Ascension
     3rd: 3ème
     3rd Ascension: 3ème Ascension
-    3A Leader Bonus A : Bonus_de_Leader_A3_A_______
-    3A Leader Bonus B : Bonus_de_Leader_A3_B
+    3A Leader Bonus A : Bonus de chef A3 A
+    3A Leader Bonus B : Bonus de chef A3 B
     3A Atk Upgrade: Gain d'Att A3
     3A Def Upgrade: Gain de Def A3
     A1 Attack: Attaque A1
     A1 Gear: Équipement A1
     A1 Health: Santé A1
-    A1 Talent: A1 Talent
+    A1 Talent: Talent A1
     A2 Attack: Attaque A2
     A2 Gear: Équipement A2
     A2 Health: Santé A2
-    A2 Talent: A2 Talent
+    A2 Talent: Talent A2
     A3 Attack: Attaque A3
     A3 Gear: Équipement A3
     A3 Health: Santé A3
-    A3 Talent: A3 Talent
+    A3 Talent: Talent A3
     Active: Actif
     Active Talent: Talent Actif
     AI: IA
@@ -357,7 +357,7 @@ Translations:
     Ascend: Ascend
     Ascension: Ascension
     Ascension Talents: Talents d'ascension
-    Attack: Attack
+    Attack: Attaque
     AttA0: AttA0
     AttA1: AttA1
     AttA2: AttA2
@@ -366,9 +366,9 @@ Translations:
     Base: Base
     Base AI: Base IA
     Basic: Base
-    Basic Attack: Attaque Basique
-    Basic Health: Santé Basique
-    Basic Talents: Talents Basiques
+    Basic Attack: Attaque de base
+    Basic Health: Santé de base
+    Basic Talents: Talents de base
     Basics: Basiques
     Body: Corps
     Cap: Limite
@@ -392,12 +392,12 @@ Translations:
     Heroes: Héros
     Hero Class Analysis: Analyse des classes de Héros
     Hero Description: Description du Héros
-    Hero Gear: Équipement des Héros
-    Hero Stats: Statistiques des Héros
-    Hero Talents: Talents des Héros
-    Hero Talents PicLess: Talents des Héros Sans Image
+    Hero Gear: Équipement du Héros
+    Hero Stats: Statistiques du Héros
+    Hero Talents: Talents du Héros
+    Hero Talents PicLess: Talents du Héros Sans Image
     Hero Talent Compare: Comparaison des Talents de Héros
-    Leader: Leader
+    Leader: Chef
     Level: Niveau
     Magic: Magique
     Mana Cost: Coût en Mana
@@ -414,13 +414,13 @@ Translations:
     Pet: Familier
     Pets: Familiers
     PetTables: Tables des Familiers
-    Pet Stats: Statistiques des Familiers
-    Pet Talents: Talents des Familiers
+    Pet Stats: Statistiques du Familier
+    Pet Talents: Talents du Familier
     Ranged: Distant
     Ring: Anneau
     Signature Hero: Héros Signature
     Silver Talents: Talents Argent
-    Species: Espèce
+    Species: Espèces
     Star: Étoile
     Stars: Étoiles
     Stat Caps: Limite de stats
@@ -509,7 +509,7 @@ Translations:
     Draigh: Draigh
     Dralgion: Dralgion
     Dravok: Dravok
-    Drift: Drift
+    Drift: Dérapage
     Durzol: Durzol
     Dusk: Dusk
     Earthblood: Earthblood
@@ -535,7 +535,7 @@ Translations:
     Firesoul: Firesoul
     Flamescale: Flamescale
     Flare: Flare
-    Flint: Flint
+    Flint: Silex
     Floralgrin: Floralgrin
     Frida: Frida
     Frostgar: Frostgar
@@ -544,10 +544,10 @@ Translations:
     Genert: Genert
     Geraint: Geraint
     Gharn: Gharn
-    Ghastly Cragg: Ghastly Cragg
+    Ghastly Cragg: Cragg abject
     Giana: Giana
     Glimmer: Glimmer
-    Gloom: Gloom
+    Gloom: Tristesse
     Gobar: Gobar
     Golarg: Golarg
     Goldclaw: Goldclaw
@@ -580,7 +580,7 @@ Translations:
     Juniper: Juniper
     Kael: Kael
     Kazz: Kazz
-    Kelp: Kelp
+    Kelp: Varech
     Khadush: Khadush
     Kharasta: Kharasta
     Kharza: Kharza
@@ -657,7 +657,7 @@ Translations:
     Sanguina: Sanguina
     Sapphirecrown: Sapphirecrown
     Sauriel: Sauriel
-    Scarlet: Scarlet
+    Scarlet: Écarlate
     Scorch: Scorch
     Scylla: Scylla
     Serelune: Serelune
@@ -676,12 +676,12 @@ Translations:
     Sleetsong: Sleetsong
     Sol: Sol
     Sonya: Sonya
-    Sparklight: Sparklight
+    Sparklight: Lumière étincelante
     Sparrow: Sparrow
-    Sprig: Sprig
+    Sprig: Brindille
     Spring Radek: Radek de printemps
-    Squall: Squall
-    Stalker: Stalker
+    Squall: Bourrasque
+    Stalker: Ombre
     Starmist: Starmist
     Steelgrip: Steelgrip
     Stormbreeze: Stormbreeze
@@ -692,7 +692,7 @@ Translations:
     Sylvain: Sylvain
     Tess: Tess
     Thargor: Thargor
-    Thistle: Thistle
+    Thistle: Chardon
     Thronak: Thronak
     Thunderclaw: Thunderclaw
     Tiordan: Tiordan
@@ -718,7 +718,7 @@ Translations:
     Wildfire: Wildfire
     Wildheart: Wildheart
     Willow: Willow
-    Windleaf: Windleaf
+    Windleaf: Feuille de vent
     Wrathborne: Wrathborne
     Wulfgar: Wulfgar
     Xaakt: Xaakt
