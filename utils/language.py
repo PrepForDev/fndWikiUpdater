@@ -22,16 +22,14 @@ class Language:
     self.code = data.get('Code')
     self.name = data.get('Name')
     self.translations = {}
-    for d in (data['Translations']['Heroes'],
-              data['Translations']['Classes'],
-              data['Translations']['AI'],
-              data['Translations']['Colors'],
-              data['Translations']['Species'],
-              data['Translations']['Talents'],
-              data['Translations']['Gear'],
-              data['Translations']['General'],
-              data['Translations']['Pets']):
-      self.translations.update(d)
+    sections = ['Heroes', 'Classes', 'AI', 'Colors', 'Species', 'Talents', 'Gear', 'General', 'Pets']
+    for section_name in sections:
+      section_data = data['Translations'][section_name]
+      for key, value in section_data.items():
+        if key in self.translations:
+          self.logger.warning(f'Key "{key}" already exists, overwriting from section {section_name}')
+        self.translations[key] = value
+    
     self.logger.info(f'Language {self.name} loaded')
     return self
 
