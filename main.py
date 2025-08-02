@@ -319,48 +319,60 @@ def compare_and_update_wiki_pages(ctx: AppContext, args: ArgsClass) -> bool:
   ctx.logger.info(f'{edit_count} pages edited out of {len(ctx.generated_pages)} checked')
   return True
 
-def compare_and_update_portrait_files(ctx: AppContext):
-  """ Compare drive files with wiki files, upload those which are not already in the wiki and update the TraitsAndPortraitsFiles page """
-  for lang in ctx.languages:
-    wiki = Wiki(config=ctx.config, logger=ctx.logger, lang_code=lang.code)
-    wiki_login = wiki.initialize()
-    if not wiki_login:
-      ctx.logger.error('Failed to initialize wiki connection')
-      return False
-    file_list_str = wiki.get_page_content('TraitsAndPortraitsFiles')
-    if not file_list_str:
-      ctx.logger.error('Failed to get content for TraitsAndPortraitsFiles page')
-      return False
-    traits_and_portraits_list = file_list_str.split(' ')
-    match_images_with_heroes(ctx=ctx, images=[{'name': portrait} for portrait in traits_and_portraits_list if 'Portrait' in portrait], attribute='wiki')
 
-    has_new_images = False
+def compare_and_update_files(ctx: AppContext):
+    """ Compare drive files with wiki files, upload those which are not already in the wiki and update FilesPage in all wikis """
+
+    all_wikis = []
+    for lang in ctx.languages:
+      wiki = Wiki(config=ctx.config, logger=ctx.logger, lang_code=lang.code)
+      if not wiki.initialize():
+        ctx.logger.error(f'Failed to initialize {lang.code} wiki connection')
+        return False
+      all_wikis.append(wiki)
+    source_wiki = next((w for w in all_wikis if w.lang_code == 'en'), None)
+    if not source_wiki:
+      ctx.logger.error('Source wiki "en" not found')
+      return False
+
+    file_list_str = source_wiki.get_page_content('FilesPage')
+    if file_list_str is False:
+        ctx.logger.error(f'Failed to get content for FilesPage {lang.code}')
+        return False
+    traits_and_portraits_list = file_list_str.split(' ') if file_list_str else []
+    match_images_with_heroes(
+      ctx=ctx,
+      images=[{'name': portrait} for portrait in traits_and_portraits_list if 'Portrait' in portrait],
+      attribute='wiki'
+    )
+
     for hero in ctx.heroes:
       if hero.file.drive and not hero.file.wiki:
         ctx.logger.info(f'---> New file found for {hero.name}')
         file_path = ctx.drive.download_image(hero.file.drive)
         if not file_path:
           return False
-        hero.portrait = f'{hero.name.replace(' ', '_')}_Portrait.png'
-        wiki_upload = wiki.upload_file(filepath=file_path, wiki_filename=hero.portrait)
-        if not wiki_upload:
-          return False
-        has_new_images = True
-      elif hero.file.wiki:
-        hero.portrait = f'{hero.name.replace(' ', '_')}_Portrait.png'
-    
-    if has_new_images:
-      update_wiki = wiki.update_traits_and_portraits_files_page()
-      if not update_wiki:
-        return False
-    
-    heroes_without_portrait = [h.name for h in ctx.heroes if h.portrait is None]
-    if len(heroes_without_portrait) > 0:
-      ctx.logger.warning(f'---> Heroes found without portrait : {', '.join(heroes_without_portrait)}')
-  
-  return True
-  
 
+        hero.portrait = f'{hero.name.replace(" ", "_")}_Portrait.png'
+        if not source_wiki.upload_file(filepath=file_path, wiki_filename=hero.portrait):
+          return False
+      elif hero.file.wiki:
+        hero.portrait = f'{hero.name.replace(" ", "_")}_Portrait.png'
+    
+    all_source_files = source_wiki.list_all_images()
+    if not all_source_files:
+      ctx.logger.error('Failed to retrieve image list from source wiki')
+      return False
+
+    for wiki in all_wikis:
+      if not wiki.update_files_page(file_list=all_source_files):
+        return False
+      ctx.logger.info(f'FilesPage updated in {wiki.lang_code} wiki')
+
+    heroes_without_portrait = [h.name for h in ctx.heroes if h.portrait is None]
+    if heroes_without_portrait:
+      ctx.logger.warning(f'---> Heroes found without portrait : {', '.join(heroes_without_portrait)}')
+    return True
 
 def cleanup(ctx: AppContext, args: ArgsClass):
   """ Cleanup before close """
@@ -400,7 +412,7 @@ def main():
     if not load_drive_data(ctx):
       ctx.logger.error('Exit due to failure to load files from shared drive')
       sys.exit(1)
-    
+
     if not compare_actual_data_to_stored_data(ctx, args):
       sys.exit(1)
     
@@ -408,14 +420,14 @@ def main():
       ctx.logger.error('Exit due to failure to generate pages contents')
       sys.exit(1)
     
-    #ctx.generated_pages = [c for c in ctx.generated_pages if c.get('title') == 'Almond' or c.get('title') == 'Almond' or c.get('title') == 'Almond'] # FOR TESTS
-    
+    ctx.generated_pages = [c for c in ctx.generated_pages if c.get('title') == 'Pet Talents' or c.get('title') == 'Talents des Familiers' or c.get('title') == 'Talentos de Mascotas'] # FOR TESTS
+
     if not compare_and_update_wiki_pages(ctx, args):
       ctx.logger.error('Exit due to failure to compare and update wiki pages')
       sys.exit(1)
-    
-    if not compare_and_update_portrait_files(ctx):
-      ctx.logger.error('Exit due to failure to compare wiki files with drive')
+
+    if not compare_and_update_files(ctx):
+      ctx.logger.error('Exit due to failure in files management')
       sys.exit(1)
     
     ctx.logger.info('Script completed successfully')
