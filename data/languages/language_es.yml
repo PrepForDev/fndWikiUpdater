@@ -348,7 +348,7 @@ Translations:
     A3 Health: Salud A3
     A3 Talent: Talento A3
     Active: Activo
-    Active Talent: Talento Activo
+    Active Talent: Talento<br>Activo
     AI: IA
     AI Speed: Velocidad de IA
     Alternate Signature Hero: Héroe de Firma Alternativa
@@ -409,7 +409,7 @@ Translations:
     Number of heroes for each class: Número de héroes de cada clase
     Off-Hand: Mano Izquierda
     or: o
-    Passive Talent: Talento Pasivo
+    Passive Talent: Talento<br>Pasivo
     Pattern: Patrón
     Pet: Mascota
     Pets: Mascotas
