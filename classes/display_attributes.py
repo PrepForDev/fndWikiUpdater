@@ -50,7 +50,7 @@ class DisplayAttributes:
   def _prepare_hero_attack_pattern_and_type(self, hero: Hero):
     """ Prepare attack pattern and attack type """
     match hero.heroclass:
-      case 'Assassin' | 'Druid' | 'Guardian' | 'Knight' | 'Warrior' | 'Paladin' | 'Pirate':
+      case 'Assassin' | 'Druid' | 'Gladiator' | 'Guardian' | 'Knight' | 'Warrior' | 'Paladin' | 'Pirate':
         attack_type = 'Melee'
         attack_pattern = 'Cross'
       case 'Princess' | 'Barbarian' | 'Monk' | 'Rogue':
