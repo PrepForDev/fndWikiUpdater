@@ -81,7 +81,7 @@ Hero Stats:
   type: full list
   title: //translated.'Hero Stats'//
   template: |
-    {{HeroStatsTableRow|Name=//name//|NameTranslated=//translated.name//|Class=//heroclass//|ClassTranslated=//translated.heroclass//|Color=//color//|
+    {{HeroStatsTableRow|Name=//name//|NameTranslated=//translated.name//|Class=//heroclass//|ClassTranslated=//translated.heroclass//|Color=//color//|ColorTranslated=//translated.color//|
     Species=//species//|SpeciesTranslated=//translated.species//|Stars=//stars//|AttackType=**attack_type.no_text_template**|AttackPattern=**attack_pattern.no_text_template**|
     AttA0=//attack.A0//|DefA0=//health.A0//|AttA1=//attack.A1//|DefA1=//health.A1//|AttA2=//attack.A2//|DefA2=//health.A2//|AttA3=//attack.A3//|DefA3=//health.A3//|
     LeadA=//display.leadA.no_text//|LeadB=//display.leadB.no_text//|AI=//AI//|Speed=//AI_speed//|Exclusive=//exclusivity//}}
