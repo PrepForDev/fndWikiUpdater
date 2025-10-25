@@ -12,6 +12,7 @@ Translations:
     Bard: Barde
     Druid: Druide
     Elementalist: Élémentaliste
+    Gladiator: Gladiateur
     Guardian: Gardien
     Healer: Guérisseuse
     Hunter: Chasseur
@@ -82,6 +83,7 @@ Translations:
     Divine Javelin: Javelot divin
     Divine Knuckles: Poings divins
     Divine Leather Armor: Armure en cuir divine
+    Divine Net: Divine Net
     Divine Orb: Orbe divin
     Divine Phylactery: Phylactère divin
     Divine Pistol: Pistolet divin
@@ -124,6 +126,7 @@ Translations:
     Epic Javelin: Javelot épique
     Epic Knuckles: Poings épiques
     Epic Leather Armor: Armure en cuir épique
+    Epic Net: Epic Net
     Epic Orb: Orbe épique
     Epic Phylactery: Phylactère épique
     Epic Pistol: Pistolet épique
@@ -166,6 +169,7 @@ Translations:
     Exalted Javelin: Javelot exalté
     Exalted Knuckles: Poings exaltés
     Exalted Leather Armor: Armure en cuir exaltée
+    Exalted Net: Exalted Net
     Exalted Orb: Orbe exalté
     Exalted Phylactery: Phylactère exalté
     Exalted Pistol: Pistolet exalté
@@ -213,6 +217,7 @@ Translations:
     Legendary Javelin: Javelot Légendaire
     Legendary Knuckles: Poings Légendaires
     Legendary Leather Armor: Armure en cuir Légendaire
+    Legendary Net: Legendary Net
     Legendary Orb: Orbe Légendaire
     Legendary Phylactery: Phylactère Légendaire
     Legendary Pistol: Pistolet Légendaire
@@ -255,6 +260,7 @@ Translations:
     Magic Javelin: Javelot Magique
     Magic Knuckles: Poings Magiques
     Magic Leather Armor: Armure en cuir Magique
+    Magic Net: Magic Net
     Magic Orb: Orbe Magique
     Magic Phylactery: Phylactère Magique
     Magic Pistol: Pistolet Magique
@@ -297,6 +303,7 @@ Translations:
     Mythic Javelin: Javelot mythique
     Mythic Knuckles: Poings mythiques
     Mythic Leather Armor: Armure en cuir mythique
+    Mythic Net: Mythic Net
     Mythic Orb: Orbe mythique
     Mythic Phylactery: Phylactère mythique
     Mythic Pistol: Pistolet mythique
@@ -507,6 +514,7 @@ Translations:
     Dorian: Dorian
     Dracyian: Dracyian
     Draigh: Draigh
+    Drak: Drak
     Dralgion: Dralgion
     Dravok: Dravok
     Drift: Dérapage
@@ -522,6 +530,7 @@ Translations:
     Elliot: Elliot
     Elmenora: Elmenora
     Elora: Elora
+    Embera: Embera
     Emberheart: Emberheart
     Emeraldcrown: Emeraldcrown
     Emeray: Emeray
@@ -565,8 +574,12 @@ Translations:
     Grognard: Grognard
     Gronn: Gronn
     Grunhild: Grunhild
+    Hailcrest: Hailcrest
+    Halo: Halo
+    Harvesting Elmenora: Elmenora de la récolte
     Heartwig: Heartwig
     Hedwig: Hedwig
+    Helio: Helio
     Hemlock: Hemlock
     Hogard: Hogard
     Idril: Idril
@@ -627,6 +640,7 @@ Translations:
     Oberyn: Oberyn
     Oleander: Oleander
     Orik: Orik
+    Ormughai: Ormughai
     Osric: Osric
     Ozgar: Ozgar
     Penelope: Penelope
@@ -660,6 +674,7 @@ Translations:
     Scarlet: Écarlate
     Scorch: Scorch
     Scylla: Scylla
+    Seraphina: Seraphina
     Serelune: Serelune
     Serene: Serene
     Shadowstep: Shadowstep
@@ -697,6 +712,7 @@ Translations:
     Thunderclaw: Thunderclaw
     Tiordan: Tiordan
     Torkan: Torkan
+    Torrent: Torrent
     Trillian: Trillian
     Trisha: Trisha
     Tristan: Tristan
@@ -899,7 +915,7 @@ Translations:
     Taz: Taz
     Toby: Toby
     Topaz: Topaz
-    Torrent: Torrent
+    Torrent (pet): Torrent (pet)
     Tracker: Tracker
     Tucker: Tucker
     Twilight: Twilight
@@ -944,6 +960,7 @@ Translations:
     Aura of Immobilize: Aura d'immobilisation
     Aura of Fire: Aura de feu
     Aura of Poison: Aura de poison
+    Aura of Terror: Aura of Terror
     Backstab: Attaque dans le dos
     Bad Medicine: Médicament périmé
     Ballistic: Balistique
@@ -995,6 +1012,7 @@ Translations:
     Eagle Eye: Eagle Eye
     Exploit Weakness: Exploiter la faiblesse
     Extra Time: Temps supplémentaire
+    Entangle: Entangle
     Favored Odds: Bonnes chances
     Finishing Blow: Coup de grâce
     Fire Resistance: Résistance à Feu
@@ -1021,12 +1039,14 @@ Translations:
     Immune to Disorientation: Immunité contre Désorientation
     Immune to Silence: Immunité contre Silence
     Immune to Stun: Immunité contre Étourdissement
+    Immune to Taunt: Immune to Taunt
     Immune to Withering: Immunité contre flétrissement
     Impunity: Impunité
     'Initiative: Double Strike': 'Initiative: Double frappe'
     'Initiative: Heroic Blow': 'Initiative: Coup héroïque'
     Inner Peace: Paix intérieure
     Ironskin: Cuir tenace
+    Lick & Drag: Lick & Drag
     Lick and Drag: Lécher et faire glisser
     Life Drain: Drain de vide
     Life Drain Immunity: Immunité contre Drain de vie
@@ -1045,6 +1065,7 @@ Translations:
     Melee Parry: Parade de mêlée
     Mighty Blow: Coup puissant
     Natural Harmony: Harmonie Naturelle
+    Net Grab: Net Grab
     Oath of Vengeance: Vœu de vengeance
     Pacifist: Pacifiste
     Pact Against Beasts: Pacte contre les bêtes
@@ -1123,6 +1144,7 @@ Translations:
     Testudo: Testudo
     Toxic Exposure: Exposition toxique
     Triage: Triage
+    Trident & Net: Trident & Net
     True Shot: Tir véritable
     Tumble: Culbute
     Unstoppable Force: Force irrésistible
