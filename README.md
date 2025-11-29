@@ -40,7 +40,7 @@ Tool to update Friends & Dragons Wiki
 7. process pages from pages_templates one by one using the template_processor class  
    **/!\ if any new data is needed in templates/pages, it should be added in class/display_attributes.py**
 8. connects to the wiki language by language and compare pages content with generated content -> update only if contents are not the same
-9. connects to Google Drive, checks for new heroes portraits compared to the existing file list in the FilesPage page (used in /Module:Picture for a lot of templates)
+9. connects to Google Drive, checks for new heroes and pets portraits compared to the existing file list in the FilesPage page (used in /Module:Picture for a lot of templates)
    -> if new files are found, download them, upload them to the wiki, update the FilesPage and then delete the temp files
 
 all of this is logged both in your shell and in a log file
