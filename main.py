@@ -18,7 +18,7 @@ from utils.language import Language
 from utils.drive import Drive
 
 from classes.hero import Hero, match_images_with_heroes
-from classes.pet import Pet
+from classes.pet import Pet, match_images_with_pets
 from classes.template_processor import TemplateProcessor
 from classes.heroclass import create_heroclasses
 from classes.talent import create_talents
@@ -58,7 +58,8 @@ class AppContext:
       self.files_to_load.append({'attr': 'languages', 'data_dir': '', 'name': lang_file})
 
     self.folders = [
-      {'name': 'Heroes', 'object': 'Hero'}
+      {'name': 'Heroes', 'object': 'Hero'},
+      {'name': 'PetPortraits-and-Icons', 'object': 'Pet'}
     ]
 
   def init_stored_data(self):
@@ -205,9 +206,13 @@ def load_drive_data(ctx: AppContext) -> bool:
     if not image_list:
       return False
     
-    if folder.get('object') == 'Hero':
-      ctx.logger.info('Checking hero portraits...')
-      match_images_with_heroes(ctx=ctx, images=image_list, attribute='drive')
+    match folder.get('object'):
+      case 'Hero':
+        ctx.logger.info('Checking hero portraits...')
+        match_images_with_heroes(ctx=ctx, images=image_list, attribute='drive')
+      case 'Pet':
+        ctx.logger.info('Checking pet portraits...')
+        match_images_with_pets(ctx=ctx, images=image_list, attribute='drive')
 
   return True
 
@@ -347,19 +352,31 @@ def compare_and_update_files(ctx: AppContext):
       images=[{'name': portrait} for portrait in traits_and_portraits_list if 'Portrait' in portrait],
       attribute='wiki'
     )
+    match_images_with_pets(
+      ctx=ctx,
+      images=[{'name': portrait} for portrait in traits_and_portraits_list if 'Portrait' in portrait],
+      attribute='wiki'
+    )
 
     for hero in ctx.heroes:
+      hero.portrait = f'{hero.name.replace(" ", "_")}_Portrait.png'
       if hero.file.drive and not hero.file.wiki:
         ctx.logger.info(f'---> New file found for {hero.name}')
         file_path = ctx.drive.download_image(hero.file.drive)
         if not file_path:
-          return False
-
-        hero.portrait = f'{hero.name.replace(" ", "_")}_Portrait.png'
+          return False        
         if not source_wiki.upload_file(filepath=file_path, wiki_filename=hero.portrait):
           return False
-      elif hero.file.wiki:
-        hero.portrait = f'{hero.name.replace(" ", "_")}_Portrait.png'
+
+    for pet in ctx.pets:
+      pet.portrait = f'{pet.special_art_id if pet.special_art_id else pet.name.replace(" ", "_")}_Portrait.png'
+      if pet.file.drive and not pet.file.wiki:
+        ctx.logger.info(f'---> New file found for {pet.name}')
+        file_path = ctx.drive.download_image(pet.file.drive)
+        if not file_path:
+          return False        
+        if not source_wiki.upload_file(filepath=file_path, wiki_filename=pet.portrait):
+          return False
     
     all_source_files = source_wiki.list_all_images()
     if not all_source_files:
@@ -374,6 +391,10 @@ def compare_and_update_files(ctx: AppContext):
     heroes_without_portrait = [h.name for h in ctx.heroes if h.portrait is None]
     if heroes_without_portrait:
       ctx.logger.warning(f'---> Heroes found without portrait : {', '.join(heroes_without_portrait)}')
+    pets_without_portrait = [p.name for p in ctx.heroes if p.portrait is None]
+    if pets_without_portrait:
+      ctx.logger.warning(f'---> Pets found without portrait : {', '.join(pets_without_portrait)}')
+    
     return True
 
 def cleanup(ctx: AppContext, args: ArgsClass):
@@ -422,7 +443,7 @@ def main():
       ctx.logger.error('Exit due to failure to generate pages contents')
       sys.exit(1)
     
-    #ctx.generated_pages = [c for c in ctx.generated_pages if c.get('title') == 'Pet Talents' or c.get('title') == 'Talents des Familiers' or c.get('title') == 'Talentos de Mascotas'] # FOR TESTS
+    #ctx.generated_pages = [c for c in ctx.generated_pages if c.get('title') == 'Hero Stats' or c.get('title') == 'Estadísticas de Héroe' or c.get('title') == 'Statistiques des Héros'] # FOR TESTS
 
     if not compare_and_update_wiki_pages(ctx, args):
       ctx.logger.error('Exit due to failure to compare and update wiki pages')
