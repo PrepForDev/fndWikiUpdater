@@ -465,7 +465,7 @@ class Wiki:
         result = response.json()
         if 'error' in result:
           code = result['error'].get('code')
-          if code == 'fileexists-shared-forbidden':
+          if code == 'fileexists-shared-forbidden' or code == 'fileexists-forbidden':
             self.logger.info(f'File already exists in the shared file repo : {wiki_filename}')
             result_ok = True
           else:
@@ -473,6 +473,9 @@ class Wiki:
         upload_result = result.get('upload', {}).get('result')
         if upload_result == 'Success':
           self.logger.info(f'File {wiki_filename} uploaded successfully')
+          result_ok = True
+        elif code == 'fileexists-forbidden':
+          self.logger.info(f'File {wiki_filename} not uploaded')
           result_ok = True
         else:
           self.logger.warning(f'Upload result: {upload_result}')
