@@ -230,16 +230,16 @@ class DisplayAttributes:
   def _prepare_signature_heroes(self, pet: Pet):
     setattr(pet.display, 'signature', pet.signature[0])
     setattr(pet.display, 'signature_translated', self.language.translate(pet.signature[0]))
-    signature_hero = next(h for h in self.all_heroes if h.name == pet.signature[0])
-    signature = self.template_processor.transform_attribute_to_element(attribute=signature_hero, which_template='portrait.translated_small_size_template', language=self.language)
+    signature_hero = next((h for h in self.all_heroes if h.name == pet.signature[0]), None)
+    signature = self.template_processor.transform_attribute_to_element(attribute=signature_hero, which_template='portrait.translated_small_size_template', language=self.language) if signature_hero else ''
     setattr(pet.display, 'signature_template', signature)
     single_list = signature
     with_title = f"'''{self.language.translate('Signature Hero')} :''' {signature}"
     if len(pet.signature) > 1:
       setattr(pet.display, 'signature_bis', pet.signature[1])
       setattr(pet.display, 'signature_bis_translated', self.language.translate(pet.signature[1]))
-      signature_bis_hero = next(h for h in self.all_heroes if h.name == pet.signature[1])
-      signature_bis = self.template_processor.transform_attribute_to_element(attribute=signature_bis_hero, which_template='portrait.translated_small_size_template', language=self.language)
+      signature_bis_hero = next((h for h in self.all_heroes if h.name == pet.signature[1]), None)
+      signature_bis = self.template_processor.transform_attribute_to_element(attribute=signature_bis_hero, which_template='portrait.translated_small_size_template', language=self.language) if signature_bis_hero else ''
       setattr(pet.display, 'signature_bis_template', signature_bis)
       single_list += f' {self.language.translate('and')} {signature_bis}'
       with_title += f"<br />\n'''{self.language.translate('Alternate Signature Hero')} :''' {signature_bis}"
