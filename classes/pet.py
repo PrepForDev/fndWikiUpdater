@@ -29,7 +29,23 @@ class Talent:
       'full': self.full,
       'merge': self.merge
     }
+
+class FileClass:
+  def __init__(self):
+    self.drive = None
+    self.wiki = None
+
+  def from_dict(cls, data: Dict):
+    return cls(
+      drive = data.get('drive', None),
+      wiki = data.get('wiki', None)
+    )
   
+  def to_dict(self) -> Dict:
+    return {
+      'drive': self.drive,
+      'wiki': self.wiki
+    }
   
 """ Empty Display class to be filled by display_attributes.py """
 class Display():
@@ -44,6 +60,7 @@ class Pet:
 
     self.name = None
     self.special_art_id = None
+    self.file = FileClass()
     self.petclass = None
     self.color = None
     self.stars = None
@@ -110,3 +127,20 @@ class Pet:
       if list[i] == element:
         return i
     self.logger.error(f'{element} not in header, please check data and run again')
+
+def match_images_with_pets(ctx, images: List[str], attribute: str):
+  """ Match image list with extracted pets objects """
+  for image in images:
+    cleaned_image_name = image.get('name').split('.png')[0][3:]
+    found_pet = next((pet for pet in ctx.pets if cleaned_image_name == pet.signature[0]), None)
+    if found_pet:
+      setattr(found_pet.file, attribute, image)
+    else:
+      cleaned_image_name = image.get('name').split('.png')[0].split('_Portrait')[0].replace('0', '').replace('_',' ')
+      found_pet = next((pet for pet in ctx.pets if cleaned_image_name == pet.name), None)
+      if found_pet:
+        setattr(found_pet.file, attribute, image)
+      else:
+        found_pet = next((pet for pet in ctx.pets if cleaned_image_name == pet.special_art_id), None)
+        if found_pet:
+          setattr(found_pet.file, attribute, image)
