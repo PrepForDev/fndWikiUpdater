@@ -508,6 +508,7 @@ Translations:
     Daryl: Daryl
     Dashing Lysander: Lysander apuesto
     Dawnshimmer: Dawnshimmer
+    Deathblossom: Deathblossom
     Dianthe: Dianthe
     Divine Einharl: Einharl divino
     Dolorea: Dolorea
@@ -527,6 +528,7 @@ Translations:
     Elethas: Elethas
     Elgar: Elgar
     Ellarion: Ellarion
+    Ellie: Ellie
     Elliot: Elliot
     Elmenora: Elmenora
     Elora: Elora
@@ -608,6 +610,7 @@ Translations:
     Lightheart: Lightheart
     Lionel: Lionel
     Liora: Liora
+    Lobelia: Lobelia
     Lotus: Lotus
     Lucent Daedra: Daedra luminosa
     Lucia: Lucia
@@ -639,6 +642,7 @@ Translations:
     Oasis: Oasis
     Oberyn: Oberyn
     Oleander: Oleander
+    Onyx: Onyx
     Orik: Orik
     Ormughai: Ormughai
     Osric: Osric
@@ -728,6 +732,7 @@ Translations:
     Vera: Vera
     Veridian: Veridian
     Violet: Violet
+    Voidtail: Voidtail
     Vorlos: Vorlos
     Wavescale: Wavescale
     Wild Caledor: Caledor salvaje
@@ -743,10 +748,12 @@ Translations:
     Yun: Yun
     Zana: Zana
     Zenith: Zenith
+    Zeyra: Zeyra
     Zouen: Zouen
   Pets:
     Adelaide: Adelaide
     Aeliana: Aeliana
+    Aenju: Aenju
     Agnes: Agnes
     Aldon: Aldon
     Alfie: Alfie
@@ -777,6 +784,7 @@ Translations:
     Cap 'n: Cap 'n
     Caramel: Caramel
     Charlotte: Charlotte
+    Chikara: Chikara
     Chopper: Chopper
     Churro: Churro
     Cipher: Cipher
@@ -796,10 +804,13 @@ Translations:
     Dorothea: Dorothea
     Dreamer: Dreamer
     Drexel: Drexel
+    Dusklily: Dusklily
     Dusty: Dusty
+    Dys: Dys
     Echo: Echo
     Eclair: Eclair
     Eclipse: Eclipse
+    Eikuro: Eikuro
     Einar: Einar
     Elmo: Elmo
     Elvira: Elvira
@@ -825,8 +836,10 @@ Translations:
     Gracie: Gracie
     Greed: Greed
     Gregorius: Gregorius
-    Grizzle: Grizzle
+    Grizzle (Grimmor): Grizzle (Grimmor)
+    Grizzle (Gloom): Grizzle (Gloom)
     Gunner: Gunner
+    Guri: Guri
     Gust: Gust
     Gwynn: Gwynn
     Harmony: Harmony
@@ -841,17 +854,20 @@ Translations:
     Joy: Joy
     Junemoss: Junemoss
     Kaia: Kaia
+    Kaido: Kaido
     Khan: Khan
     Kilbo: Kilbo
     Kismet: Kismet
     Klarion: Klarion
     Kodiak: Kodiak
     Kormit: Kormit
+    Lazumi: Lazumi
     Lemon: Lemon
     Lenny: Lenny
     Leopold: Leopold
     Linus: Linus
     Looter: Looter
+    Lumei: Lumei
     Luminara: Luminara
     Lurgrim: Lurgrim
     Lyssa: Lyssa
@@ -859,14 +875,17 @@ Translations:
     Matey: Matey
     Maximilian: Maximilian
     Melody: Melody
+    Midnara: Midnara
     Midnight: Midnight
     Miracle: Miracle
     Mist: Mist
     Montague: Montague
     Mystique: Mystique
+    Naru: Naru
     Nebula: Nebula
     Nori: Nori
     Oddball: Oddball
+    Omenar: Omenar
     Onslaught: Onslaught
     Ozzy: Ozzy
     Pandora: Pandora
@@ -880,6 +899,7 @@ Translations:
     Ricky: Ricky
     Rohan: Rohan
     Rolli: Rolli
+    Rotwart: Rotwart
     Roxie: Roxie
     Ruffian: Ruffian
     Rufus: Rufus
@@ -921,6 +941,7 @@ Translations:
     Twilight: Twilight
     Umbra: Umbra
     Upton: Upton
+    Vargan: Vargan
     Velma: Velma
     Vesper: Vesper
     Vex: Vex
@@ -936,6 +957,7 @@ Translations:
     Zelda: Zelda
     Zephyr: Zephyr
     Ziggy: Ziggy
+    Zirra: Zirra
   Species:
     Beastfolk: Bestiales
     Dragonborn: Nacidos de Dragón
@@ -945,6 +967,7 @@ Translations:
     Orc: Orco
   Talents:
     Acid Resistance: Resistencia al Ácido
+    Alpha Alliance: Alpha Alliance
     Aquatic Ambush: Aquatic Ambush
     Arcane Shield: Escudo Arcano
     Arcane Vibrations: Vibraciones Arcanas
@@ -1067,6 +1090,7 @@ Translations:
     Natural Harmony: Armonía Natural
     Net Grab: Net Grab
     Oath of Vengeance: Juramento de venganza
+    Ooze Exterminator: Ooze Exterminator
     Pacifist: Pacifista
     Pact Against Beasts: Pacto Contra Bestias
     Pact Against Constructs: Pacto Contra Construcciones
@@ -1089,6 +1113,7 @@ Translations:
     Prepared Freeze: Congelación Preparada
     Prepared Ignite: Encendido Preparado
     Prepared Rupture: Ruptura Preparada
+    Prepared Weakened: Prepared Weakened
     Protector: Protector
     Pulverize: Pulverize
     Push: Empujar
