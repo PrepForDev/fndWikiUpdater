@@ -18,6 +18,24 @@
 #   exemple : **color.translated_template** -> returns {{Color|Name=//color//|Translated=//translated.color//|Size=30}} taken from elements_template.yml
 #
 
+Dragonspire main page:
+  base object: grid
+  type: full list
+  title: //translated.'Category'//://translated.'Dragonspire'//
+  template: |
+    [[File://filename//.png]]
+  footer: |
+    [[//translated.'Category'//://translated.'Tables'//]]
+
+Single dragonspire page:
+  base object: map
+  type: single
+  title: //playsome_name//
+  template: |
+    //display.pics//
+  footer: |
+    [[//translated.'Category'//://translated.'Dragonspire'//]]
+
 Hero 3A:
   base object: hero
   type: full list
