@@ -5,6 +5,8 @@ from classes.hero import Hero, Leader, Display
 from classes.heroclass import Heroclass
 from classes.talent import Talent
 from classes.pet import Pet
+from classes.map import Map
+from classes.grid import Grid
 from utils.language import Language
 from utils.logger import Logger
 
@@ -32,6 +34,9 @@ class DisplayAttributes:
       return self._prepare_talent_display_data(talent=entity)
     if isinstance(entity, Pet):
       return self._prepare_pet_display_data(pet=entity)
+    if isinstance(entity, Map):
+      return self._prepare_map_display_data(map=entity)
+    return entity
     
 
   def _prepare_hero_display_data(self, hero: Hero):
@@ -309,6 +314,17 @@ class DisplayAttributes:
       heroes.append(hero_output)
     setattr(talent.display, 'heroes_list', ', '.join(heroes))
     return talent
+  
+  def _prepare_map_display_data(self, map: Map):
+    if len(map.images) > 1:
+      pics = ''
+      for i in range(1, len(map.images)):
+        map_name = map.images[i]['filename'].split('Spire')[1].replace('_', ' ')
+        pics += f'\'\'\'{map_name}\'\'\'\n[[File:{map.images[i]['filename']}.png|Frameless]]\n\n'
+    else:
+      pics = f'[[File:{map.images[0]['filename']}.png|Frameless]]'
+    setattr(map.display, 'pics', pics)
+    return map
     
   
   def _setattr_nested(self, obj, attribute_path: str, value) -> Any:
