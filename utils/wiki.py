@@ -438,7 +438,7 @@ class Wiki:
     """ Upload a file to the wiki and delete local copy after upload
       Args:
         filepath: local path to the file (in /temp)
-        filename: file name as it appears on the wiki
+        wiki_filename: file name as it appears on the wiki
         ignore_warnings: if True, ignore warnings (duplicate)
       Returns:
         True on succes, False otherwise
@@ -446,9 +446,14 @@ class Wiki:
     if not os.path.isfile(filepath):
       self.logger.error(f'File not found: {filepath}')
       return False
-
+    local_size = os.path.getsize(filepath)
+    remote_size = self._get_remote_file_size(wiki_filename)
+    if remote_size is not None and remote_size == local_size:
+      self.logger.info(f'Skipping upload for {wiki_filename}: identical size ({local_size} bytes)')
+      return True
     self._apply_edit_delay()
     result_ok = False
+    code = None
     try:
       with open(filepath, 'rb') as file_stream:
         file = {'file': (wiki_filename, file_stream, 'image/png')}
@@ -459,40 +464,37 @@ class Wiki:
           'format': 'json',
           'ignorewarnings': '1' if ignore_warnings else '0'
         }
-
         response = self._make_request('POST UPLOAD', data=data, file=file)
-        response.raise_for_status()
+        if not response:
+          return False
         result = response.json()
+
         if 'error' in result:
           code = result['error'].get('code')
-          if code == 'fileexists-shared-forbidden' or code == 'fileexists-forbidden':
-            self.logger.info(f'File already exists in the shared file repo : {wiki_filename}')
-            result_ok = True
+          if code in ('fileexists-shared-forbidden', 'fileexists-forbidden'):
+            self.logger.info(f'File already exists on wiki: {wiki_filename}')
+            return True
           else:
-            self.logger.error(f'Upload error: {result.get('error')}')
+            self.logger.error(f'Upload error: {result.get("error")}')
+            return False
         upload_result = result.get('upload', {}).get('result')
         if upload_result == 'Success':
           self.logger.info(f'File {wiki_filename} uploaded successfully')
           result_ok = True
-        elif code == 'fileexists-forbidden':
-          self.logger.info(f'File {wiki_filename} not uploaded')
-          result_ok = True
         else:
           self.logger.warning(f'Upload result: {upload_result}')
-          result_ok = False
 
     except RequestException as e:
       self.logger.error(f'Upload failed due to request error: {e}')
-      result_ok = False
     except ValueError as e:
       self.logger.error(f'Invalid JSON response during upload: {e}')
-      result_ok = False
     finally:
-      try:
-        os.remove(filepath)
-        self.logger.info(f'Local file {filepath} removed after upload')
-      except OSError as e:
-        self.logger.warning(f'Error while removing file after upload : {e}')
+      if result_ok:
+        try:
+          os.remove(filepath)
+          self.logger.info(f'Local file {filepath} removed after upload')
+        except OSError as e:
+          self.logger.warning(f'Error while removing file after upload : {e}')
     return result_ok
   
   def update_files_page(self, page_title='FilesPage', file_list=None):
@@ -503,7 +505,7 @@ class Wiki:
 
     filtered_files = [
       name for name in file_list
-      if name.lower().endswith('.png') and any(term in name.lower() for term in ['trait', 'portrait', 'monster', 'boss'])
+      if name.lower().endswith('.png') and any(term in name.lower() for term in ['trait', 'portrait', 'monster', 'boss', 'spire'])
     ]
 
     if not filtered_files:
@@ -541,3 +543,27 @@ class Wiki:
       else:
         break
     return all_files
+  
+  def _get_remote_file_size(self, filename: str):
+    """Return remote file size in bytes, or None if file does not exist"""
+    params = {
+        'action': 'query',
+        'titles': f'File:{filename}',
+        'prop': 'imageinfo',
+        'iiprop': 'size',
+        'format': 'json'
+    }
+    try:
+      response = self._make_request('GET', params=params)
+      if not response:
+        return None
+      data = response.json()
+      pages = data.get('query', {}).get('pages', {})
+      for page in pages.values():
+        imageinfo = page.get('imageinfo')
+        if imageinfo:
+          return imageinfo[0].get('size')
+      return None
+    except Exception as e:
+      self.logger.warning(f'Error while getting remote size for {filename}: {e}')
+      return None
