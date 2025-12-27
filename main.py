@@ -22,13 +22,14 @@ from classes.pet import Pet, match_images_with_pets
 from classes.template_processor import TemplateProcessor
 from classes.heroclass import create_heroclasses
 from classes.talent import create_talents
-
+from classes.map import create_all_maps, match_images_with_maps
+from classes.grid import create_all_grids
 
 
 class AppContext:
   """ Class to contain all application objects and data """
   def __init__(self):
-    self.config = None
+    self.config = Config()
     self.logger = None
     self.sheets = None
     self.yml = None
@@ -42,6 +43,8 @@ class AppContext:
     self.pages_templates = None
     self.heroes = []
     self.pets = []
+    self.maps = []
+    self.grids = []
     self.generated_pages = []
     self.images = []
     self.heroclasses = []
@@ -58,8 +61,9 @@ class AppContext:
       self.files_to_load.append({'attr': 'languages', 'data_dir': '', 'name': lang_file})
 
     self.folders = [
-      {'name': 'Heroes', 'object': 'Hero'},
-      {'name': 'PetPortraits-and-Icons', 'object': 'Pet'}
+      {'name': 'Heroes', 'object': 'Hero', 'drive_key': self.config.PLAYSOME_DRIVE_KEY, 'mime_type': 'image/png', 'display': 'hero portraits'},
+      {'name': 'PetPortraits-and-Icons', 'object': 'Pet','drive_key': self.config.PLAYSOME_DRIVE_KEY, 'mime_type': 'image/png', 'display': 'pet portraits'},
+      {'name': None, 'object': 'Map', 'drive_key': self.config.PLAYSOME_SPIRE_KEY, 'mime_type': 'application/octet-stream', 'display': 'spire maps'},
     ]
 
   def init_stored_data(self):
@@ -69,7 +73,8 @@ class AppContext:
       {'stored': 'elements_templates', 'new': copy.deepcopy([self.elements_templates])},
       {'stored': 'pages_templates', 'new': copy.deepcopy([self.pages_templates])},
       {'stored': 'playsome_data', 'new': copy.deepcopy([self.playsome_data])},
-      {'stored': 'languages', 'new': [lang.to_dict() for lang in self.languages]}
+      {'stored': 'languages', 'new': [lang.to_dict() for lang in self.languages]},
+      {'stored': 'maps', 'new': [map.to_dict() for map in self.maps]}
     ]
 
   def init_data_to_process(self):
@@ -77,7 +82,9 @@ class AppContext:
       {'object': 'hero', 'list': self.heroes},
       {'object': 'heroclass', 'list': self.heroclasses},
       {'object': 'talent', 'list': self.talents},
-      {'object': 'pet', 'list': self.pets}
+      {'object': 'pet', 'list': self.pets},
+      {'object': 'map', 'list': self.maps},
+      {'object': 'grid', 'list': self.grids},
     ]
 
 
@@ -112,7 +119,6 @@ def parse_arguments(ctx: AppContext) -> ArgsClass:
 
 def init_classes(ctx: AppContext):
   """ Initialize util classes stored in /utils """
-  ctx.config = Config()
   ctx.logger = Logger(log_file=ctx.config.LOG_FILE)
   ctx.logger.info('Init classes')
   ctx.sheets = Sheets(config=ctx.config, logger=ctx.logger)
@@ -200,19 +206,22 @@ def create_talents_from_heroes(ctx: AppContext) -> bool:
   return True
 
 def load_drive_data(ctx: AppContext) -> bool:
-  """ Load files from shared Google Drive and associate them with their heroes """
+  """ Load files from shared Google Drive and associate them with their objects """
   for folder in ctx.folders:
-    image_list = ctx.drive.find_images(folder=folder.get('name'))
-    if not image_list:
+    ctx.logger.info(f'Checking {folder.get('display')}...')
+    file_list = ctx.drive.find_files(drive_key=folder.get('drive_key'), folder=folder.get('name'), mime_type=folder.get('mime_type'))
+    if not file_list:
       return False
     
     match folder.get('object'):
       case 'Hero':
-        ctx.logger.info('Checking hero portraits...')
-        match_images_with_heroes(ctx=ctx, images=image_list, attribute='drive')
+        match_images_with_heroes(ctx=ctx, images=file_list, attribute='drive')
       case 'Pet':
-        ctx.logger.info('Checking pet portraits...')
-        match_images_with_pets(ctx=ctx, images=image_list, attribute='drive')
+        match_images_with_pets(ctx=ctx, images=file_list, attribute='drive')
+      case 'Map':
+        create_all_maps(ctx=ctx, files=[ctx.yml.load(raw_data=f['content']) for f in file_list])
+        create_all_grids(ctx=ctx, path='temp')
+        print(ctx.grids)
 
   return True
 
@@ -346,37 +355,46 @@ def compare_and_update_files(ctx: AppContext):
     if file_list_str is False:
         ctx.logger.error(f'Failed to get content for FilesPage {lang.code}')
         return False
-    traits_and_portraits_list = file_list_str.split(' ') if file_list_str else []
-    match_images_with_heroes(
-      ctx=ctx,
-      images=[{'name': portrait} for portrait in traits_and_portraits_list if 'Portrait' in portrait],
-      attribute='wiki'
-    )
-    match_images_with_pets(
-      ctx=ctx,
-      images=[{'name': portrait} for portrait in traits_and_portraits_list if 'Portrait' in portrait],
-      attribute='wiki'
-    )
+    images_list = file_list_str.split(' ') if file_list_str else []
 
+    match_images_with_heroes(ctx=ctx, images=[{'name': i} for i in images_list if 'Portrait' in i], attribute='wiki')
     for hero in ctx.heroes:
       hero.portrait = f'{hero.name.replace(" ", "_")}_Portrait.png'
       if hero.file.drive and not hero.file.wiki:
         ctx.logger.info(f'---> New file found for {hero.name}')
-        file_path = ctx.drive.download_image(hero.file.drive)
+        file_path = ctx.drive.download_file(hero.file.drive)
         if not file_path:
           return False        
         if not source_wiki.upload_file(filepath=file_path, wiki_filename=hero.portrait):
           return False
-
+        
+    match_images_with_pets(ctx=ctx, images=[{'name': i} for i in images_list if 'Portrait' in i], attribute='wiki')
     for pet in ctx.pets:
       pet.portrait = f'{pet.special_art_id if pet.special_art_id else pet.name.replace(" ", "_")}_Portrait.png'
       if pet.file.drive and not pet.file.wiki:
         ctx.logger.info(f'---> New file found for {pet.name}')
-        file_path = ctx.drive.download_image(pet.file.drive)
+        file_path = ctx.drive.download_file(pet.file.drive)
         if not file_path:
           return False        
         if not source_wiki.upload_file(filepath=file_path, wiki_filename=pet.portrait):
           return False
+        
+    match_images_with_maps(ctx=ctx, images=[i.get('name') for i in images_list if 'Spire' in i], attribute='wiki_exists')
+    for map in ctx.maps:
+      for idx, image in enumerate(map.images):
+        if len(map.images) == 1:
+          should_upload = not image['wiki_exists']
+        else:
+          should_upload = idx in [1, 2] and not image['wiki_exists']
+        if should_upload:
+          ctx.logger.info(f'---> New file found for {image['filename']}')
+          if not source_wiki.upload_file(filepath=image['filepath'], wiki_filename=image['filename']):
+            return False
+          
+    for grid in ctx.grids:
+      ctx.logger.info(f'---> Trying to upload file for {map.name}')
+      if not source_wiki.upload_file(filepath=grid.filepath, wiki_filename=grid.filename):
+        return False
     
     all_source_files = source_wiki.list_all_images()
     if not all_source_files:
@@ -401,7 +419,12 @@ def cleanup(ctx: AppContext, args: ArgsClass):
   """ Cleanup before close """
   if ctx.mongodb and not args.no_save:
     ctx.mongodb.close()
-
+  
+  for file in os.listdir('temp'):
+    file_path = os.path.join('temp', file)
+    os.remove(file_path)
+    ctx.logger.info(f'{file} removed from /temp')
+    
 
 def main():
   """ Main function """
@@ -443,7 +466,7 @@ def main():
       ctx.logger.error('Exit due to failure to generate pages contents')
       sys.exit(1)
     
-    #ctx.generated_pages = [c for c in ctx.generated_pages if c.get('title') == 'Hero Stats' or c.get('title') == 'Estadísticas de Héroe' or c.get('title') == 'Statistiques des Héros'] # FOR TESTS
+    #ctx.generated_pages = [c for c in ctx.generated_pages if c.get('title') == 'Category:Dragonspire'] # or c.get('title') == 'Estadísticas de Héroe' or c.get('title') == 'Statistiques des Héros'] # FOR TESTS
 
     if not compare_and_update_wiki_pages(ctx, args):
       ctx.logger.error('Exit due to failure to compare and update wiki pages')
@@ -453,6 +476,7 @@ def main():
       ctx.logger.error('Exit due to failure in files management')
       sys.exit(1)
     
+    cleanup(ctx, args)
     ctx.logger.info('Script completed successfully')
   except SystemExit as e:
     return
