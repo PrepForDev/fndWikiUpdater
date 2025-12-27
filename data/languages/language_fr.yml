@@ -388,6 +388,7 @@ Translations:
     DefA1: DefA1
     DefA2: DefA2
     DefA3: DefA3
+    Dragonspire: Dragonspire
     Exclusive: Exclusif
     for: pour
     Full merge: Fusion complète
@@ -401,7 +402,7 @@ Translations:
     Hero Description: Description du Héros
     Hero Gear: Équipements des Héros
     Hero Stats: Statistiques des Héros
-    Hero Talents: Talents des Héros
+    Hero Talents: Talents du Héros
     Hero Talents PicLess: Talents des Héros Sans Image
     Hero Talent Compare: Comparaison des Talents de Héros
     Leader: Chef
@@ -527,6 +528,7 @@ Translations:
     Elesha: Elesha
     Elethas: Elethas
     Elgar: Elgar
+    Elgroth: Elgroth
     Ellarion: Ellarion
     Ellie: Ellie
     Elliot: Elliot
@@ -552,6 +554,7 @@ Translations:
     Frostgar: Frostgar
     Fulgrin: Fulgrin
     Furia: Furia
+    Garnabur: Garnabur
     Genert: Genert
     Geraint: Geraint
     Gharn: Gharn
@@ -691,6 +694,7 @@ Translations:
     Sigyn: Sigyn
     Silverstring: Silverstring
     Skylar: Skylar
+    Skylash: Skylash
     Skytail: Skytail
     Sleetsong: Sleetsong
     Sol: Sol
@@ -725,6 +729,7 @@ Translations:
     Two-Talon: Two-Talon
     Ugaz: Ugaz
     Urgax: Urgax
+    Urzmorga: Urzmorga
     Vaelith: Vaelith
     Valenor: Valenor
     Valeria: Valeria
@@ -773,6 +778,7 @@ Translations:
     Avalon: Avalon
     Bernice: Bernice
     Biscuit: Biscuit
+    Blackbeak: Blackbeak
     Bonsai: Bonsai
     Breeze: Breeze
     Brewster: Brewster
@@ -798,6 +804,7 @@ Translations:
     Daphne: Daphne
     Dawn: Dawn
     Dax: Dax
+    Dewdrop: Dewdrop
     Diva: Diva
     Dizzy: Dizzy
     Dori: Dori
@@ -812,6 +819,7 @@ Translations:
     Eclipse: Eclipse
     Eikuro: Eikuro
     Einar: Einar
+    Ekon: Ekon
     Elmo: Elmo
     Elvira: Elvira
     Elyrian: Elyrian
@@ -838,6 +846,7 @@ Translations:
     Gregorius: Gregorius
     Grizzle (Grimmor): Grizzle (Grimmor)
     Grizzle (Gloom): Grizzle (Gloom)
+    Gumleaf: Gumleaf
     Gunner: Gunner
     Guri: Guri
     Gust: Gust
@@ -924,6 +933,7 @@ Translations:
     Snickers: Snickers
     Snowball: Snowball
     Snuggle: Snuggle
+    Soar: Soar
     Strider: Strider
     Sundancer: Sundancer
     Sunny (Shani): Sunny (Shani)
@@ -1065,6 +1075,7 @@ Translations:
     Immune to Taunt: Immune to Taunt
     Immune to Withering: Immunité contre flétrissement
     Impunity: Impunité
+    'Initiative: Cure Poison': 'Initiative: Cure Poison'
     'Initiative: Double Strike': 'Initiative: Double frappe'
     'Initiative: Heroic Blow': 'Initiative: Coup héroïque'
     Inner Peace: Paix intérieure
@@ -1091,6 +1102,7 @@ Translations:
     Net Grab: Net Grab
     Oath of Vengeance: Vœu de vengeance
     Ooze Exterminator: Ooze Exterminator
+    Pacify Beasts: Pacify Beasts
     Pacifist: Pacifiste
     Pact Against Beasts: Pacte contre les bêtes
     Pact Against Constructs: Pacte contre Automates
@@ -1164,7 +1176,6 @@ Translations:
     Survivor: Survivant
     Swashbuckler: Bretteur
     Syphon Life: Siphon de vie
-    Talents: Talents
     Taunt: Provocation
     Testudo: Testudo
     Toxic Exposure: Exposition toxique
