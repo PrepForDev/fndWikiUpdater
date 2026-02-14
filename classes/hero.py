@@ -4,17 +4,19 @@ from typing import Dict, List
 """ Hero sub-classes """
 class StatsByAscend:
   def __init__(self):
-    self.A0 = None
-    self.A1 = None
-    self.A2 = None
-    self.A3 = None
+    self.A0 = ''
+    self.A1 = ''
+    self.A2 = ''
+    self.A3 = ''
+    self.A4 = ''
 
   def from_dict(cls, data: Dict):
     return cls(
-      A0 = data.get('A0', None),
-      A1 = data.get('A0', None),
-      A2 = data.get('A0', None),
-      A3 = data.get('A0', None)
+      A0 = data.get('A0', ''),
+      A1 = data.get('A1', ''),
+      A2 = data.get('A2', ''),
+      A3 = data.get('A3', ''),
+      A4 = data.get('A3', ''),
     )
 
   def to_dict(self) -> Dict:
@@ -22,7 +24,8 @@ class StatsByAscend:
       'A0': self.A0,
       'A1': self.A1,
       'A2': self.A2,
-      'A3': self.A3
+      'A3': self.A3,
+      'A4': self.A4
     }
 
 class Leader:
@@ -60,6 +63,7 @@ class Talent:
     self.A1 = None
     self.A2 = None
     self.A3 = None
+    self.A4 = None
     self.merge = []
   
   def from_dict(cls, data: Dict):
@@ -68,6 +72,7 @@ class Talent:
       A1 = data.get('A1', ''),
       A2 = data.get('A2', ''),
       A3 = data.get('A3', ''),
+      A4 = data.get('A4', ''),
       merge = data.get('merge', [])
     )
 
@@ -77,6 +82,7 @@ class Talent:
       'A1': self.A1,
       'A2': self.A2,
       'A3': self.A3,
+      'A4': self.A4,
       'merge': self.merge
     }
   
@@ -180,7 +186,15 @@ class Hero:
       setattr(self.health, ascend, line[header.index('Health Cap')])
       setattr(self.gear, ascend, self._get_gear(line, header))
     self._get_talents(data=data, header=header)
-    self._get_leader(line=line[:-1], header=header)
+
+    i = len(data) - 1
+    line_for_leader = data[i]
+    while line_for_leader and line_for_leader[0] == '':
+      i -= 1
+      if i < 0:
+        break
+      line_for_leader = data[i]
+    self._get_leader(line=line_for_leader[:-1], header=header)
     return self
   
   """ class private methods for sheets data parsing """
@@ -202,6 +216,7 @@ class Hero:
     self.talents.A1 = data[1][ascend_talents_start].replace(' Of ',' of ')
     self.talents.A2 = data[2][ascend_talents_start + 1].replace(' Of ',' of ')
     self.talents.A3 = data[3][ascend_talents_start + 2].replace(' Of ',' of ')
+    self.talents.A4 = data[4][ascend_talents_start + 3].replace(' Of ',' of ')
 
     merge_talents_start = header.index('Mastery Talents')
     self.talents.merge = [data[0][mt].replace(' Of ',' of ') for mt in range(merge_talents_start, merge_talents_start + 3) if data[0][merge_talents_start] != '']
@@ -266,7 +281,7 @@ class Hero:
       self.logger.error(f'{name} not in Heroes\' section of playsome_data.yml, please add it and run again')
 
 
-def match_images_with_heroes(ctx, images: List[str], attribute: str):
+def match_images_with_heroes(ctx, images: List[Dict], attribute: str):
   """ Match image list with extracted heroes objects """
   for image in images:
     cleaned_image_name = image.get('name').split('.png')[0].split('_Portrait')[0].replace('0', '').replace('_',' ')
