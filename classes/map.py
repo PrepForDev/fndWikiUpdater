@@ -71,9 +71,9 @@ def create_all_maps(ctx, files: List[str]):
     ctx.maps.append(game_map)
   ctx.maps.sort(key=lambda m: (not m.always_same_start, m.height, m.has_water_or_lava, m.name))
 
-def match_images_with_maps(ctx, images: List[str], attribute: str):
+def match_images_with_maps(ctx, images: List[Dict], attribute: str):
   """ Match image list with extracted maps objects """
-  wiki_files = set(images)
+  wiki_files = set([i.get('name') for i in images])
   for map_obj in ctx.maps:
     for image_dict in map_obj.images:
       if attribute not in image_dict:
