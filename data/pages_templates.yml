@@ -50,6 +50,21 @@ Hero 3A:
     |}
     [[//translated.'Category'//://translated.'Barracks'//]]
 
+Hero Ascend Gain:
+  base object: hero
+  type: full list
+  title: //translated.'Hero Ascend Gain'//
+  template: |
+    {{HeroAscendTableRow|Name=//name//|Translated=//translated.name//|Color=//color//|Stars=//stars//|AttA1=//display.attack.A1_gain//|DefA1=//display.health.A1_gain//|
+    AttA2=//display.attack.A2_gain//|DefA2=//display.health.A1_gain//|AttA3=//display.attack.A3_gain//|DefA3=//display.health.A3_gain//|AttA4=//display.attack.A4_gain//|DefA4=//display.health.A4_gain//}}
+  header: |
+    {|  class="fandom-table sortable" style="100%"
+    |+
+    !//translated.'Hero'//!!//translated.'Color'//!!//translated.'Stars'//!!//translated.'A1 Atk Gain'//!!//translated.'A1 Def Gain'//!!//translated.'A2 Atk Gain'//!!//translated.'A2 Def Gain'//!!//translated.'A3 Atk Gain'//!!//translated.'A3 Def Gain'//!!//translated.'A4 Atk Gain'//!!//translated.'A4 Def Gain'//
+  footer: |
+    |}
+    [[//translated.'Category'//://translated.'Barracks'//]]
+
 Hero Class Analysis:
   base object: heroclass
   type: full list
@@ -86,6 +101,8 @@ Hero Gear:
     |[[//translated.name//]]||//translated.'2nd'//||//display.gear.A2.table_list//
     |-
     |[[//translated.name//]]||//translated.'3rd'//||//display.gear.A3.table_list//
+    |-
+    |[[//translated.name//]]||//translated.'4th'//||//display.gear.A4.table_list//
   header: |
     {|  class="fandom-table sortable" style="100%"
     |+
@@ -102,11 +119,11 @@ Hero Stats:
     {{HeroStatsTableRow|Name=//name//|NameTranslated=//translated.name//|Class=//heroclass//|ClassTranslated=//translated.heroclass//|Color=//color//|ColorTranslated=//translated.color//|
     Species=//species//|SpeciesTranslated=//translated.species//|Stars=//stars//|AttackType=**attack_type.no_text_template**|AttackPattern=**attack_pattern.no_text_template**|
     AttA0=//attack.A0//|DefA0=//health.A0//|AttA1=//attack.A1//|DefA1=//health.A1//|AttA2=//attack.A2//|DefA2=//health.A2//|AttA3=//attack.A3//|DefA3=//health.A3//|
-    LeadA=//display.leadA.no_text//|LeadB=//display.leadB.no_text//|AI=//AI//|Speed=//AI_speed//|Exclusive=//exclusivity//}}
+    AttA4=//attack.A4//|DefA4=//health.A4//|LeadA=//display.leadA.no_text//|LeadB=//display.leadB.no_text//|AI=//AI//|Speed=//AI_speed//|Exclusive=//exclusivity//}}
   header: |
     {|  class="fandom-table sortable" style="100%"
     |+
-    !//translated.'Hero'//!!//translated.'Class'//!!//translated.'Color'//!!//translated.'Species'//!!//translated.'Stars'//!!//translated.'Type'//!!//translated.'Pattern'//!!//translated.'AttA0'//!!//translated.'DefA0'//!!//translated.'AttA1'//!!//translated.'DefA1'//!!//translated.'AttA2'//!!//translated.'DefA2'//!!//translated.'AttA3'//!!//translated.'DefA3'//!!//translated.'3A Leader Bonus A'//!!//translated.'3A Leader Bonus B'//!!//translated.'Base AI'//!!//translated.'Exclusive'//
+    !//translated.'Hero'//!!//translated.'Class'//!!//translated.'Color'//!!//translated.'Species'//!!//translated.'Stars'//!!//translated.'Type'//!!//translated.'Pattern'//!!//translated.'AttA0'//!!//translated.'DefA0'//!!//translated.'AttA1'//!!//translated.'DefA1'//!!//translated.'AttA2'//!!//translated.'DefA2'//!!//translated.'AttA3'//!!//translated.'DefA3'//!!//translated.'AttA4'//!!//translated.'DefA4'//!!//translated.'3A Leader Bonus A'//!!//translated.'3A Leader Bonus B'//!!//translated.'Base AI'//!!//translated.'Exclusive'//
   footer: |
     |}
     [[//translated.'Category'//://translated.'Barracks'//]]
@@ -116,7 +133,7 @@ Hero Talents:
   type: full list
   title: //translated.'Hero Talents'//
   template: |
-    {{HeroTalentsTableRow|Name=//name//|Translated=//translated.name//|BasicTalents=//display.talents.base.raw_list//|AscTalents=//display.talents.A1.raw_list// <sup>//translated.'1st'//</sup><br />//display.talents.A2.raw_list// <sup>//translated.'2nd'//</sup><br />//display.talents.A3.raw_list// <sup>//translated.'3rd'//</sup><br />|MergeTalents=//display.talents.merge.raw_list//}}
+    {{HeroTalentsTableRow|Name=//name//|Translated=//translated.name//|BasicTalents=//display.talents.base.raw_list//|AscTalents=//display.talents.ascend.raw_list//|MergeTalents=//display.talents.merge.raw_list//}}
   header: |
     {|  class="fandom-table sortable" style="100%"
     |+
@@ -145,7 +162,7 @@ Hero Talents PicLess:
   type: full list
   title: //translated.'Hero Talents PicLess'//
   template: |
-    {{HeroTalentsTableRow|Name=//name//|Translated=//translated.name//|noimage=True|BasicTalents=//display.talents.base.raw_list_picless//|AscTalents=//translated.talents.A1// <sup>//translated.'1st'//</sup><br />//translated.talents.A2// <sup>//translated.'2nd'//</sup><br />//translated.talents.A3// <sup>//translated.'3rd'//</sup><br />|MergeTalents=//display.talents.merge.raw_list_picless//}}
+    {{HeroTalentsTableRow|Name=//name//|Translated=//translated.name//|noimage=True|BasicTalents=//display.talents.base.raw_list_picless//|AscTalents=//display.talents.ascend.raw_list_picless//</sup><br />|MergeTalents=//display.talents.merge.raw_list_picless//}}
   header: |
     {|  class="fandom-table sortable" style="100%"
     |+
@@ -230,6 +247,7 @@ Single Hero page:
     '''//translated.'1st Ascension'//'''//display.gear.A1.bullet_list//<br />
     '''//translated.'2nd Ascension'//'''//display.gear.A2.bullet_list//<br />
     '''//translated.'3rd Ascension'//'''//display.gear.A3.bullet_list//<br />
+    '''//translated.'4th Ascension'//'''//display.gear.A4.bullet_list//<br />
   footer: |
     **category.hero_template**
 
