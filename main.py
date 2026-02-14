@@ -93,6 +93,7 @@ class ArgsClass:
   """ Dataclass to store command line arguments """
   force: bool = False
   no_save: bool = False
+  no_maps: bool = False
   templates: List[str] = field(default_factory=list)
   
 def parse_arguments(ctx: AppContext) -> ArgsClass:
@@ -100,6 +101,7 @@ def parse_arguments(ctx: AppContext) -> ArgsClass:
   parser = argparse.ArgumentParser(prog='fndWikiUpdater', description='Friends & Dragons Wiki Updater', formatter_class=argparse.RawTextHelpFormatter)
   parser.add_argument('--force', action='store_true', help='force updates even if content hasn\'t changed')
   parser.add_argument('--no_save', action='store_true', help='desactivate MongoDB data storage and backups')
+  parser.add_argument('--no_maps', action='store_true', help='desactivate spire maps update')
 
   template_help = 'update only listed templates :\n' + '\n'.join([f'  - {k.lower()}' for k in ctx.pages_templates.keys()]) + '\nexemple: py main.py --template "hero 3a" "hero gear"'
   parser.add_argument('--templates', nargs='*', help=template_help)
@@ -114,7 +116,7 @@ def parse_arguments(ctx: AppContext) -> ArgsClass:
         exit(1)
   except SystemExit:
     exit(0)
-  return ArgsClass(force=parsed_args.force, no_save=parsed_args.no_save, templates=parsed_args.templates or [])
+  return ArgsClass(force=parsed_args.force, no_save=parsed_args.no_save, no_maps=parsed_args.no_maps, templates=parsed_args.templates or [])
 
 
 def init_classes(ctx: AppContext):
@@ -205,23 +207,25 @@ def create_talents_from_heroes(ctx: AppContext) -> bool:
   ctx.talents = create_talents(heroes=ctx.heroes)
   return True
 
-def load_drive_data(ctx: AppContext) -> bool:
+def load_drive_data(ctx: AppContext, args: ArgsClass) -> bool:
   """ Load files from shared Google Drive and associate them with their objects """
   for folder in ctx.folders:
-    ctx.logger.info(f'Checking {folder.get('display')}...')
-    file_list = ctx.drive.find_files(drive_key=folder.get('drive_key'), folder=folder.get('name'), mime_type=folder.get('mime_type'))
-    if not file_list:
-      return False
-    
-    match folder.get('object'):
-      case 'Hero':
-        match_images_with_heroes(ctx=ctx, images=file_list, attribute='drive')
-      case 'Pet':
-        match_images_with_pets(ctx=ctx, images=file_list, attribute='drive')
-      case 'Map':
-        create_all_maps(ctx=ctx, files=[ctx.yml.load(raw_data=f['content']) for f in file_list])
-        create_all_grids(ctx=ctx, path='temp')
-        print(ctx.grids)
+    if args.no_maps and folder.get('object') == 'Map':
+      ctx.logger.info(f'Maps skipped due to no_maps argument')
+    else:
+      ctx.logger.info(f'Checking {folder.get('display')}...')
+      file_list = ctx.drive.find_files(drive_key=folder.get('drive_key'), folder=folder.get('name'), mime_type=folder.get('mime_type'))
+      if not file_list:
+        return False
+      
+      match folder.get('object'):
+        case 'Hero':
+          match_images_with_heroes(ctx=ctx, images=file_list, attribute='drive')
+        case 'Pet':
+          match_images_with_pets(ctx=ctx, images=file_list, attribute='drive')
+        case 'Map':
+          create_all_maps(ctx=ctx, files=[ctx.yml.load(raw_data=f['content']) for f in file_list])
+          create_all_grids(ctx=ctx, path='temp')
 
   return True
 
@@ -271,7 +275,7 @@ def generate_pages_contents(ctx: AppContext, args: ArgsClass) -> bool:
 
   for language in ctx.languages:
     ctx.logger.info(f'Language : {language.name}')
-    processor = TemplateProcessor(logger=ctx.logger, elements_templates=ctx.elements_templates, pages_templates=ctx.pages_templates, all_languages=ctx.languages, all_heroes=ctx.heroes, all_pets=ctx.pets, templates=args.templates)
+    processor = TemplateProcessor(logger=ctx.logger, elements_templates=ctx.elements_templates, pages_templates=ctx.pages_templates, all_languages=ctx.languages, all_heroes=ctx.heroes, all_pets=ctx.pets, maps_processing=args.no_maps, templates=args.templates)
     ctx.init_data_to_process()
     to_update = processor.process_all_templates(ctx.data_to_process, language)
     if not to_update:
@@ -378,8 +382,8 @@ def compare_and_update_files(ctx: AppContext):
           return False        
         if not source_wiki.upload_file(filepath=file_path, wiki_filename=pet.portrait):
           return False
-        
-    match_images_with_maps(ctx=ctx, images=[i.get('name') for i in images_list if 'Spire' in i], attribute='wiki_exists')
+
+    match_images_with_maps(ctx=ctx, images=[{'name': i} for i in images_list if 'Spire' in i], attribute='wiki_exists')
     for map in ctx.maps:
       for idx, image in enumerate(map.images):
         if len(map.images) == 1:
@@ -455,7 +459,7 @@ def main():
       ctx.logger.error('Exit due to failure to create talents objects')
       sys.exit(1)
 
-    if not load_drive_data(ctx):
+    if not load_drive_data(ctx, args):
       ctx.logger.error('Exit due to failure to load files from shared drive')
       sys.exit(1)
 
@@ -466,7 +470,7 @@ def main():
       ctx.logger.error('Exit due to failure to generate pages contents')
       sys.exit(1)
     
-    #ctx.generated_pages = [c for c in ctx.generated_pages if c.get('title') == 'Category:Dragonspire'] # or c.get('title') == 'Estadísticas de Héroe' or c.get('title') == 'Statistiques des Héros'] # FOR TESTS
+    #ctx.generated_pages = [c for c in ctx.generated_pages if c.get('title') == 'Hero Ascend Gain' or c.get('title') == 'Ganancia de ascenso de héroe' or c.get('title') == 'Gain d\'ascension des Héros'] # FOR TESTS
 
     if not compare_and_update_wiki_pages(ctx, args):
       ctx.logger.error('Exit due to failure to compare and update wiki pages')
