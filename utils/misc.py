@@ -18,4 +18,8 @@ def group_data_by_hero(data):
       current_name = line_name
   if current_group:
     groups.append(current_group)
+  
+  for group in groups:
+    if len(group) < 5:
+      group.append(['']*44)
   return groups
