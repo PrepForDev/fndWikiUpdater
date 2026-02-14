@@ -338,6 +338,8 @@ Translations:
     2nd Ascension: 2ème Ascension
     3rd: 3ème
     3rd Ascension: 3ème Ascension
+    4th: 4ème
+    4th Ascension: 4ème Ascensión
     3A Leader Bonus A : Bonus de chef A3 A
     3A Leader Bonus B : Bonus de chef A3 B
     3A Atk Upgrade: Gain d'Att A3
@@ -354,6 +356,14 @@ Translations:
     A3 Gear: Équipement A3
     A3 Health: Santé A3
     A3 Talent: Talent A3
+    A1 Atk Gain: Gain d'Att A1
+    A1 Def Gain: Gain de Def A1
+    A2 Atk Gain: Gain d'Att A2
+    A2 Def Gain: Gain de Def A2
+    A3 Atk Gain: Gain d'Att A3
+    A3 Def Gain: Gain de Def A3
+    A4 Atk Gain: Gain d'Att A3
+    A4 Def Gain: Gain de Def A3
     Active: Actif
     Active Talent: Talent<br>Actif
     AI: IA
@@ -369,6 +379,7 @@ Translations:
     AttA1: AttA1
     AttA2: AttA2
     AttA3: AttA3
+    AttA4: AttA4
     Barracks: Caserne
     Base: Base
     Base AI: Base IA
@@ -388,6 +399,7 @@ Translations:
     DefA1: DefA1
     DefA2: DefA2
     DefA3: DefA3
+    DefA4: DefA4
     Dragonspire: Dragonspire
     Exclusive: Exclusif
     for: pour
@@ -398,6 +410,7 @@ Translations:
     Hero: Héros
     Hero 3A: Héros A3
     Heroes: Héros
+    Hero Ascend Gain: Gain d'ascension des Héros
     Hero Class Analysis: Analyse des classes de Héros
     Hero Description: Description du Héros
     Hero Gear: Équipements des Héros
@@ -493,6 +506,7 @@ Translations:
     Camron: Camron
     Caraway: Caraway
     Cassandra: Cassandra
+    Cassius: Cassius
     Celeste: Celeste
     Chivalrous Percival: Percival chevaleresque
     Ciadrine: Ciadrine
@@ -512,6 +526,7 @@ Translations:
     Deathblossom: Deathblossom
     Dianthe: Dianthe
     Divine Einharl: Divine Einharl
+    Dolin: Dolin
     Dolorea: Dolorea
     Dorian: Dorian
     Dracyian: Dracyian
@@ -548,6 +563,7 @@ Translations:
     Firesoul: Firesoul
     Flamescale: Flamescale
     Flare: Flare
+    Flicker: Flicker
     Flint: Silex
     Floralgrin: Floralgrin
     Frida: Frida
@@ -560,6 +576,7 @@ Translations:
     Gharn: Gharn
     Ghastly Cragg: Cragg abject
     Giana: Giana
+    Gleam: Gleam
     Glimmer: Glimmer
     Gloom: Tristesse
     Gobar: Gobar
@@ -623,6 +640,7 @@ Translations:
     Lysander: Lysander
     Lythar: Lythar
     Magda: Magda
+    Malveria: Malveria
     Malzareth: Malzareth
     Maple: Maple
     Marath: Marath
@@ -711,6 +729,7 @@ Translations:
     Strixx: Strixx
     Sunstrike: Sunstrike
     Summershine: Summershine
+    Sunmend: Sunmend
     Swiftcloud: Swiftcloud
     Sylvain: Sylvain
     Tess: Tess
@@ -776,9 +795,11 @@ Translations:
     Atticus: Atticus
     Avalanche: Avalanche
     Avalon: Avalon
+    Bandit: Bandit
     Bernice: Bernice
     Biscuit: Biscuit
     Blackbeak: Blackbeak
+    Blight: Blight
     Bonsai: Bonsai
     Breeze: Breeze
     Brewster: Brewster
@@ -786,10 +807,13 @@ Translations:
     Bubbles: Bubbles
     Bucky: Bucky
     Burno: Burno
+    Bruno: Bruno
     Buttercup: Buttercup
     Cap 'n: Cap'n
     Caramel: Caramel
+    Cedric: Cedric
     Charlotte: Charlotte
+    Cheddar: Cheddar
     Chikara: Chikara
     Chopper: Chopper
     Churro: Churro
@@ -802,6 +826,8 @@ Translations:
     Crescent: Crescent
     Croak: Croak
     Daphne: Daphne
+    Darcy: Darcy
+    Darrveil: Darrveil
     Dawn: Dawn
     Dax: Dax
     Dewdrop: Dewdrop
@@ -825,12 +851,18 @@ Translations:
     Elyrian: Elyrian
     Elysia: Elysia
     Enigma: Enigma
+    Enrico: Enrico
+    Eolith: Eolith
     Eruption: Eruption
     Evar: Evar
     Fable: Fable
+    Fabulous: Fabulous
     Faelen: Faelen
+    Fandango: Fandango
     Felicity: Felicity
     Fernia: Fernia
+    Firmus: Firmus
+    Foulwind: Foulwind
     Fuego: Fuego
     Funky: Funky
     Fuzzy: Fuzzy
@@ -842,6 +874,7 @@ Translations:
     Goldie: Goldie
     Gossamer: Gossamer
     Gracie: Gracie
+    Gravecoil: Gravecoil
     Greed: Greed
     Gregorius: Gregorius
     Grizzle (Grimmor): Grizzle (Grimmor)
@@ -859,11 +892,13 @@ Translations:
     Inky: Inky
     Ivaldi: Ivaldi
     Ivy: Ivy
+    Jalara: Jalara
     Jinx: Jinx
     Joy: Joy
     Junemoss: Junemoss
     Kaia: Kaia
     Kaido: Kaido
+    Kefyr: Kefyr
     Khan: Khan
     Kilbo: Kilbo
     Kismet: Kismet
@@ -874,12 +909,14 @@ Translations:
     Lemon: Lemon
     Lenny: Lenny
     Leopold: Leopold
+    Liftoff: Liftoff
     Linus: Linus
     Looter: Looter
     Lumei: Lumei
     Luminara: Luminara
     Lurgrim: Lurgrim
     Lyssa: Lyssa
+    Malix: Malix
     Marlowe: Marlowe
     Matey: Matey
     Maximilian: Maximilian
@@ -892,12 +929,15 @@ Translations:
     Mystique: Mystique
     Naru: Naru
     Nebula: Nebula
+    Nelson: Nelson
     Nori: Nori
     Oddball: Oddball
     Omenar: Omenar
     Onslaught: Onslaught
+    Oshira: Oshira
     Ozzy: Ozzy
     Pandora: Pandora
+    Porridge: Porridge
     Prince: Prince
     Prospero: Prospero
     Rajah: Rajah
@@ -906,6 +946,7 @@ Translations:
     Reaper: Reaper
     Rebel: Rebel
     Ricky: Ricky
+    Rivulet: Rivulet
     Rohan: Rohan
     Rolli: Rolli
     Rotwart: Rotwart
@@ -914,6 +955,7 @@ Translations:
     Rufus: Rufus
     Runar: Runar
     Rusty: Rusty
+    Saffron: Saffron
     Sapphira: Sapphira
     Sarge: Sarge
     Sasha: Sasha
@@ -925,6 +967,7 @@ Translations:
     Seedling: Seedling
     Seraph: Seraph
     Serenade: Serenade
+    Shinelance: Shinelance
     Shiverbark: Shiverbark
     Shroudweaver: Shroudweaver
     Sifu: Sifu
@@ -934,7 +977,9 @@ Translations:
     Snowball: Snowball
     Snuggle: Snuggle
     Soar: Soar
+    Sparky: Sparky
     Strider: Strider
+    Sulfur: Sulfur
     Sundancer: Sundancer
     Sunny (Shani): Sunny (Shani)
     Sunny (Skytail): Sunny (Skytail)
@@ -947,14 +992,18 @@ Translations:
     Topaz: Topaz
     Torrent (pet): Torrent (pet)
     Tracker: Tracker
+    Trivax: Trivax
+    Trollbert: Trollbert
     Tucker: Tucker
     Twilight: Twilight
     Umbra: Umbra
     Upton: Upton
+    Vanilla: Vanilla
     Vargan: Vargan
     Velma: Velma
     Vesper: Vesper
     Vex: Vex
+    Vinny: Vinny
     Vomitous: Vomitous
     Wendell: Wendell
     Widna: Widna
@@ -1078,6 +1127,7 @@ Translations:
     'Initiative: Cure Poison': 'Initiative: Cure Poison'
     'Initiative: Double Strike': 'Initiative: Double frappe'
     'Initiative: Heroic Blow': 'Initiative: Coup héroïque'
+    'Initiative: Quick Attack': 'Initiative: Quick Attack'
     Inner Peace: Paix intérieure
     Ironskin: Cuir tenace
     Lick & Drag: Lick & Drag
@@ -1129,7 +1179,10 @@ Translations:
     Protector: Protecteur
     Pulverize: Pulverisation
     Push: Pousser
+    Quick Attack: Quick Attack
     Raider: Pilleur
+    Raider Boost: Raider Boost
+    Raider Surge: Raider Surge
     Ranged Parry: Parrade à distance
     Reactive Armor: Armure réactive
     Refresh: Actualiser
