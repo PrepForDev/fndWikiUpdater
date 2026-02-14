@@ -6,14 +6,16 @@ from utils.language import Language
 
 
 class TemplateProcessor:
-  def __init__(self, logger, elements_templates, pages_templates, all_languages, all_pets, all_heroes, templates: Optional[List[str]] = None):
+  def __init__(self, logger, elements_templates, pages_templates, all_languages, all_pets, all_heroes, maps_processing, templates: Optional[List[str]] = None):
     self.logger = logger
     self.elements_templates = elements_templates
     self.pages_templates = pages_templates
     self.all_languages = all_languages
     self.all_pets = all_pets
     self.all_heroes = all_heroes
+    self.maps_processing = maps_processing
     self.templates = [t.lower() for t in templates] if templates else None
+    
   
   def process_all_templates(self, entities: List[Dict], language: Language) -> List[Dict]:
     """ Entry point to process all templates
@@ -35,6 +37,9 @@ class TemplateProcessor:
       for template_name, template_config in self.pages_templates.items():
         if self.templates and template_name.lower() not in self.templates:
           self.logger.info(f'Skipping {template_name} (not in --templates)')
+          continue
+        if self.maps_processing and template_config.get('base object') in ['grid', 'map']:
+          self.logger.info(f'Skipping {template_name} due to --no_maps argument')
           continue
         if template_config.get('base object') == entity_dict.get('object'):
           self.logger.info(f'Processing {template_name} template')
@@ -154,6 +159,7 @@ class TemplateProcessor:
     processed = template
     processed = self._replace_element_templates(processed, base_object, language)
     processed = self._replace_direct_values(processed, base_object, language)
+    processed = self._clean_empty_lines(processed)
     return processed
   
   def _replace_element_templates(self, content: str, base_object: Any, language: Language) -> str:
@@ -197,7 +203,7 @@ class TemplateProcessor:
               value = base_object
             if value:
               return language.translate(value)
-            self.logger.error(f'attribute error: no {attribute_path} found')
+            self.logger.error(f'attribute error: no {attribute_path} found ({base_object.name}, {language.name})')
             return match.group(0)
         else:
           if hasattr(base_object, '__dict__'):
@@ -206,13 +212,30 @@ class TemplateProcessor:
             value = base_object
           if value is not None:
             return str(value)
-          self.logger.error(f'attribute error: no {attribute_path} found')
+          self.logger.error(f'attribute error: no {attribute_path} found ({base_object.name}, {language.name})')
           return match.group(0)
       except Exception:
-        self.logger.error(f'attribute error: no {attribute_path} found')
+        self.logger.error(f'attribute error exception: no {attribute_path} found')
         return match.group(0)
     
     return re.sub(pattern, replace_value, content)
+  
+  def _clean_empty_lines(self, content: str) -> str:
+    """ Remove lines that only contain empty values like '<br />( + + )' """
+    lines = content.split('\n')
+    cleaned_lines = []
+    
+    for line in lines:
+      if '=' in line and line.strip().startswith('|'):
+        parts = line.split('=', 1)
+        if len(parts) == 2:
+          value = parts[1].strip()
+          cleaned_value = value.replace('<br />', '').replace('<br>', '').replace('&nbsp;', '').replace(' ', '').replace('(', '').replace(')', '').replace('+', '')
+          if not cleaned_value:
+            continue
+      cleaned_lines.append(line)
+    
+    return '\n'.join(cleaned_lines)
           
   
   """ class utils (private methods to get nested attributes in an object and get nested values in a dict) """
