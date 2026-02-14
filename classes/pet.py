@@ -128,7 +128,7 @@ class Pet:
         return i
     self.logger.error(f'{element} not in header, please check data and run again')
 
-def match_images_with_pets(ctx, images: List[str], attribute: str):
+def match_images_with_pets(ctx, images: List[Dict], attribute: str):
   """ Match image list with extracted pets objects """
   for image in images:
     cleaned_image_name = image.get('name').split('.png')[0][3:]
