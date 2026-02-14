@@ -68,23 +68,27 @@ character:
     | color        =//translated.color//
     | species      =//translated.species//
     | stars        =//display.stars//
-    | basic_attack =//display.attack.A0.total_base_gear//<br />(//translated.'Base'// //attack.A0// + //translated.'Gear'// //display.attack.A0.gear//)
-    | basic_health =//display.health.A0.total_base_gear//<br />(//translated.'Base'// //health.A0// + //translated.'Gear'// //display.health.A0.gear//)
+    | basic_attack =//display.attack.A0.total_base_gear_merge//<br />(//attack.A0// + //display.attack.A0.gear// + //display.attack.A0.merge//)
+    | basic_health =//display.health.A0.total_base_gear_merge//<br />(//health.A0// + //display.health.A0.gear// + //display.health.A0.merge//)
     | basic_traits =//display.talents.base.raw_list//
     | merge_traits =//display.talents.merge.raw_list//
     | basic_gear   =//display.gear.A0.raw_list//
-    | asc_attack   =//display.attack.A1.total_base_gear//<br />(//translated.'Base'// //attack.A1// + //translated.'Gear'// //display.attack.A1.gear//)
-    | asc_health   =//display.health.A1.total_base_gear//<br />(//translated.'Base'// //health.A1// + //translated.'Gear'// //display.health.A1.gear//)
+    | asc_attack   =//display.attack.A1.total_base_gear_merge//<br />(//attack.A1// + //display.attack.A1.gear// + //display.attack.A1.merge//)
+    | asc_health   =//display.health.A1.total_base_gear_merge//<br />(//health.A1// + //display.health.A1.gear// + //display.health.A1.merge//)
     | asc_traits   =//display.talents.A1.raw_list//
     | asc_gear     =//display.gear.A1.raw_list//
-    | asc2_attack  =//display.attack.A2.total_base_gear//<br />(//translated.'Base'// //attack.A2// + //translated.'Gear'// //display.attack.A2.gear//)
-    | asc2_health  =//display.health.A2.total_base_gear//<br />(//translated.'Base'// //health.A2// + //translated.'Gear'// //display.health.A2.gear//)
+    | asc2_attack  =//display.attack.A2.total_base_gear_merge//<br />(//attack.A2// + //display.attack.A2.gear// + //display.attack.A2.merge//)
+    | asc2_health  =//display.health.A2.total_base_gear_merge//<br />(//health.A2// + //display.health.A2.gear// + //display.health.A2.merge//)
     | asc2_traits  =//display.talents.A2.raw_list//
     | asc2_gear    =//display.gear.A2.raw_list//
-    | asc3_attack  =//display.attack.A3.total_base_gear//<br />(//translated.'Base'// //attack.A3// + //translated.'Gear'// //display.attack.A3.gear//)
-    | asc3_health  =//display.health.A3.total_base_gear//<br />(//translated.'Base'// //health.A3// + //translated.'Gear'// //display.health.A3.gear//)
+    | asc3_attack  =//display.attack.A3.total_base_gear_merge//<br />(//attack.A3// + //display.attack.A3.gear// + //display.attack.A3.merge//)
+    | asc3_health  =//display.health.A3.total_base_gear_merge//<br />(//health.A3// + //display.health.A3.gear// + //display.health.A3.merge//)
     | asc3_traits  =//display.talents.A3.raw_list//
     | asc3_gear    =//display.gear.A3.raw_list//
+    | asc4_attack  =//display.attack.A4.total_base_gear_merge//<br />(//attack.A4// + //display.attack.A4.gear// + //display.attack.A4.merge//)
+    | asc4_health  =//display.health.A4.total_base_gear_merge//<br />(//health.A4// + //display.health.A4.gear// + //display.health.A4.merge//)
+    | asc4_traits  =//display.talents.A4.raw_list//
+    | asc4_gear    =//display.gear.A4.raw_list//
     }}
 
 color:
