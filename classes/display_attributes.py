@@ -20,6 +20,9 @@ class DisplayAttributes:
     self.all_languages = all_languages
     self.all_heroes = all_heroes
     self.all_pets = all_pets
+    self.ascends = ['A0', 'A1', 'A2', 'A3', 'A4']
+    self.ascend_sups = ['1st', '2nd', '3rd', '4th']
+    self.attrs = ['attack', 'health']
   
   def init_template_processor(self, template_processor):
     self.template_processor = template_processor
@@ -83,29 +86,57 @@ class DisplayAttributes:
   
   def _prepare_hero_stats(self, hero: Hero):
     """ Prepare attack and health stats """
-    for ascend in ['A0', 'A1', 'A2', 'A3']:
-      att_gear = ceil(int(getattr(hero.attack, ascend)) * 5 / 100 * sum(1 for g in getattr(hero.gear, ascend)[:3] if g))
-      att_merge = ceil(int(getattr(hero.attack, ascend)) * 15 / 100)
-      self._setattr_nested(hero.display, f'attack.{ascend}.gear', att_gear)
-      self._setattr_nested(hero.display, f'attack.{ascend}.merge', att_merge)
-      self._setattr_nested(hero.display, f'attack.{ascend}.total_base_gear', int(getattr(hero.attack, ascend)) + att_gear)
-      self._setattr_nested(hero.display, f'attack.{ascend}.total_base_gear_merge', int(getattr(hero.attack, ascend)) + att_gear + att_merge)
+    for attr in self.attrs:
+      for ascend in self.ascends:
+        base = self._getattr_nested(hero, f'{attr}.{ascend}')
+        self._setattr_nested(hero.display, f'{attr}.{ascend}.gear', '')
+        self._setattr_nested(hero.display, f'{attr}.{ascend}.merge', '')
+        self._setattr_nested(hero.display, f'{attr}.{ascend}.total_base_gear', '')
+        self._setattr_nested(hero.display, f'{attr}.{ascend}.total_base_gear_merge', '')
+        if not base:
+          continue
+        base = int(base)
+        gear = self._getattr_nested(hero, f'gear.{ascend}') or []
+        if attr == 'attack':
+          gear_count = sum(1 for g in gear[:3] if g)
+        else:
+          gear_count = sum(1 for g in gear[3:] if g)
+        gear_bonus = ceil(base * 0.05 * gear_count)
+        merge_bonus = ceil(base * 0.15)
+        self._setattr_nested(hero.display, f'{attr}.{ascend}.gear', gear_bonus)
+        self._setattr_nested(hero.display, f'{attr}.{ascend}.merge', merge_bonus)
+        self._setattr_nested(hero.display, f'{attr}.{ascend}.total_base_gear', base + gear_bonus)
+        self._setattr_nested(hero.display, f'{attr}.{ascend}.total_base_gear_merge', base + gear_bonus + merge_bonus)
 
-      health_gear = ceil(int(getattr(hero.health, ascend)) * 5 / 100 * sum(1 for g in getattr(hero.gear, ascend)[3:] if g))
-      health_merge = ceil(int(getattr(hero.health, ascend)) * 15 / 100)
-      self._setattr_nested(hero.display, f'health.{ascend}.gear', health_gear)
-      self._setattr_nested(hero.display, f'health.{ascend}.merge', health_merge)
-      self._setattr_nested(hero.display, f'health.{ascend}.total_base_gear', int(getattr(hero.health, ascend)) + health_gear)
-      self._setattr_nested(hero.display, f'health.{ascend}.total_base_gear_merge', int(getattr(hero.health, ascend)) + health_gear + health_merge)
-    
-    for attr in ['attack', 'health']:
-      self._setattr_nested(hero.display, f'{attr}.max.base', max([int(self._getattr_nested(hero, f'{attr}.A0')), int(self._getattr_nested(hero, f'{attr}.A1')), int(self._getattr_nested(hero, f'{attr}.A2')), int(self._getattr_nested(hero, f'{attr}.A3'))]))
-      self._setattr_nested(hero.display, f'{attr}.max.gear', max([int(self._getattr_nested(hero.display, f'{attr}.A0.gear')), int(self._getattr_nested(hero.display, f'{attr}.A1.gear')), int(self._getattr_nested(hero.display, f'{attr}.A2.gear')), int(self._getattr_nested(hero.display, f'{attr}.A3.gear'))]))
-      self._setattr_nested(hero.display, f'{attr}.max.merge', max([int(self._getattr_nested(hero.display, f'{attr}.A0.merge')), int(self._getattr_nested(hero.display, f'{attr}.A1.merge')), int(self._getattr_nested(hero.display, f'{attr}.A2.merge')), int(self._getattr_nested(hero.display, f'{attr}.A3.merge'))]))
-      self._setattr_nested(hero.display, f'{attr}.max.total', int(self._getattr_nested(hero.display, f'{attr}.max.base')) + int(self._getattr_nested(hero.display, f'{attr}.max.gear')) + int(self._getattr_nested(hero.display, f'{attr}.max.merge')))
-      self._setattr_nested(hero.display, f'{attr}.A3_gain', f'{((int(self._getattr_nested(hero.display, f'{attr}.max.total')) - int(self._getattr_nested(hero.display, f'{attr}.A2.total_base_gear_merge'))) / int(self._getattr_nested(hero.display, f'{attr}.A2.total_base_gear_merge')) * 100):.1f}%')
+    for attr in self.attrs:
+      last_ascend = None
+      for ascend in self.ascends:
+        if self._getattr_nested(hero, f'{attr}.{ascend}'):
+          last_ascend = ascend
+      if last_ascend:
+        max_base = int(self._getattr_nested(hero, f'{attr}.{last_ascend}'))
+        max_gear = int(self._getattr_nested(hero.display, f'{attr}.{last_ascend}.gear') or 0)
+        max_merge = int(self._getattr_nested(hero.display, f'{attr}.{last_ascend}.merge') or 0)
+      else:
+        max_base = max_gear = max_merge = 0
+      self._setattr_nested(hero.display, f'{attr}.max.base', max_base)
+      self._setattr_nested(hero.display, f'{attr}.max.gear', max_gear)
+      self._setattr_nested(hero.display, f'{attr}.max.merge', max_merge)
+      self._setattr_nested(hero.display, f'{attr}.max.total', max_base + max_gear + max_merge)
 
-    self._setattr_nested(hero.display, 'max_level', max([int(hero.levelmax.A0), int(hero.levelmax.A1), int(hero.levelmax.A2), int(hero.levelmax.A3)]))
+      previous_total = None
+      for ascend in self.ascends:
+        total = self._getattr_nested(hero.display, f'{attr}.{ascend}.total_base_gear_merge')
+        if not total:
+          self._setattr_nested(hero.display, f'{attr}.{ascend}_gain', '')
+          continue
+        total = int(total)
+        if previous_total is not None:
+          gain = self._gain(total, previous_total)
+          self._setattr_nested(hero.display, f'{attr}.{ascend}_gain', gain)
+        previous_total = total
+    levels = [int(hero.levelmax.A0), int(hero.levelmax.A1), int(hero.levelmax.A2), int(hero.levelmax.A3), int(hero.levelmax.A4) if hero.levelmax.A4 else 0]
+    self._setattr_nested(hero.display, 'max_level', max(levels))
   
   def _prepare_hero_talents(self, hero: Hero):
     """ Prepare formatted talents """
@@ -114,7 +145,17 @@ class DisplayAttributes:
     traits_to_process.append({'attr': 'A2', 'traits': self.template_processor.transform_attribute_to_element(attribute=hero.talents.A2, which_template= 'trait.translated_template', language=self.language)})
     traits_to_process.append({'attr': 'A3', 'traits': self.template_processor.transform_attribute_to_element(attribute=hero.talents.A3, which_template= 'trait.translated_template', language=self.language)})
     ascend_talents = [hero.talents.A1, hero.talents.A2, hero.talents.A3]
-    traits_to_process.append({'attr': 'ascend', 'traits': [self.template_processor.transform_attribute_to_element(attribute=t, which_template= 'trait.translated_template', language=self.language) for t in ascend_talents]})
+    if hero.talents.A4:
+      traits_to_process.append({'attr': 'A4', 'traits': self.template_processor.transform_attribute_to_element(attribute=hero.talents.A4, which_template= 'trait.translated_template', language=self.language)})
+      ascend_talents.append(hero.talents.A4)
+    else:
+      self._setattr_nested(hero.display, 'talents.A4.raw_list', '')
+    ascend_talents_with_sup = []
+    for i, talent in enumerate(ascend_talents):
+      if talent:
+        transformed = self.template_processor.transform_attribute_to_element(attribute=talent, which_template= 'trait.translated_template', language=self.language)
+        ascend_talents_with_sup.append(f'{transformed}<sup>{self.ascend_sups[i]}</sup>')
+    traits_to_process.append({'attr': 'ascend', 'traits': ascend_talents_with_sup})
     traits_to_process.append({'attr': 'merge', 'traits': [self.template_processor.transform_attribute_to_element(attribute=t, which_template= 'trait.translated_template', language=self.language) for t in hero.talents.merge]})
     for traits in traits_to_process:
       if isinstance(traits.get('traits'), list):
@@ -128,6 +169,8 @@ class DisplayAttributes:
         self._setattr_nested(hero.display, f'talents.{traits.get('attr')}.raw_list', traits.get('traits'))
 
     self._setattr_nested(hero.display, f'talents.base.raw_list_picless', '<br />'.join(hero.talents.base))
+    ascend_talents_picless_with_sup = [f'{talent}<sup>{self.ascend_sups[i]}</sup>' for i, talent in enumerate(ascend_talents) if talent]
+    self._setattr_nested(hero.display, f'talents.ascend.raw_list_picless', '<br />'.join(ascend_talents_picless_with_sup))
     self._setattr_nested(hero.display, f'talents.merge.raw_list_picless', '<br />'.join(hero.talents.merge))
     
     traits_to_process = [{'attr': 'base', 'traits': [self.template_processor.transform_attribute_to_element(attribute=t, which_template= 'trait.no_text_template', language=self.language) for t in hero.talents.base]}]
@@ -143,9 +186,10 @@ class DisplayAttributes:
   
   def _prepare_hero_gear(self, hero: Hero):   
     """ Prepare formatted gear """
-    for ascend in ['A0', 'A1', 'A2', 'A3']:
-      translated_gear_without_empty_gear = [self.language.translate(g) for g in getattr(hero.gear, ascend) if g != '']
-      translated_gear_with_empty_gear = [self.language.translate(g) if g != '' else '' for g in getattr(hero.gear, ascend)]
+    for ascend in self.ascends:
+      gear_list = getattr(hero.gear, ascend, None) or []
+      translated_gear_without_empty_gear = [self.language.translate(g) for g in gear_list if g and g != '']
+      translated_gear_with_empty_gear = [self.language.translate(g) if g != '' else '' for g in gear_list]
       self._setattr_nested(hero.display, f'gear.{ascend}.raw_list', '<br />'.join([''] + translated_gear_without_empty_gear))
       self._setattr_nested(hero.display, f'gear.{ascend}.bullet_list', '<br />&nbsp;&nbsp;'.join([''] + translated_gear_without_empty_gear))
       self._setattr_nested(hero.display, f'gear.{ascend}.table_list', '||'.join(translated_gear_with_empty_gear))
@@ -336,11 +380,16 @@ class DisplayAttributes:
         updated obj with new attribute (ex: hero.display.talents.base.raw_list)
     """
     attrs = attribute_path.split('.')
+    current = obj
     for attr in attrs[:-1]:
-      if not hasattr(obj, attr):
-        setattr(obj, attr, Display())
-      obj = getattr(obj, attr)
-    setattr(obj, attrs[-1], value)
+      if current is None:
+        return None
+      next_obj = getattr(current, attr, None)
+      if next_obj is None:
+        next_obj = Display()
+        setattr(current, attr, next_obj)
+      current = next_obj
+    setattr(current, attrs[-1], value)
 
   def _getattr_nested(self, obj: Any, attribute_path: str) -> Any:
     """ Get the value of a nested attribute with multiple nestings handler
@@ -353,9 +402,17 @@ class DisplayAttributes:
     try:
       current = obj
       for attr in attribute_path.split('.'):
-        current = getattr(current, attr, None)
         if current is None:
           return None
+        if isinstance(current, dict):
+          current = current.get(attr, None)
+        else:
+          current = getattr(current, attr, None)
       return current
     except (AttributeError, TypeError):
       return None
+    
+  def _gain(self, a, b):
+    if b == 0:
+      return '0%'
+    return f'{((a - b) / b) * 100:.1f}%'
