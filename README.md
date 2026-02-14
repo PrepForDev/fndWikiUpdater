@@ -18,6 +18,7 @@ Tool to update Friends & Dragons Wiki
 --no_save   : skip mongoDB data storage and backups if you don't want to bother with it  
 --force     : force update even if Playsome's data is the same as the one stored in mongoDB
 --templates : updates only listed templates. Templates are string, so use double-quote, and you can list any number of templates
+--no_maps   : skip map/grids update (which takes a loooong time to process since all spire map files are downloaded and pictures generated for each map)
 --help      : list all of these commands
 
 ## What does the script step by step: ##
@@ -40,7 +41,7 @@ Tool to update Friends & Dragons Wiki
 7. process pages from pages_templates one by one using the template_processor class  
    **/!\ if any new data is needed in templates/pages, it should be added in class/display_attributes.py**
 8. connects to the wiki language by language and compare pages content with generated content -> update only if contents are not the same
-9. connects to Google Drive, checks for new heroes and pets portraits compared to the existing file list in the FilesPage page (used in /Module:Picture for a lot of templates)
+9. connects to Google Drive, checks for new heroes and pets portraits, compared to the existing file list in the FilesPage page (used in /Module:Picture for a lot of templates)
    -> if new files are found, download them, upload them to the wiki, update the FilesPage and then delete the temp files
 10. also downloads all unity files for dragonspire map, draws maps from those files, regroups them into grids for a quick overview
     ->if new maps/grids are found (compares file sizes if maps/grids already exist), uploads everything to the wiki, update the FilesPage and then delete the temp files
