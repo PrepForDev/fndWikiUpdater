@@ -19,6 +19,7 @@ from utils.drive import Drive
 
 from classes.hero import Hero, match_images_with_heroes
 from classes.pet import Pet, match_images_with_pets
+from classes.trait import Trait, match_images_with_traits
 from classes.template_processor import TemplateProcessor
 from classes.heroclass import create_heroclasses
 from classes.talent import create_talents
@@ -43,6 +44,7 @@ class AppContext:
     self.pages_templates = None
     self.heroes = []
     self.pets = []
+    self.traits = []
     self.maps = []
     self.grids = []
     self.generated_pages = []
@@ -63,6 +65,7 @@ class AppContext:
     self.folders = [
       {'name': 'Heroes', 'object': 'Hero', 'drive_key': self.config.PLAYSOME_DRIVE_KEY, 'mime_type': 'image/png', 'display': 'hero portraits'},
       {'name': 'PetPortraits-and-Icons', 'object': 'Pet','drive_key': self.config.PLAYSOME_DRIVE_KEY, 'mime_type': 'image/png', 'display': 'pet portraits'},
+      {'name': 'TraitIcons-2-2025', 'object': 'Trait','drive_key': self.config.PLAYSOME_DRIVE_KEY, 'mime_type': 'image/png', 'display': 'trait icons'},
       {'name': None, 'object': 'Map', 'drive_key': self.config.PLAYSOME_SPIRE_KEY, 'mime_type': 'application/octet-stream', 'display': 'spire maps'},
     ]
 
@@ -70,6 +73,7 @@ class AppContext:
     self.stored_data = [
       {'stored': 'heroes', 'new': [hero.to_dict() for hero in self.heroes]},
       {'stored': 'pets', 'new': [pet.to_dict() for pet in self.pets]},
+      {'stored': 'traits', 'new': [trait.to_dict() for trait in self.traits]},
       {'stored': 'elements_templates', 'new': copy.deepcopy([self.elements_templates])},
       {'stored': 'pages_templates', 'new': copy.deepcopy([self.pages_templates])},
       {'stored': 'playsome_data', 'new': copy.deepcopy([self.playsome_data])},
@@ -83,6 +87,7 @@ class AppContext:
       {'object': 'heroclass', 'list': self.heroclasses},
       {'object': 'talent', 'list': self.talents},
       {'object': 'pet', 'list': self.pets},
+      {'object': 'trait', 'list': self.traits},
       {'object': 'map', 'list': self.maps},
       {'object': 'grid', 'list': self.grids},
     ]
@@ -197,6 +202,19 @@ def load_sheets_data(ctx: AppContext) -> bool:
     ctx.pets.append(pet)
   ctx.pets.sort(key=lambda x:x.name)
   ctx.logger.info('Pets parsed')
+
+  traits_data = ctx.sheets.grab_sheets_data(key=ctx.config.TRAIT_SHEET_KEY)
+  if not traits_data:
+    ctx.logger.error('Failed to grab Traits sheet data')
+    return False
+  
+  ctx.logger.info('Parse data into Traits')
+  ctx.traits = []
+  for trait_data in traits_data[1:]:
+    trait = Trait(ctx)
+    trait.create_trait(data=trait_data, header=traits_data[0])
+    ctx.traits.append(trait)
+  ctx.logger.info('Traits parsed')
   return True
 
 def create_classes_from_heroes(ctx: AppContext) -> bool:
@@ -223,6 +241,8 @@ def load_drive_data(ctx: AppContext, args: ArgsClass) -> bool:
           match_images_with_heroes(ctx=ctx, images=file_list, attribute='drive')
         case 'Pet':
           match_images_with_pets(ctx=ctx, images=file_list, attribute='drive')
+        case 'Trait':
+          match_images_with_traits(ctx=ctx, images=file_list, attribute='drive')
         case 'Map':
           create_all_maps(ctx=ctx, files=[ctx.yml.load(raw_data=f['content']) for f in file_list])
           create_all_grids(ctx=ctx, path='temp')
@@ -341,83 +361,97 @@ def compare_and_update_wiki_pages(ctx: AppContext, args: ArgsClass) -> bool:
 
 
 def compare_and_update_files(ctx: AppContext):
-    """ Compare drive files with wiki files, upload those which are not already in the wiki and update FilesPage in all wikis """
+  """ Compare drive files with wiki files, upload those which are not already in the wiki and update FilesPage in all wikis """
 
-    all_wikis = []
-    for lang in ctx.languages:
-      wiki = Wiki(config=ctx.config, logger=ctx.logger, lang_code=lang.code)
-      if not wiki.initialize():
-        ctx.logger.error(f'Failed to initialize {lang.code} wiki connection')
-        return False
-      all_wikis.append(wiki)
-    source_wiki = next((w for w in all_wikis if w.lang_code == 'en'), None)
-    if not source_wiki:
-      ctx.logger.error('Source wiki "en" not found')
+  all_wikis = []
+  for lang in ctx.languages:
+    wiki = Wiki(config=ctx.config, logger=ctx.logger, lang_code=lang.code)
+    if not wiki.initialize():
+      ctx.logger.error(f'Failed to initialize {lang.code} wiki connection')
       return False
+    all_wikis.append(wiki)
+  source_wiki = next((w for w in all_wikis if w.lang_code == 'en'), None)
+  if not source_wiki:
+    ctx.logger.error('Source wiki "en" not found')
+    return False
 
-    file_list_str = source_wiki.get_page_content('FilesPage')
-    if file_list_str is False:
-        ctx.logger.error(f'Failed to get content for FilesPage {lang.code}')
+  file_list_str = source_wiki.get_page_content('FilesPage')
+  if file_list_str is False:
+      ctx.logger.error(f'Failed to get content for FilesPage {lang.code}')
+      return False
+  images_list = file_list_str.split(' ') if file_list_str else []
+
+  match_images_with_heroes(ctx=ctx, images=[{'name': i} for i in images_list if 'Portrait' in i], attribute='wiki')
+  for hero in ctx.heroes:
+    hero.portrait = f'{hero.name.replace(" ", "_")}_Portrait.png'
+    if hero.file.drive and not hero.file.wiki:
+      ctx.logger.info(f'---> New file found for {hero.name}')
+      file_path = ctx.drive.download_file(hero.file.drive)
+      if not file_path:
+        return False        
+      if not source_wiki.upload_file(filepath=file_path, wiki_filename=hero.portrait):
         return False
-    images_list = file_list_str.split(' ') if file_list_str else []
+      
+  match_images_with_pets(ctx=ctx, images=[{'name': i} for i in images_list if 'Portrait' in i], attribute='wiki')
+  for pet in ctx.pets:
+    pet.portrait = f'{pet.special_art_id if pet.special_art_id else pet.name.replace(" ", "_")}_Portrait.png'
+    if pet.file.drive and not pet.file.wiki:
+      ctx.logger.info(f'---> New file found for {pet.name}')
+      file_path = ctx.drive.download_file(pet.file.drive)
+      if not file_path:
+        return False        
+      if not source_wiki.upload_file(filepath=file_path, wiki_filename=pet.portrait):
+        return False
+      
+  match_images_with_traits(ctx=ctx, images=[{'name': i} for i in images_list if 'Trait' in i], attribute='wiki')
+  for trait in ctx.traits:
+    trait.portrait = f'Trait{trait.special_art_id if trait.special_art_id else trait.name.replace(" ", "")}.png'
+    if trait.file.drive and not trait.file.wiki:
+      ctx.logger.info(f'---> New file found for {trait.name}')
+      file_path = ctx.drive.download_file(trait.file.drive)
+      if not file_path:
+        return False        
+      if not source_wiki.upload_file(filepath=file_path, wiki_filename=trait.portrait):
+        return False
 
-    match_images_with_heroes(ctx=ctx, images=[{'name': i} for i in images_list if 'Portrait' in i], attribute='wiki')
-    for hero in ctx.heroes:
-      hero.portrait = f'{hero.name.replace(" ", "_")}_Portrait.png'
-      if hero.file.drive and not hero.file.wiki:
-        ctx.logger.info(f'---> New file found for {hero.name}')
-        file_path = ctx.drive.download_file(hero.file.drive)
-        if not file_path:
-          return False        
-        if not source_wiki.upload_file(filepath=file_path, wiki_filename=hero.portrait):
+  match_images_with_maps(ctx=ctx, images=[{'name': i} for i in images_list if 'Spire' in i], attribute='wiki_exists')
+  for map in ctx.maps:
+    for idx, image in enumerate(map.images):
+      if len(map.images) == 1:
+        should_upload = not image['wiki_exists']
+      else:
+        should_upload = idx in [1, 2] and not image['wiki_exists']
+      if should_upload:
+        ctx.logger.info(f'---> New file found for {image['filename']}')
+        if not source_wiki.upload_file(filepath=image['filepath'], wiki_filename=image['filename']):
           return False
         
-    match_images_with_pets(ctx=ctx, images=[{'name': i} for i in images_list if 'Portrait' in i], attribute='wiki')
-    for pet in ctx.pets:
-      pet.portrait = f'{pet.special_art_id if pet.special_art_id else pet.name.replace(" ", "_")}_Portrait.png'
-      if pet.file.drive and not pet.file.wiki:
-        ctx.logger.info(f'---> New file found for {pet.name}')
-        file_path = ctx.drive.download_file(pet.file.drive)
-        if not file_path:
-          return False        
-        if not source_wiki.upload_file(filepath=file_path, wiki_filename=pet.portrait):
-          return False
-
-    match_images_with_maps(ctx=ctx, images=[{'name': i} for i in images_list if 'Spire' in i], attribute='wiki_exists')
-    for map in ctx.maps:
-      for idx, image in enumerate(map.images):
-        if len(map.images) == 1:
-          should_upload = not image['wiki_exists']
-        else:
-          should_upload = idx in [1, 2] and not image['wiki_exists']
-        if should_upload:
-          ctx.logger.info(f'---> New file found for {image['filename']}')
-          if not source_wiki.upload_file(filepath=image['filepath'], wiki_filename=image['filename']):
-            return False
-          
-    for grid in ctx.grids:
-      ctx.logger.info(f'---> Trying to upload file for {map.name}')
-      if not source_wiki.upload_file(filepath=grid.filepath, wiki_filename=grid.filename):
-        return False
-    
-    all_source_files = source_wiki.list_all_images()
-    if not all_source_files:
-      ctx.logger.error('Failed to retrieve image list from source wiki')
+  for grid in ctx.grids:
+    ctx.logger.info(f'---> Trying to upload file for {map.name}')
+    if not source_wiki.upload_file(filepath=grid.filepath, wiki_filename=grid.filename):
       return False
+  
+  all_source_files = source_wiki.list_all_images()
+  if not all_source_files:
+    ctx.logger.error('Failed to retrieve image list from source wiki')
+    return False
 
-    for wiki in all_wikis:
-      if not wiki.update_files_page(file_list=all_source_files):
-        return False
-      ctx.logger.info(f'FilesPage updated in {wiki.lang_code} wiki')
+  for wiki in all_wikis:
+    if not wiki.update_files_page(file_list=all_source_files):
+      return False
+    ctx.logger.info(f'FilesPage updated in {wiki.lang_code} wiki')
 
-    heroes_without_portrait = [h.name for h in ctx.heroes if h.portrait is None]
-    if heroes_without_portrait:
-      ctx.logger.warning(f'---> Heroes found without portrait : {', '.join(heroes_without_portrait)}')
-    pets_without_portrait = [p.name for p in ctx.heroes if p.portrait is None]
-    if pets_without_portrait:
-      ctx.logger.warning(f'---> Pets found without portrait : {', '.join(pets_without_portrait)}')
-    
-    return True
+  heroes_without_portrait = [h.name for h in ctx.heroes if h.portrait is None]
+  if heroes_without_portrait:
+    ctx.logger.warning(f'---> Heroes found without portrait : {', '.join(heroes_without_portrait)}')
+  pets_without_portrait = [p.name for p in ctx.pets if p.portrait is None]
+  if pets_without_portrait:
+    ctx.logger.warning(f'---> Pets found without portrait : {', '.join(pets_without_portrait)}')
+  traits_without_icon = [t.name for t in ctx.traits if t.portrait is None]
+  if traits_without_icon:
+    ctx.logger.warning(f'---> Traits found without icon : {', '.join(traits_without_icon)}')
+  
+  return True
 
 def cleanup(ctx: AppContext, args: ArgsClass):
   """ Cleanup before close """
@@ -470,7 +504,7 @@ def main():
       ctx.logger.error('Exit due to failure to generate pages contents')
       sys.exit(1)
     
-    #ctx.generated_pages = [c for c in ctx.generated_pages if c.get('title') == 'Hero Ascend Gain' or c.get('title') == 'Ganancia de ascenso de héroe' or c.get('title') == 'Gain d\'ascension des Héros'] # FOR TESTS
+    #ctx.generated_pages = [c for c in ctx.generated_pages if c.get('title') == 'Traits' or c.get('title') == 'Rasgos' or c.get('title') == 'Caractéristiques'] # FOR TESTS
 
     if not compare_and_update_wiki_pages(ctx, args):
       ctx.logger.error('Exit due to failure to compare and update wiki pages')
