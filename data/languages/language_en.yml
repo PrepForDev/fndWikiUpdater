@@ -388,6 +388,7 @@ Translations:
     Basic Health: Basic Health
     Basic Talents: Basic Talents
     Basics: Basics
+    Battles: Battles
     Body: Body
     Cap: Cap
     Category: Category
@@ -452,6 +453,7 @@ Translations:
     Template: Template
     Total: Total
     Totals: Totals
+    Traits: Traits
     Type: Type
     Weapon: Weapon
   Heroes:
@@ -505,6 +507,7 @@ Translations:
     Callista: Callista
     Camron: Camron
     Caraway: Caraway
+    Carmine: Carmine
     Cassandra: Cassandra
     Cassius: Cassius
     Celeste: Celeste
@@ -517,6 +520,7 @@ Translations:
     Coralgrin: Coralgrin
     Corinne: Corinne
     Cragg: Cragg
+    Crimson: Crimson
     Crystal: Crystal
     Daedra: Daedra
     Dahlia: Dahlia
@@ -636,6 +640,7 @@ Translations:
     Lucia: Lucia
     Lumi: Lumi
     Luna: Luna
+    Lunethar: Lunethar
     Lyra: Lyra
     Lysander: Lysander
     Lythar: Lythar
@@ -657,6 +662,7 @@ Translations:
     Nightmeria: Nightmeria
     Nightsong: Nightsong
     Nimbus: Nimbus
+    Nok: Nok
     November: November
     Nymeria: Nymeria
     Oakscale: Oakscale
@@ -779,6 +785,7 @@ Translations:
     Aeliana: Aeliana
     Aenju: Aenju
     Agnes: Agnes
+    Aku: Aku
     Aldon: Aldon
     Alfie: Alfie
     Almond: Almond
@@ -812,6 +819,7 @@ Translations:
     Cap 'n: Cap 'n
     Caramel: Caramel
     Cedric: Cedric
+    Cerber: Cerber
     Charlotte: Charlotte
     Cheddar: Cheddar
     Chikara: Chikara
@@ -820,11 +828,13 @@ Translations:
     Cipher: Cipher
     Cira: Cira
     Clarissa: Clarissa
+    Coconut: Coconut
     Colby: Colby
     Corsair: Corsair
     Cragjaw: Cragjaw
     Crescent: Crescent
     Croak: Croak
+    Cutlass: Cutlass
     Daphne: Daphne
     Darcy: Darcy
     Darrveil: Darrveil
@@ -837,6 +847,7 @@ Translations:
     Dorothea: Dorothea
     Dreamer: Dreamer
     Drexel: Drexel
+    Drumclaw: Drumclaw
     Dusklily: Dusklily
     Dusty: Dusty
     Dys: Dys
@@ -861,10 +872,12 @@ Translations:
     Fandango: Fandango
     Felicity: Felicity
     Fernia: Fernia
+    Fiero: Fiero
     Firmus: Firmus
     Foulwind: Foulwind
     Fuego: Fuego
     Funky: Funky
+    Furyx: Furyx
     Fuzzy: Fuzzy
     Gallant: Gallant
     Ginger: Ginger
@@ -886,6 +899,7 @@ Translations:
     Gwynn: Gwynn
     Harmony: Harmony
     Hazel: Hazel
+    Honeywing: Honeywing
     Hoshi: Hoshi
     Illusia: Illusia
     Inara: Inara
@@ -900,11 +914,13 @@ Translations:
     Kaido: Kaido
     Kefyr: Kefyr
     Khan: Khan
+    Kiki: Kiki
     Kilbo: Kilbo
     Kismet: Kismet
     Klarion: Klarion
     Kodiak: Kodiak
     Kormit: Kormit
+    Lanceris: Lanceris
     Lazumi: Lazumi
     Lemon: Lemon
     Lenny: Lenny
@@ -926,7 +942,10 @@ Translations:
     Miracle: Miracle
     Mist: Mist
     Montague: Montague
+    Mudwick: Mudwick
     Mystique: Mystique
+    Naraka: Naraka
+    Nash: Nash
     Naru: Naru
     Nebula: Nebula
     Nelson: Nelson
@@ -935,6 +954,7 @@ Translations:
     Omenar: Omenar
     Onslaught: Onslaught
     Oshira: Oshira
+    Otsu: Otsu
     Ozzy: Ozzy
     Pandora: Pandora
     Porridge: Porridge
@@ -945,6 +965,7 @@ Translations:
     Rascal: Rascal
     Reaper: Reaper
     Rebel: Rebel
+    Relic: Relic
     Ricky: Ricky
     Rivulet: Rivulet
     Rohan: Rohan
@@ -968,6 +989,7 @@ Translations:
     Seraph: Seraph
     Serenade: Serenade
     Shinelance: Shinelance
+    Shiver: Shiver
     Shiverbark: Shiverbark
     Shroudweaver: Shroudweaver
     Sifu: Sifu
@@ -977,7 +999,9 @@ Translations:
     Snowball: Snowball
     Snuggle: Snuggle
     Soar: Soar
+    Solace: Solace
     Sparky: Sparky
+    Spite: Spite
     Strider: Strider
     Sulfur: Sulfur
     Sundancer: Sundancer
@@ -985,8 +1009,10 @@ Translations:
     Sunny (Skytail): Sunny (Skytail)
     Sunset: Sunset
     Sven: Sven
+    Swash: Swash
     Swindler: Swindler
     Taffy: Taffy
+    Taro: Taro
     Taz: Taz
     Toby: Toby
     Topaz: Topaz
@@ -997,6 +1023,7 @@ Translations:
     Tucker: Tucker
     Twilight: Twilight
     Umbra: Umbra
+    Umbria: Umbria
     Upton: Upton
     Vanilla: Vanilla
     Vargan: Vargan
@@ -1198,6 +1225,7 @@ Translations:
     Rune of Moon: Rune of Moon
     Rune of Sea: Rune of Sea
     Rune of Sun: Rune of Sun
+    Scale Piercer: Scale Piercer
     Sentinel: Sentinel
     Shroud: Shroud
     Silencing Strike: Silencing Strike
