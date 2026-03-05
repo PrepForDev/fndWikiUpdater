@@ -19,6 +19,7 @@ class Config:
     self.PLAYSOME_DRIVE_KEY = os.getenv('PLAYSOME_DRIVE_KEY')
     self.PLAYSOME_SPIRE_KEY = os.getenv('PLAYSOME_SPIRE_KEY')
     self.PET_SHEET_KEY = os.getenv('PET_SHEET_KEY')
+    self.TRAIT_SHEET_KEY = os.getenv('TRAIT_SHEET_KEY')
 
     self.WIKI_URL = os.getenv('WIKI_URL')
     self.WIKI_USERNAME = os.getenv('WIKI_USERNAME')
