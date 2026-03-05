@@ -219,6 +219,21 @@ Pet Talents:
     [[//translated.'Category'//://translated.'Pets'//]]
     [[//translated.'Category'//://translated.'PetTables'//]]
 
+Traits:
+  base object: trait
+  type: full list
+  title: //translated.'Traits'//
+  template: |
+    |-
+    |//formatted_name//||//type//||//sub_type//||//description//
+  header: |
+    {| class="fandom-table article-table sortable"
+    |+
+    !Trait!!Type!!SubType!!Description
+  footer: |
+    |}
+    [[//translated.'Category'//://translated.'Battles'//]]
+
 Single Hero page:
   base object: hero
   type: single
