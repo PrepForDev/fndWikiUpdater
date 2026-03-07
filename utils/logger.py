@@ -40,4 +40,4 @@ class Logger:
 
   def debug(self, msg):
     message = f'{self._str_now()} {msg}'
-    self.logger.debug(message)
+    self.logger.info(message)
