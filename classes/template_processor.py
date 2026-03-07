@@ -1,22 +1,32 @@
 import re
 from typing import Dict, List, Any, Optional
+from collections import defaultdict
 
 from classes.display_attributes import DisplayAttributes
 from utils.language import Language
 
 
 class TemplateProcessor:
-  def __init__(self, logger, elements_templates, pages_templates, all_languages, all_pets, all_heroes, maps_processing, templates: Optional[List[str]] = None):
+  def __init__(self, logger, elements_templates, pages_templates, all_languages, all_pets, all_heroes, no_map_processing, templates: Optional[List[str]] = None):
     self.logger = logger
     self.elements_templates = elements_templates
     self.pages_templates = pages_templates
     self.all_languages = all_languages
     self.all_pets = all_pets
     self.all_heroes = all_heroes
-    self.maps_processing = maps_processing
+    self.no_map_processing = no_map_processing
     self.templates = [t.lower() for t in templates] if templates else None
+    self._index_templates()
     
-  
+  def _index_templates(self):
+    """Create a lookup index: base_object -> templates"""
+    self.templates_by_object = defaultdict(list)
+    for template_name, template_config in self.pages_templates.items():
+      base_object = template_config.get("base object")
+      if not base_object:
+        continue
+      self.templates_by_object[base_object].append((template_name, template_config))
+
   def process_all_templates(self, entities: List[Dict], language: Language) -> List[Dict]:
     """ Entry point to process all templates
       Args:
@@ -26,38 +36,37 @@ class TemplateProcessor:
         List[Dict] with processed template -> {'title': 'XX', 'content': 'XX'}
     """
     results = []
-    
-    for entity_dict in entities:
-      processed_entities = []
-      for entity in entity_dict.get('list'):
-        display = DisplayAttributes(logger=self.logger, elements_templates=self.elements_templates, language=language, all_languages=self.all_languages, all_heroes=self.all_heroes, all_pets=self.all_pets)
-        display.init_template_processor(template_processor=self)
-        processed_entities.append(display.prepare_display_data(entity=entity))
+    display = DisplayAttributes(logger=self.logger, elements_templates=self.elements_templates, language=language, all_languages=self.all_languages, all_heroes=self.all_heroes, all_pets=self.all_pets)
+    display.init_template_processor(template_processor=self)
 
-      for template_name, template_config in self.pages_templates.items():
+    processed_entities_by_type = {}
+    for entity_dict in entities:
+      obj_type = entity_dict.get('object')
+      processed_entities_by_type[obj_type] = [display.prepare_display_data(entity=e) for e in entity_dict.get('list', [])]
+
+    for base_object, processed_entities in processed_entities_by_type.items():
+      templates = self.templates_by_object.get(base_object)
+      if not templates:
+          continue
+      for template_name, template_config in templates:
         if self.templates and template_name.lower() not in self.templates:
           self.logger.info(f'Skipping {template_name} (not in --templates)')
           continue
-        if self.maps_processing and template_config.get('base object') in ['grid', 'map']:
-          self.logger.info(f'Skipping {template_name} due to --no_maps argument')
+        if self.no_map_processing and base_object in ['grid', 'map']:
           continue
-        if template_config.get('base object') == entity_dict.get('object'):
-          self.logger.info(f'Processing {template_name} template')
-          processed = None
-          template_type = template_config.get('type')
-          
-          if template_type == 'single':
-            processed = self._process_single_templates(template_name, template_config, processed_entities, language)
-            if processed:
-              results.extend(processed)
-          elif template_type == 'full list':
-            processed = self._process_full_list_template(template_name, template_config, processed_entities, language)
-            if processed:
-              results.append(processed)
-          else:
-            self.logger.error(f'type missing in {template_name}, please check pages_templates.yml and run again')
-    return results
-  
+        self.logger.info(f'Processing {template_name} template')
+        template_type = template_config.get('type')
+        if template_type == 'single':
+          processed = self._process_single_templates(template_name, template_config, processed_entities, language)
+          if processed:
+            results.extend(processed)
+        elif template_type == 'full list':
+          processed = self._process_full_list_template(template_name, template_config, processed_entities, language)
+          if processed:
+            results.append(processed)
+        else:
+          self.logger.error(f'type missing in {template_name}, please check pages_templates.yml and run again')
+    return results  
 
   """ class private methods for template processing """
 
