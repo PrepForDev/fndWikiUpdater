@@ -131,16 +131,25 @@ class Pet:
 def match_images_with_pets(ctx, images: List[Dict], attribute: str):
   """ Match image list with extracted pets objects """
   for image in images:
-    cleaned_image_name = image.get('name').split('.png')[0][3:]
-    found_pet = next((pet for pet in ctx.pets if cleaned_image_name == pet.signature[0]), None)
+    # match with signature hero
+    cleaned_image_name = image.get('name').split('.png')[0][3:].lower()
+    found_pet = next((pet for pet in ctx.pets if cleaned_image_name == pet.signature[0].lower()), None)
     if found_pet:
       setattr(found_pet.file, attribute, image)
-    else:
-      cleaned_image_name = image.get('name').split('.png')[0].split('_Portrait')[0].replace('0', '').replace('_',' ')
-      found_pet = next((pet for pet in ctx.pets if cleaned_image_name == pet.name), None)
-      if found_pet:
-        setattr(found_pet.file, attribute, image)
-      else:
-        found_pet = next((pet for pet in ctx.pets if cleaned_image_name == pet.special_art_id), None)
-        if found_pet:
-          setattr(found_pet.file, attribute, image)
+      ctx.logger.debug(f'  Pet pic : {image.get('name')} | found for {found_pet.name} (match signature hero)')
+      continue
+    # match with wiki pet portait
+    cleaned_image_name = image.get('name').split('.png')[0].split('_Portrait')[0].replace('0', '').replace('_',' ')
+    found_pet = next((pet for pet in ctx.pets if cleaned_image_name == pet.name), None)
+    if found_pet:
+      setattr(found_pet.file, attribute, image)
+      ctx.logger.debug(f'  Pet pic : {image.get('name')} | found for {found_pet.name}')
+      continue
+    # match with pet special_art_id
+    found_pet = next((pet for pet in ctx.pets if cleaned_image_name == pet.special_art_id), None)
+    if found_pet:
+      setattr(found_pet.file, attribute, image)
+      ctx.logger.debug(f'  Pet pic : {image.get('name')} | found for {found_pet.name}')
+      continue
+    # ne match found
+    ctx.logger.debug(f'  Pet pic : {image.get('name')} didn\'t match any pet')
