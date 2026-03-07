@@ -97,16 +97,16 @@ class AppContext:
 class ArgsClass:
   """ Dataclass to store command line arguments """
   force: bool = False
-  no_save: bool = False
-  no_maps: bool = False
+  save: bool = False
+  maps: bool = False
   templates: List[str] = field(default_factory=list)
   
 def parse_arguments(ctx: AppContext) -> ArgsClass:
   """ Parse command line arguments """
   parser = argparse.ArgumentParser(prog='fndWikiUpdater', description='Friends & Dragons Wiki Updater', formatter_class=argparse.RawTextHelpFormatter)
-  parser.add_argument('--force', action='store_true', help='force updates even if content hasn\'t changed')
-  parser.add_argument('--no_save', action='store_true', help='desactivate MongoDB data storage and backups')
-  parser.add_argument('--no_maps', action='store_true', help='desactivate spire maps update')
+  parser.add_argument('--force', action='store_true', help='force updates even if content hasn\'t changed\nuse it with --save if needed')
+  parser.add_argument('--save', action='store_true', help='activate MongoDB data storage and backups')
+  parser.add_argument('--maps', action='store_true', help='activate spire maps update')
 
   template_help = 'update only listed templates :\n' + '\n'.join([f'  - {k.lower()}' for k in ctx.pages_templates.keys()]) + '\nexemple: py main.py --template "hero 3a" "hero gear"'
   parser.add_argument('--templates', nargs='*', help=template_help)
@@ -116,12 +116,12 @@ def parse_arguments(ctx: AppContext) -> ArgsClass:
       valid_templates = [k.lower() for k in ctx.pages_templates.keys()]
       invalid = [t for t in parsed_args.templates if t.lower() not in valid_templates]
       if invalid:
-        ctx.logger.error(f"Invalid template name(s): {', '.join(invalid)}")
+        ctx.logger.error(f'Invalid template name(s): {', '.join(invalid)}')
         parser.print_help()
         exit(1)
   except SystemExit:
     exit(0)
-  return ArgsClass(force=parsed_args.force, no_save=parsed_args.no_save, no_maps=parsed_args.no_maps, templates=parsed_args.templates or [])
+  return ArgsClass(force=parsed_args.force, save=parsed_args.save, maps=parsed_args.maps, templates=parsed_args.templates or [])
 
 
 def init_classes(ctx: AppContext):
@@ -136,8 +136,8 @@ def init_classes(ctx: AppContext):
 
 def init_mongodb_connection(ctx: AppContext, args: ArgsClass) -> bool:
   """ Initialize MongoDB connexion """
-  if args.no_save:
-    ctx.logger.info('MongoDB connection disabled by --no_save flag')
+  if not args.save:
+    ctx.logger.info('MongoDB connection disabled')
     return True
   ctx.mongodb = Mongo(config=ctx.config, logger=ctx.logger)
   connection_to_mongodb = ctx.mongodb.connect()
@@ -228,8 +228,8 @@ def create_talents_from_heroes(ctx: AppContext) -> bool:
 def load_drive_data(ctx: AppContext, args: ArgsClass) -> bool:
   """ Load files from shared Google Drive and associate them with their objects """
   for folder in ctx.folders:
-    if args.no_maps and folder.get('object') == 'Map':
-      ctx.logger.info(f'Maps skipped due to no_maps argument')
+    if not args.maps and folder.get('object') == 'Map':
+      ctx.logger.info(f'Maps skipped')
     else:
       ctx.logger.info(f'Checking {folder.get('display')}...')
       file_list = ctx.drive.find_files(drive_key=folder.get('drive_key'), folder=folder.get('name'), mime_type=folder.get('mime_type'))
@@ -251,7 +251,7 @@ def load_drive_data(ctx: AppContext, args: ArgsClass) -> bool:
 
 def compare_actual_data_to_stored_data(ctx: AppContext, args: ArgsClass) -> bool:
   """ Compare stored data to freshly loaded data """
-  if args.no_save:
+  if not args.save:
     return True
   
   ctx.init_stored_data()
@@ -292,12 +292,12 @@ def generate_pages_contents(ctx: AppContext, args: ArgsClass) -> bool:
   """ Generate pages contents translated in all known languages """
   ctx.logger.info('Generating pages contents')
   ctx.generated_pages = []
+  ctx.init_data_to_process()
+  processor = TemplateProcessor(logger=ctx.logger, elements_templates=ctx.elements_templates, pages_templates=ctx.pages_templates, all_languages=ctx.languages, all_heroes=ctx.heroes, all_pets=ctx.pets, no_map_processing=args.maps, templates=args.templates)
 
   for language in ctx.languages:
     ctx.logger.info(f'Language : {language.name}')
-    processor = TemplateProcessor(logger=ctx.logger, elements_templates=ctx.elements_templates, pages_templates=ctx.pages_templates, all_languages=ctx.languages, all_heroes=ctx.heroes, all_pets=ctx.pets, maps_processing=args.no_maps, templates=args.templates)
-    ctx.init_data_to_process()
-    to_update = processor.process_all_templates(ctx.data_to_process, language)
+    to_update = processor.process_all_templates(entities=ctx.data_to_process, language=language)
     if not to_update:
       ctx.logger.warning(f'No content generated for language: {language.name}')
       continue
@@ -307,7 +307,7 @@ def generate_pages_contents(ctx: AppContext, args: ArgsClass) -> bool:
     else:
       ctx.generated_pages.append({'lang_code': language.code, 'title': to_update.get('title'), 'content': to_update.get('content')})
   
-  if len(ctx.generated_pages) == 0:
+  if not ctx.generated_pages:
     ctx.logger.error('No pages content generated')
     return False
   
