@@ -284,11 +284,24 @@ class Hero:
 def match_images_with_heroes(ctx, images: List[Dict], attribute: str):
   """ Match image list with extracted heroes objects """
   for image in images:
-    cleaned_image_name = image.get('name').split('.png')[0].split('_Portrait')[0].replace('0', '').replace('_',' ')
-    found_hero = next((hero for hero in ctx.heroes if cleaned_image_name == hero.playsome_art_id), None)
+    cleaned_image_name = image.get('name').lower().split('.png')[0].split('_portrait')[0].replace('0', '').replace('_',' ')
+    # match with playsome_art_id
+    found_hero = next((hero for hero in ctx.heroes if cleaned_image_name == hero.playsome_art_id.lower()), None)
     if found_hero:
       setattr(found_hero.file, attribute, image)
-    else:
-      found_hero = next((hero for hero in ctx.heroes if cleaned_image_name == hero.name), None)
-      if found_hero:
-        setattr(found_hero.file, attribute, image)
+      ctx.logger.debug(f'  Hero pic : {image.get('name')} | found for {found_hero.name} (match hero playsome_art_id)')
+      continue
+    # match with hero name
+    found_hero = next((hero for hero in ctx.heroes if cleaned_image_name == hero.name.lower()), None)
+    if found_hero:
+      setattr(found_hero.file, attribute, image)
+      ctx.logger.debug(f'  Hero pic : {image.get('name')} | found for {found_hero.name} (match hero name)')
+      continue
+    # Heeatwig mock u_u
+    found_hero = next((hero for hero in ctx.heroes if cleaned_image_name == hero.playsome_art_id[:-1].lower()), None)
+    if found_hero:
+      setattr(found_hero.file, attribute, image)
+      ctx.logger.debug(f'  Hero pic : {image.get('name')} | found for {found_hero.name}')
+      continue
+    # no match found
+    ctx.logger.info(f'  Hero pic : {image.get('name')} didn\'t match any hero')
