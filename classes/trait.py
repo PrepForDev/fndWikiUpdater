@@ -64,13 +64,17 @@ def match_images_with_traits(ctx, images: List[Dict], attribute: str):
   """ Match image list with extracted traits objects """
   for image in images:
     cleaned_image_name = image.get('name').split('.png')[0][5:]
-    print(f'name : {image.get('name')} | cleaned : {cleaned_image_name}')
+    # match with trait name
     found_trait = next((trait for trait in ctx.traits if cleaned_image_name.lower() == trait.name.replace(' ','').lower()), None)
     if found_trait:
       setattr(found_trait.file, attribute, image)
-      print(f' -> found for {found_trait.name}')
-    else:
-      found_trait = next((trait for trait in ctx.traits if cleaned_image_name.lower() == trait.special_art_id.lower()), None)
-      if found_trait:
-        setattr(found_trait.file, attribute, image)
-        print(f' -> found for {found_trait.name}')
+      ctx.logger.debug(f'  Trait pic : {image.get('name')} | found for {found_trait.name}')
+      continue
+    # match with trait special_art_id
+    found_trait = next((trait for trait in ctx.traits if cleaned_image_name.lower() == trait.special_art_id.lower()), None)
+    if found_trait:
+      setattr(found_trait.file, attribute, image)
+      ctx.logger.debug(f'  Trait pic : {image.get('name')} | found for {found_trait.name}')
+      continue
+    # no match found
+    ctx.logger.info(f'  Trait pic : {image.get('name')} didn\'t match any trait')
