@@ -4,25 +4,28 @@ from datetime import datetime
 import time
 import random
 import os
+import hashlib
 
 class Wiki:
 
-  def __init__(self, config, logger, lang_code='en', timeout=10):
+  def __init__(self, config, logger, lang_code='en', timeout=20):
     self.session = Session()
     self.base_url = config.WIKI_URL
     self.username = config.WIKI_USERNAME
     self.password = config.WIKI_PWD
     self.lang_code = lang_code
     self.timeout = timeout
+    self.max_timeouts = 10
     self.logger = logger
     self.login_token = None
     self.csrf_token = None
 
     self.last_edit_time = 0
     self.consecutive_edits = 0
-    self.base_delay = 1
-    self.batch_pause_threshold = 20
+    self.base_delay = 0.5
+    self.batch_pause_threshold = 10
     self.batch_pause_duration = 10
+    self.batch_size = 50
 
   def initialize(self) -> bool:
     """ Initialise wiki connexion """
@@ -43,12 +46,12 @@ class Wiki:
         return f'{self.base_url}{self.lang_code}/api.php'
 
 
-  def _make_request(self, method, params=None, data=None, file=None):
+  def _make_request(self, method, params=None, data=None, file=None, _retries=3):
     """ Util func to make requests """
     if params is None:
-        params = {}
+      params = {}
     if data is None:
-        data = {}
+      data = {}
         
     self._apply_request_delay()
     endpoint = self._get_api_endpoint()
@@ -68,20 +71,37 @@ class Wiki:
           timeout=self.timeout
         )
       elif method.upper() == 'POST UPLOAD':
-        response = self.session.post(
-          url=endpoint,
-          data=data,
-          files=file,
-          timeout=self.timeout)
+        if file:
+          response = self.session.post(
+            url=endpoint,
+            data=data,
+            files=file,
+            timeout=self.timeout
+          )
+        else:
+          self.logger.error(f'Upload error : file is empty')
+          return 'retry'
       else:
         self.logger.error(f'Unsupported request method : {method}')
         return None
+      if response.status_code >= 500:
+        if _retries > 0:
+          wait = random.uniform(5, 15)
+          self.logger.warning(f'Server error {response.status_code}, retrying in {wait:.1f}s ({_retries} left)')
+          time.sleep(wait)
+          return self._make_request(method=method, params=params, data=data, file=file, _retries=_retries-1)
+        else:
+          self.logger.error(f'Server error {response.status_code} after all retries')
+          return None
       response.raise_for_status()
       return response
     
     except Timeout:
-      self.logger.error('Timeout while requesting wiki')
-      return None
+      self.logger.error(f'Timeout while requesting wiki : {self.max_timeouts} timeouts left')
+      self.max_timeouts -= 1
+      if self.max_timeouts == 0:
+        return None
+      return self._make_request(method=method, params=params, data=data, file=file)
     except ConnectionError:
       self.logger.error('Unable to connect to wiki')
       return None
@@ -446,10 +466,11 @@ class Wiki:
     if not os.path.isfile(filepath):
       self.logger.error(f'File not found: {filepath}')
       return False
-    local_size = os.path.getsize(filepath)
-    remote_size = self._get_remote_file_size(wiki_filename)
-    if remote_size is not None and remote_size == local_size:
-      self.logger.info(f'Skipping upload for {wiki_filename}: identical size ({local_size} bytes)')
+    local_sha1 = hashlib.sha1(open(filepath, 'rb').read()).hexdigest()
+    remote_sha1 = self.get_file_sha1(wiki_filename)
+    if remote_sha1 and remote_sha1 == local_sha1:
+      self.logger.info(f'Skipping upload for {wiki_filename}: identical SHA1')
+      os.remove(filepath)
       return True
     self._apply_edit_delay()
     result_ok = False
@@ -467,15 +488,17 @@ class Wiki:
         response = self._make_request('POST UPLOAD', data=data, file=file)
         if not response:
           return False
+        elif response == 'retry':
+          response = self._make_request('POST UPLOAD', data=data, file=file)
         result = response.json()
 
         if 'error' in result:
           code = result['error'].get('code')
-          if code in ('fileexists-shared-forbidden', 'fileexists-forbidden'):
+          if code in ('fileexists-shared-forbidden', 'fileexists-forbidden', 'fileexists-no-change'):
             self.logger.info(f'File already exists on wiki: {wiki_filename}')
             return True
           else:
-            self.logger.error(f'Upload error: {result.get("error")}')
+            self.logger.error(f'Upload error: {result.get('error')}')
             return False
         upload_result = result.get('upload', {}).get('result')
         if upload_result == 'Success':
@@ -534,7 +557,7 @@ class Wiki:
         return []
       data = response.json()
       if 'error' in data:
-        self.logger.error(f'API error in list_all_images: {data["error"]}')
+        self.logger.error(f'API error in list_all_images: {data['error']}')
         return []
       images = data.get('query', {}).get('allimages', [])
       all_files.extend([img.get('name') for img in images if 'name' in img])
@@ -566,4 +589,60 @@ class Wiki:
       return None
     except Exception as e:
       self.logger.warning(f'Error while getting remote size for {filename}: {e}')
+      return None
+    
+  def get_pages_sha1(self, titles: list[str]) -> dict:
+    result = {}
+    try:
+      for i in range(0, len(titles), self.batch_size):
+        batch = titles[i:i+self.batch_size]
+        params = {
+          'action': 'query',
+          'format': 'json',
+          'prop': 'revisions',
+          'rvprop': 'sha1|ids',
+          'titles': '|'.join(batch)
+        }
+        response = self._make_request('GET', params=params)
+        if not response:
+          return None
+        data = response.json()
+        pages = data.get('query', {}).get('pages', {})
+        for page_id, data in pages.items():
+          title = data.get('title')
+          if 'missing' in data:
+            result[title] = None
+            continue
+          revision = data.get('revisions', [{}])[0]
+          result[title] = {
+            'sha1': revision.get('sha1'),
+            'revid': revision.get('revid')
+          }
+      return result
+    except Exception as e:
+      self.logger.warning(f'Error while getting pages sha1: {e}')
+      return None
+    
+  def get_file_sha1(self, filename: str) -> str | None:
+    """Return remote file SHA1, or None if file does not exist"""
+    params = {
+      'action': 'query',
+      'titles': f'File:{filename}',
+      'prop': 'imageinfo',
+      'iiprop': 'sha1',
+      'format': 'json'
+    }
+    try:
+      response = self._make_request('GET', params=params)
+      if not response:
+        return None
+      data = response.json()
+      pages = data.get('query', {}).get('pages', {})
+      for page in pages.values():
+        imageinfo = page.get('imageinfo')
+        if imageinfo:
+          return imageinfo[0].get('sha1')
+      return None
+    except Exception as e:
+      self.logger.warning(f'Error while getting SHA1 for {filename}: {e}')
       return None
