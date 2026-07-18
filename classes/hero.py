@@ -133,6 +133,7 @@ class Hero:
     self.talents = Talent()
     self.gear = StatsByAscend()
     self.exclusivity = None
+    self.pet = None
     self.leaderA = Leader()
     self.leaderB = Leader()
     self.display = Display()
@@ -212,14 +213,14 @@ class Hero:
       if data[0][i] == '':
         ascend_talents_start = i
         break
-      self.talents.base.append(data[0][i].replace(' Of ',' of '))
-    self.talents.A1 = data[1][ascend_talents_start].replace(' Of ',' of ')
-    self.talents.A2 = data[2][ascend_talents_start + 1].replace(' Of ',' of ')
-    self.talents.A3 = data[3][ascend_talents_start + 2].replace(' Of ',' of ')
-    self.talents.A4 = data[4][ascend_talents_start + 3].replace(' Of ',' of ')
+      self.talents.base.append(self._format_talent(data[0][i]))
+    self.talents.A1 = self._format_talent(data[1][ascend_talents_start])
+    self.talents.A2 = self._format_talent(data[2][ascend_talents_start + 1])
+    self.talents.A3 = self._format_talent(data[3][ascend_talents_start + 2])
+    self.talents.A4 = self._format_talent(data[4][ascend_talents_start + 3])
 
     merge_talents_start = header.index('Mastery Talents')
-    self.talents.merge = [data[0][mt].replace(' Of ',' of ') for mt in range(merge_talents_start, merge_talents_start + 3) if data[0][merge_talents_start] != '']
+    self.talents.merge = [self._format_talent(data[0][mt]) for mt in range(merge_talents_start, merge_talents_start + 3) if data[0][merge_talents_start] != '']
 
   def _get_last_index(self, list, element):
     for i in range(len(list) - 1, -1, -1):
@@ -269,7 +270,7 @@ class Hero:
         to_return += ' ' + char
       else:
         to_return += char
-    return to_return
+    return self._format_talent(to_return)
   
   def _recolor_hero(self, name: str):
     try:
@@ -280,28 +281,28 @@ class Hero:
     except:
       self.logger.error(f'{name} not in Heroes\' section of playsome_data.yml, please add it and run again')
 
+  def _format_talent(self, talent):
+    return talent.replace('Of', 'of')
 
 def match_images_with_heroes(ctx, images: List[Dict], attribute: str):
   """ Match image list with extracted heroes objects """
   for image in images:
-    cleaned_image_name = image.get('name').lower().split('.png')[0].split('_portrait')[0].replace('0', '').replace('_',' ')
-    # match with playsome_art_id
-    found_hero = next((hero for hero in ctx.heroes if cleaned_image_name == hero.playsome_art_id.lower()), None)
-    if found_hero:
-      setattr(found_hero.file, attribute, image)
-      ctx.logger.debug(f'  Hero pic : {image.get('name')} | found for {found_hero.name} (match hero playsome_art_id)')
+    if _match_hero(ctx, image, 'playsome_art_id', attribute):
       continue
-    # match with hero name
-    found_hero = next((hero for hero in ctx.heroes if cleaned_image_name == hero.name.lower()), None)
-    if found_hero:
-      setattr(found_hero.file, attribute, image)
-      ctx.logger.debug(f'  Hero pic : {image.get('name')} | found for {found_hero.name} (match hero name)')
+    if _match_hero(ctx, image, 'name', attribute):
       continue
-    # Heeatwig mock u_u
-    found_hero = next((hero for hero in ctx.heroes if cleaned_image_name == hero.playsome_art_id[:-1].lower()), None)
-    if found_hero:
-      setattr(found_hero.file, attribute, image)
-      ctx.logger.debug(f'  Hero pic : {image.get('name')} | found for {found_hero.name}')
+    if _match_hero(ctx, image, 'playsome_art_id', attribute, True):
       continue
-    # no match found
-    ctx.logger.info(f'  Hero pic : {image.get('name')} didn\'t match any hero')
+    if attribute != 'wiki':
+      ctx.logger.info(f'  Hero pic : {image.get('name')} didn\'t match any hero')
+
+def _match_hero(ctx, image, attr_to_compare: str, file_attribute: str, mock: bool = False) -> bool:
+  cleaned_image_name = image.get('name').lower().split('.png')[0].split('_portrait')[0].replace('0', '').replace('_',' ')
+  if mock:
+    cleaned_image_name = cleaned_image_name[:-1]
+  found_hero = next((hero for hero in ctx.heroes if getattr(hero, attr_to_compare) and cleaned_image_name == getattr(hero, attr_to_compare).replace(' ','').lower()), None)
+  if found_hero:
+    setattr(found_hero.file, file_attribute, image)
+    ctx.logger.debug(f'  Hero pic : {image.get('name')} | found for {found_hero.name} ({attr_to_compare})')
+    return True
+  return False
