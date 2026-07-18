@@ -150,7 +150,7 @@ class Drive:
           os.makedirs('temp', exist_ok=True)
           file_path = os.path.join('temp', file.get('name'))
           with open(file_path, 'wb') as f:
-              f.write(fh.getbuffer())
+            f.write(fh.getbuffer())
           self.logger.info(f'File downloaded : {file_path}')
           return file_path
       except Exception as e:
