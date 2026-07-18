@@ -56,6 +56,7 @@ class Display():
 class Pet:
   def __init__(self, ctx):
     self.logger = ctx.logger
+    self.playsome_data = ctx.playsome_data
     self.elements_templates = ctx.elements_templates
 
     self.name = None
@@ -68,6 +69,7 @@ class Pet:
     self.health = None
     self.manacost = None
     self.signature = None
+    self.exclusive = None
     self.talents = Talent()
     self.display = Display()
 
@@ -82,6 +84,7 @@ class Pet:
       'health': self.health,
       'manacost': self.manacost,
       'signature': self.signature,
+      'exclusivity': self.exclusivity,
       'talents': self.talents.to_dict(),
     }
   
@@ -102,6 +105,7 @@ class Pet:
     self.attack = data[header.index('Attack Cap')]
     self.health = data[header.index('Health Cap')]
     self.manacost = data[header.index('Mana Cost')]
+    self.exclusivity = self.playsome_data['Events'][data[header.index('Exclusivity')]] if data[header.index('Exclusivity')] != '' else ''
     self._get_signature_heroes(data=data, header=header)
     self._get_talents(data=data, header=header)
     return self
@@ -131,25 +135,23 @@ class Pet:
 def match_images_with_pets(ctx, images: List[Dict], attribute: str):
   """ Match image list with extracted pets objects """
   for image in images:
-    # match with signature hero
+    if _match_pet(ctx, image, 'signature hero', attribute, True):
+      continue
+    if _match_pet(ctx, image, 'name', attribute):
+      continue
+    if _match_pet(ctx, image, 'special_art_id', attribute):
+      continue
+    ctx.logger.debug(f'  Pet pic : {image.get('name')} didn\'t match any pet')
+
+def _match_pet(ctx, image, attr_to_compare: str, file_attribute: str, signature: bool = False) -> bool:
+  if signature:
     cleaned_image_name = image.get('name').split('.png')[0][3:].lower()
     found_pet = next((pet for pet in ctx.pets if cleaned_image_name == pet.signature[0].lower()), None)
-    if found_pet:
-      setattr(found_pet.file, attribute, image)
-      ctx.logger.debug(f'  Pet pic : {image.get('name')} | found for {found_pet.name} (match signature hero)')
-      continue
-    # match with wiki pet portait
-    cleaned_image_name = image.get('name').split('.png')[0].split('_Portrait')[0].replace('0', '').replace('_',' ')
-    found_pet = next((pet for pet in ctx.pets if cleaned_image_name == pet.name), None)
-    if found_pet:
-      setattr(found_pet.file, attribute, image)
-      ctx.logger.debug(f'  Pet pic : {image.get('name')} | found for {found_pet.name}')
-      continue
-    # match with pet special_art_id
-    found_pet = next((pet for pet in ctx.pets if cleaned_image_name == pet.special_art_id), None)
-    if found_pet:
-      setattr(found_pet.file, attribute, image)
-      ctx.logger.debug(f'  Pet pic : {image.get('name')} | found for {found_pet.name}')
-      continue
-    # ne match found
-    ctx.logger.debug(f'  Pet pic : {image.get('name')} didn\'t match any pet')
+  else:
+    cleaned_image_name = image.get('name').split('.png')[0].split('_Portrait')[0].replace('0', '').replace('_',' ').lower()
+    found_pet = next((pet for pet in ctx.pets if getattr(pet, attr_to_compare) and cleaned_image_name == getattr(pet, attr_to_compare).lower()), None)
+  if found_pet:
+    setattr(found_pet.file, file_attribute, image)
+    ctx.logger.debug(f'  Pet pic : {image.get('name')} | found for {found_pet.name} ({attr_to_compare})')
+    return True
+  return False
