@@ -330,6 +330,7 @@ Translations:
     Radiant Amulet of Sea: Amuleto radiante de mar
     Radiant Amulet of Sun: Amuleto radiante de sol
   General:
+    '@Self': 'el líder'
     '%Att': '%Ata'
     '%Def': '%Def'
     1st: 1er
@@ -365,7 +366,7 @@ Translations:
     A4 Atk Gain: A4 mejora del Ata
     A4 Def Gain: A4 mejora del Def
     Active: Activo
-    Active Talent: Talento<br>Activo
+    Active Talent: Talento Activo
     AI: IA
     AI Speed: Velocidad de IA
     Alternate Signature Hero: Héroe de Firma Alternativa
@@ -431,7 +432,7 @@ Translations:
     Number of heroes for each class: Número de héroes de cada clase
     Off-Hand: Mano Izquierda
     or: o
-    Passive Talent: Talento<br>Pasivo
+    Passive Talent: Talento Pasivo
     Pattern: Patrón
     Pet: Mascota
     Pets: Mascotas
@@ -479,6 +480,7 @@ Translations:
     Arryn: Arryn
     Ashtalon: Ashtalon
     Augar: Augar
+    Aurin: Aurin
     Aurora: Aurora
     Aveline: Aveline
     Azgog: Azgog
@@ -500,6 +502,7 @@ Translations:
     Brassblade: Brassblade
     Brianna: Brianna
     Brightbrook: Brightbrook
+    Brom: Brom
     Broxx: Broxx
     Brula: Brula
     Caldera: Caldera
@@ -558,6 +561,7 @@ Translations:
     Emeraldcrown: Emeraldcrown
     Emeray: Emeray
     Emory: Emory
+    Fargok: Fargok
     Farris: Farris
     Fawke: Fawke
     Fayra: Fayra
@@ -571,6 +575,7 @@ Translations:
     Flint: Flint
     Floralgrin: Floralgrin
     Frida: Frida
+    Frostfang: Frostfang
     Frostgar: Frostgar
     Fulgrin: Fulgrin
     Furia: Furia
@@ -580,6 +585,7 @@ Translations:
     Gharn: Gharn
     Ghastly Cragg: Ghastly Cragg
     Giana: Giana
+    Glare: Glare
     Gleam: Gleam
     Glimmer: Glimmer
     Gloom: Gloom
@@ -602,6 +608,7 @@ Translations:
     Grunhild: Grunhild
     Hailcrest: Cresta de granizo
     Halo: Halo
+    Harrig: Harrig
     Harvesting Elmenora: Elmenora cosechadora
     Heartwig: Heartwig
     Hedwig: Hedwig
@@ -612,6 +619,7 @@ Translations:
     Illyria: Illyria
     Iridian: Iridian
     Iris: Iris
+    Isil: Isil
     Ixora: Ixora
     Jade: Jade
     Jenya: Jenya
@@ -644,6 +652,7 @@ Translations:
     Lyra: Lyra
     Lysander: Lysander
     Lythar: Lythar
+    Maegra: Maegra
     Magda: Magda
     Malveria: Malveria
     Malzareth: Malzareth
@@ -651,6 +660,7 @@ Translations:
     Marath: Marath
     Maribel: Maribel
     Meraldon: Meraldon
+    Mokara: Mokara
     Moonshade: Moonshade
     Moonshine: Moonshine
     Moreia: Moreia
@@ -678,6 +688,7 @@ Translations:
     Percival: Percival
     Petalstep: Dracopétalo
     Primrose: Primrose
+    Prism: Prism
     Pyrrion: Pyrrion
     Radek: Radek
     Radomyr: Radomyr
@@ -704,7 +715,9 @@ Translations:
     Sauriel: Sauriel
     Scarlet: Scarlet
     Scorch: Scorch
+    Scraptooth: Scraptooth
     Scylla: Scylla
+    Seplin: Seplin
     Seraphina: Seraphina
     Serelune: Serelune
     Serene: Serene
@@ -715,6 +728,7 @@ Translations:
     Sharpscale: Sharpscale
     Shatterstorm: Shatterstorm
     Shoal: Shoal
+    Shore: Shore
     Sigyn: Sigyn
     Silverstring: Silverstring
     Skylar: Skylar
@@ -775,6 +789,7 @@ Translations:
     Xaakt: Xaakt
     Xiv: Xiv
     Yazgak: Yazgak
+    Yeora: Yeora
     Yun: Yun
     Zana: Zana
     Zenith: Zenith
@@ -785,6 +800,7 @@ Translations:
     Aeliana: Aeliana
     Aenju: Aenju
     Agnes: Agnes
+    Ahzek: Ahzek
     Aku: Aku
     Aldon: Aldon
     Alfie: Alfie
@@ -794,15 +810,20 @@ Translations:
     Amora: Amora
     Amun: Amun
     Anastasia: Anastasia
+    Argent: Argent
     Aria: Aria
     Arthur: Arthur
+    Ashmaw: Ashmaw
     Asladon: Asladon
     Astra: Astra
     Atove: Atove
     Atticus: Atticus
     Avalanche: Avalanche
     Avalon: Avalon
+    Azalea: Azalea
     Bandit: Bandit
+    Banner: Banner
+    Beacon: Beacon
     Bernice: Bernice
     Biscuit: Biscuit
     Blackbeak: Blackbeak
@@ -815,6 +836,7 @@ Translations:
     Bubbles: Bubbles
     Bucky: Bucky
     Burno: Burno
+    Butch: Butch
     Buttercup: Buttercup
     Cap 'n: Cap 'n
     Caramel: Caramel
@@ -874,16 +896,20 @@ Translations:
     Fernia: Fernia
     Fiero: Fiero
     Firmus: Firmus
+    Fjorn: Fjorn
     Foulwind: Foulwind
     Fuego: Fuego
     Funky: Funky
     Furyx: Furyx
+    Fuzzwing: Fuzzwing
     Fuzzy: Fuzzy
     Gallant: Gallant
     Ginger: Ginger
     Glider: Glider
     Glint: Glint
     Glitterhoof: Glitterhoof
+    Glowtail: Glowtail
+    Goldfeather: Goldfeather
     Goldie: Goldie
     Gossamer: Gossamer
     Gracie: Gracie
@@ -893,17 +919,21 @@ Translations:
     Grizzle (Grimmor): Grizzle (Grimmor)
     Grizzle (Gloom): Grizzle (Gloom)
     Gumleaf: Gumleaf
+    Gung-Ho: Gung-Ho
     Gunner: Gunner
     Guri: Guri
     Gust: Gust
     Gwynn: Gwynn
+    Hamilton: Hamilton
     Harmony: Harmony
     Hazel: Hazel
     Honeywing: Honeywing
+    Hooky: Hooky
     Hoshi: Hoshi
     Illusia: Illusia
     Inara: Inara
     Inky: Inky
+    Irin: Irin
     Ivaldi: Ivaldi
     Ivy: Ivy
     Jalara: Jalara
@@ -927,6 +957,7 @@ Translations:
     Leopold: Leopold
     Liftoff: Liftoff
     Linus: Linus
+    Lolo: Lolo
     Looter: Looter
     Lumei: Lumei
     Luminara: Luminara
@@ -943,6 +974,7 @@ Translations:
     Mist: Mist
     Montague: Montague
     Mudwick: Mudwick
+    Muffy: Muffy
     Mystique: Mystique
     Naraka: Naraka
     Nash: Nash
@@ -950,9 +982,12 @@ Translations:
     Nebula: Nebula
     Nelson: Nelson
     Nori: Nori
+    Oathkeeper: Oathkeeper
     Oddball: Oddball
     Omenar: Omenar
     Onslaught: Onslaught
+    Opaline: Opaline
+    Orion: Orion
     Oshira: Oshira
     Otsu: Otsu
     Ozzy: Ozzy
@@ -966,6 +1001,7 @@ Translations:
     Reaper: Reaper
     Rebel: Rebel
     Relic: Relic
+    Remy: Remy
     Ricky: Ricky
     Rivulet: Rivulet
     Rohan: Rohan
@@ -988,6 +1024,7 @@ Translations:
     Seedling: Seedling
     Seraph: Seraph
     Serenade: Serenade
+    Shimmer: Shimmer
     Shinelance: Shinelance
     Shiver: Shiver
     Shiverbark: Shiverbark
@@ -997,11 +1034,15 @@ Translations:
     Sirocco: Sirocco
     Snickers: Snickers
     Snowball: Snowball
+    Snowcrest: Snowcrest
+    Snuffley: Snuffley
     Snuggle: Snuggle
     Soar: Soar
     Solace: Solace
+    Sora: Sora
     Sparky: Sparky
     Spite: Spite
+    Starquill: Starquill
     Strider: Strider
     Sulfur: Sulfur
     Sundancer: Sundancer
@@ -1018,6 +1059,7 @@ Translations:
     Topaz: Topaz
     Torrent (pet): Torrent (pet)
     Tracker: Tracker
+    Trickster: Trickster
     Trivax: Trivax
     Trollbert: Trollbert
     Tucker: Tucker
@@ -1031,6 +1073,7 @@ Translations:
     Vesper: Vesper
     Vex: Vex
     Vinny: Vinny
+    Vickle: Vickle
     Vomitous: Vomitous
     Wendell: Wendell
     Widna: Widna
@@ -1040,6 +1083,7 @@ Translations:
     Xavier: Xavier
     Xylon: Xylon
     Yarrow: Yarrow
+    Yorick: Yorick
     Zelda: Zelda
     Zephyr: Zephyr
     Ziggy: Ziggy
@@ -1093,6 +1137,7 @@ Translations:
     Chord of Point Blank: Acorde de Punto en Blanco
     Chromatic Shield: Escudo Cromático
     Chromatic Song: Canción Cromática
+    Clean Kill: Clean Kill
     Cold Resistance: Resistencia al Frío
     Critical Attack: Ataque Crítico
     'Critical Attack: Ignite': 'Ataque Crítico: Encender'
@@ -1100,6 +1145,7 @@ Translations:
     'Critical Attack: Rupture': 'Ataque Crítico: Ruptura'
     Critical Distraction: Critical Distraction
     Critical Heal: Curación Crítica
+    Critical Parry: Critical Parry
     Crushing Blow: Golpe Aplastante
     Curse Resistance: Resistencia a Maldiciones
     Cutlass & Flintlock: Alfanje y Pedernal
@@ -1124,14 +1170,17 @@ Translations:
     Extra Time: Tiempo Extra
     Favored Odds: Todo a favor
     Finishing Blow: Golpe Final
+    Firewhirl: Firewhirl
     Fire Resistance: Resistencia al Fuego
     Fire Walker: Caminante del Fuego
     Flank: Flanquear
     Fleet-Footed: Pie Ligero
     Focus: Enfoque
+    Focused Freeze: Focused Freeze
     Foresight: Previsión
     Fortify: Fortificar
     Frostwhirl: Frostwhirl
+    Furious: Furious
     Grappling Hook: Gancho de Agarre
     Hamstring: Desgarrar Tendones
     Healing Aura: Aura Curativa
@@ -1140,6 +1189,7 @@ Translations:
     Healing Touch: Toque Curativo
     Healing Wave: Onda sanadora
     High Ground: Terreno Elevado
+    Ignite: Ignite
     Ignition Point: Ignition Point
     Immobilizing Strike: Golpe Inmovilizador
     Immovable: Inamovible
@@ -1154,6 +1204,8 @@ Translations:
     'Initiative: Cure Poison': 'Initiative: Cure Poison'
     'Initiative: Double Strike': 'Initiative: Double Strike'
     'Initiative: Heroic Blow': 'Initiative: Heroic Blow'
+    'Initiative: Long Shot': 'Initiative: Long Shot'
+    'Initiative: Melt Freeze': 'Initiative: Melt Freeze'
     'Initiative: Quick Attack': 'Initiative: Quick Attack'
     Inner Peace: Paz Interior
     Ironskin: Piel de Hierro
@@ -1202,10 +1254,11 @@ Translations:
     Prepared Freeze: Congelación Preparada
     Prepared Ignite: Encendido Preparado
     Prepared Rupture: Ruptura Preparada
-    Prepared Weakened: Prepared Weakened
+    Prepared Weaken: Prepared Weaken
     Protector: Protector
     Pulverize: Pulverize
     Push: Empujar
+    Quadra Fury: Quadra Fury
     Quick Attack: Quick Attack
     Raider: Saqueador
     Raider Boost: Raider Boost
@@ -1233,6 +1286,7 @@ Translations:
     Slay Beast: Matar Bestia
     Slay Celestial: Matar Celestial
     Slay Construct: Matar Construcción
+    Slay Cyclops: Matar Cyclop
     Slay Demon: Matar Demonio
     Slay Dragon: Matar Dragón
     Slay Elemental: Matar Elemental
@@ -1254,6 +1308,7 @@ Translations:
     Steady Heal: Curación Constante
     Strongpoint: Plaza fuerte
     Stunning Strike: Golpe Aturdidor
+    'Surge: Flying': 'Surge: Flying'
     Survivor: Superviviente
     Swashbuckler: Espadachín
     Syphon Life: Sifón de Vida
@@ -1264,6 +1319,7 @@ Translations:
     Trident & Net: Trident & Net
     True Shot: Disparo Certero
     Tumble: Voltereta
+    Undead Guard: Undead Guard
     Unstoppable Force: Fuerza Imparable
     Vampirism: Vampirismo
     Venom: Veneno
