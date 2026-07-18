@@ -22,7 +22,7 @@ class Language:
     self.code = data.get('Code')
     self.name = data.get('Name')
     self.translations = {}
-    sections = ['Heroes', 'Classes', 'AI', 'Colors', 'Species', 'Talents', 'Gear', 'General', 'Pets']
+    sections = ['Heroes', 'Classes', 'AI', 'Events', 'Colors', 'Species', 'Talents', 'Gear', 'General', 'Pets']
     for section_name in sections:
       section_data = data['Translations'][section_name]
       for key, value in section_data.items():
