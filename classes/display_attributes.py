@@ -6,7 +6,6 @@ from classes.heroclass import Heroclass
 from classes.talent import Talent
 from classes.pet import Pet
 from classes.map import Map
-from classes.grid import Grid
 from utils.language import Language
 from utils.logger import Logger
 
@@ -22,6 +21,7 @@ class DisplayAttributes:
     self.all_pets = all_pets
     self.ascends = ['A0', 'A1', 'A2', 'A3', 'A4']
     self.ascend_sups = ['1st', '2nd', '3rd', '4th']
+    self.pet_stats = [0, 10, 12, 12, 15, 15]
     self.attrs = ['attack', 'health']
   
   def init_template_processor(self, template_processor):
@@ -45,7 +45,7 @@ class DisplayAttributes:
   def _prepare_hero_display_data(self, hero: Hero):
     """ Prepare hero custom data with formatted values """
     self.logger.debug(f'Calculate custom data for {hero.name}')
-    self._prepare_hero_attack_pattern_and_type(hero)
+    self._prepare_hero_attack_pattern_type_and_exclusivity(hero)
     self._prepare_hero_image(hero)
     self._prepare_hero_stats(hero)
     self._prepare_hero_talents(hero)
@@ -55,7 +55,7 @@ class DisplayAttributes:
     self._prepare_hero_talent_categories(hero)
     return hero
 
-  def _prepare_hero_attack_pattern_and_type(self, hero: Hero):
+  def _prepare_hero_attack_pattern_type_and_exclusivity(self, hero: Hero):
     """ Prepare attack pattern and attack type """
     match hero.heroclass:
       case 'Assassin' | 'Druid' | 'Gladiator' | 'Guardian' | 'Knight' | 'Warrior' | 'Paladin' | 'Pirate':
@@ -78,6 +78,12 @@ class DisplayAttributes:
         attack_pattern = 'Star'
     setattr(hero.display, 'attack_type', attack_type)
     setattr(hero.display, 'attack_pattern', attack_pattern)
+    if hero.exclusivity != '':
+      setattr(hero.display, 'exclusive', self.language.translate(hero.exclusivity))
+      setattr(hero.display, 'exclusive_with_title', f'\'\'\'{self.language.translate(hero.exclusivity)} {self.language.translate('Exclusive').lower()}\'\'\'<br />')
+    else:
+      setattr(hero.display, 'exclusive', '')
+      setattr(hero.display, 'exclusive_with_title', '')
 
   def _prepare_hero_image(self, hero: Hero):
     """ Prepare image filename """
@@ -91,6 +97,7 @@ class DisplayAttributes:
         base = self._getattr_nested(hero, f'{attr}.{ascend}')
         self._setattr_nested(hero.display, f'{attr}.{ascend}.gear', '')
         self._setattr_nested(hero.display, f'{attr}.{ascend}.merge', '')
+        self._setattr_nested(hero.display, f'{attr}.{ascend}.pet', '')
         self._setattr_nested(hero.display, f'{attr}.{ascend}.total_base_gear', '')
         self._setattr_nested(hero.display, f'{attr}.{ascend}.total_base_gear_merge', '')
         if not base:
@@ -103,10 +110,13 @@ class DisplayAttributes:
           gear_count = sum(1 for g in gear[3:] if g)
         gear_bonus = ceil(base * 0.05 * gear_count)
         merge_bonus = ceil(base * 0.15)
+        pet_bonus = ceil(base * self.pet_stats[int(hero.stars)] / 100) if hero.pet else 0
         self._setattr_nested(hero.display, f'{attr}.{ascend}.gear', gear_bonus)
         self._setattr_nested(hero.display, f'{attr}.{ascend}.merge', merge_bonus)
+        self._setattr_nested(hero.display, f'{attr}.{ascend}.pet', pet_bonus)
         self._setattr_nested(hero.display, f'{attr}.{ascend}.total_base_gear', base + gear_bonus)
         self._setattr_nested(hero.display, f'{attr}.{ascend}.total_base_gear_merge', base + gear_bonus + merge_bonus)
+        self._setattr_nested(hero.display, f'{attr}.{ascend}.total_all', base + gear_bonus + merge_bonus + pet_bonus)
 
     for attr in self.attrs:
       last_ascend = None
@@ -117,16 +127,18 @@ class DisplayAttributes:
         max_base = int(self._getattr_nested(hero, f'{attr}.{last_ascend}'))
         max_gear = int(self._getattr_nested(hero.display, f'{attr}.{last_ascend}.gear') or 0)
         max_merge = int(self._getattr_nested(hero.display, f'{attr}.{last_ascend}.merge') or 0)
+        max_pet = int(self._getattr_nested(hero.display, f'{attr}.{last_ascend}.pet') or 0)
       else:
-        max_base = max_gear = max_merge = 0
+        max_base = max_gear = max_merge = max_pet = 0
       self._setattr_nested(hero.display, f'{attr}.max.base', max_base)
       self._setattr_nested(hero.display, f'{attr}.max.gear', max_gear)
       self._setattr_nested(hero.display, f'{attr}.max.merge', max_merge)
-      self._setattr_nested(hero.display, f'{attr}.max.total', max_base + max_gear + max_merge)
+      self._setattr_nested(hero.display, f'{attr}.max.pet', max_pet)
+      self._setattr_nested(hero.display, f'{attr}.max.total', max_base + max_gear + max_merge + max_pet)
 
       previous_total = None
       for ascend in self.ascends:
-        total = self._getattr_nested(hero.display, f'{attr}.{ascend}.total_base_gear_merge')
+        total = self._getattr_nested(hero.display, f'{attr}.{ascend}.total_all')
         if not total:
           self._setattr_nested(hero.display, f'{attr}.{ascend}_gain', '')
           continue
@@ -203,8 +215,8 @@ class DisplayAttributes:
     """ Prepare formatted leader data """
     self._setattr_nested(hero.display, f'leadA.no_text', self._format_leader_bonus(leader=hero.leaderA, template_type='no_text_template'))
     self._setattr_nested(hero.display, f'leadB.no_text', self._format_leader_bonus(leader=hero.leaderB, template_type='no_text_template'))
-    self._setattr_nested(hero.display, f'leadA.with_text', f'{self._format_leader_bonus(leader=hero.leaderA, template_type='template')} {self.language.translate('Heroes')}')
-    self._setattr_nested(hero.display, f'leadB.with_text', f'{self._format_leader_bonus(leader=hero.leaderB, template_type='template')} {self.language.translate('Heroes')}')
+    self._setattr_nested(hero.display, f'leadA.with_text', f'{self._format_leader_bonus(leader=hero.leaderA, template_type='template')} {self.language.translate('Heroes') if hero.leaderB.species != '@Self' else ''}')
+    self._setattr_nested(hero.display, f'leadB.with_text', f'{self._format_leader_bonus(leader=hero.leaderB, template_type='template')} {self.language.translate('Heroes') if hero.leaderB.species != '@Self' else ''}')
   
   def _format_leader_bonus(self, leader: Leader, template_type: str) -> str:
     """ Format leader data into str """
@@ -222,7 +234,10 @@ class DisplayAttributes:
       if leader.color:
         lead += self.template_processor.transform_attribute_to_element(attribute=leader.color, which_template=f'color.{template_type}', language=self.language)
       if leader.species:
-        lead += self.template_processor.transform_attribute_to_element(attribute=leader.species, which_template=f'species.{template_type}', language=self.language)
+        if leader.species == '@Self':
+          lead += self.language.translate(leader.species)
+        else:
+          lead += self.template_processor.transform_attribute_to_element(attribute=leader.species, which_template=f'species.{template_type}', language=self.language)
       if leader.extra:
         lead += f' {self.language.translate('or')} {self.template_processor.transform_attribute_to_element(attribute=leader.extra, which_template=f'trait.{template_type}', language=self.language)}'
     return lead
@@ -267,7 +282,7 @@ class DisplayAttributes:
     self._prepare_pet_image(pet=pet)
     self._prepare_signature_heroes(pet=pet)
     self._prepare_pet_talents(pet=pet)
-    setattr(pet.display, 'stars', '&#11088; ' * int(pet.stars))
+    self._prepare_stars_and_exclusivity(pet=pet)
     self._prepare_pet_stats(pet=pet)
     self._prepare_pet_manacost(pet=pet)
     return pet
@@ -323,6 +338,15 @@ class DisplayAttributes:
     merge_talents = '<br />&nbsp;&nbsp;'.join(merge_no_text)
     self._setattr_nested(pet.display, 'merge_talents.row_list', merge_talents)
 
+  def _prepare_stars_and_exclusivity(self, pet: Pet):
+    setattr(pet.display, 'stars', '&#11088; ' * int(pet.stars))
+    if pet.exclusivity != '':
+      setattr(pet.display, 'exclusive', self.language.translate(pet.exclusivity))
+      setattr(pet.display, 'exclusive_with_title', f'\'\'\'{self.language.translate(pet.exclusivity)} {self.language.translate('Exclusive').lower()}\'\'\'<br />')
+    else:
+      setattr(pet.display, 'exclusive', '')
+      setattr(pet.display, 'exclusive_with_title', '')
+
   def _prepare_pet_stats(self, pet: Pet):
     talents_stats = int(pet.talents.base) + (int(pet.talents.silver) * 2)
     merge_stats = len([t for t in pet.talents.merge if 'Attack' in t])
@@ -360,13 +384,11 @@ class DisplayAttributes:
     return talent
   
   def _prepare_map_display_data(self, map: Map):
-    if len(map.images) > 1:
-      pics = ''
-      for i in range(1, len(map.images)):
-        map_name = map.images[i]['filename'].split('Spire')[1].replace('_', ' ')
-        pics += f'\'\'\'{map_name}\'\'\'\n[[File:{map.images[i]['filename']}.png|Frameless]]\n\n'
-    else:
-      pics = f'[[File:{map.images[0]['filename']}.png|Frameless]]'
+    images = map.images if len(map.images) > 1 else map.images[:1]
+    pics = ''
+    for img in images[len(images) > 1:]:
+      map_name = img['filename'].split('Spire')[1].replace('_', ' ').strip()
+      pics += f'[[File:{img["filename"]}.png|frame|none|\'\'\'{ map_name}\'\'\']]\n\n\n\n'
     setattr(map.display, 'pics', pics)
     return map
     
