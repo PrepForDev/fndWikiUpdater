@@ -21,5 +21,5 @@ def group_data_by_hero(data):
   
   for group in groups:
     if len(group) < 5:
-      group.append(['']*44)
+      group.append(['']*45)
   return groups
