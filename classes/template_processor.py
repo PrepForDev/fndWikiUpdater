@@ -22,7 +22,7 @@ class TemplateProcessor:
     """Create a lookup index: base_object -> templates"""
     self.templates_by_object = defaultdict(list)
     for template_name, template_config in self.pages_templates.items():
-      base_object = template_config.get("base object")
+      base_object = template_config.get('base object')
       if not base_object:
         continue
       self.templates_by_object[base_object].append((template_name, template_config))
@@ -53,6 +53,7 @@ class TemplateProcessor:
           self.logger.info(f'Skipping {template_name} (not in --templates)')
           continue
         if self.no_map_processing and base_object in ['grid', 'map']:
+          self.logger.info(f'Skipping {template_name} (no map processing)')
           continue
         self.logger.info(f'Processing {template_name} template')
         template_type = template_config.get('type')
